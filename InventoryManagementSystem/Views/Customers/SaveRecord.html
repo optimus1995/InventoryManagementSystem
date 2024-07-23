@@ -1,0 +1,36 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}\
+
+@using ApplicationCore.DapperEntity
+
+<h1>Customer Data</h1>
+<form class="form mt-3" id="saveform" method="post">
+
+
+    <div class="mb-3">
+        <label for="Name" class="form-label">Name</label>
+        <input type="text" name="Name" class="form-control" placeholder="Enter Customer name" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="Email" class="form-label">Email</label>
+        <input type="email" name="Email" class="form-control" placeholder="Enter Email" />
+    </div>
+
+    <div class="mb-3">
+        <label for="BillingAddress" class="form-label">SKU</label>
+        <input type="text" name="BillingAddress" class="form-control" placeholder="Billing Address" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="ShippingAddress" class="form-label">Price</label>
+        <input type="text" name="ShippingAddress" class="form-control" placeholder="Shipping Address" />
+    </div>
+
+
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

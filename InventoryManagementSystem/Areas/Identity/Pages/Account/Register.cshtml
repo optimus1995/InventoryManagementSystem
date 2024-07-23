@@ -1,0 +1,107 @@
+﻿@page
+@model RegisterModel
+@{
+    Layout = null;
+}
+
+<body class="bg-gradient-primary" >
+
+
+
+<link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+      rel="stylesheet">
+
+<!-- Custom styles for this template-->
+<link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+<div class="container">
+
+    <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+                <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                <div class="col-lg-7">
+                    <div class="p-5">
+                        <form class="user" id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+
+
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+                            </div>
+
+                            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+
+
+
+                            <div class="form-group row">
+                                    <label asp-for="Input.Email">Email</label>
+                                    
+                                <input asp-for="Input.Email" class="form-control form-control-user" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+
+                                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+
+
+                            </div>
+                            <div class="form-group row">
+                            <div class="col-sm-6">
+                                        <label asp-for="Input.Password">Password</label>
+                                  
+                                <input asp-for="Input.Password" class="form-control form-control-user" autocomplete="new-password" aria-required="true" placeholder="password" />
+                                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                            </div>
+                                <div class="col-sm-6">
+                                        <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                   
+                                    <input asp-for="Input.ConfirmPassword" class="form-control form-control-user" autocomplete="new-password" aria-required="true" placeholder="Confirm Password" />
+                                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                                </div>
+
+                            </div>
+                            <hr />
+
+                    <button id="registerSubmit" type="submit" class="btn btn-primary btn-user btn-block">Register</button>
+                    <hr />
+                                <a class="btn btn-google btn-user btn-block" asp-page="./Login">
+                                    <i class="fab fa-user fa-fw"></i> Already have an Account? Login.
+                                </a>
+                                
+
+
+
+
+                    </form>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="/js/sb-admin-2.min.js"></script>
+}
+</body>
+<!-- Bootstrap core JavaScript-->
+
+
+
+
+
+
+
+
+
+
+

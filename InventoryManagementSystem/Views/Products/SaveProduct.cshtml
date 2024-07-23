@@ -1,0 +1,50 @@
+﻿@using ApplicationCore.DapperEntity
+
+@model IEnumerable<Category>
+
+
+
+<h1>Add Product</h1>
+<form class="form mt-3" id="saveform" method="post">
+
+  
+    <div class="mb-3">
+        <label for="productName" class="form-label">Name</label>
+        <input type="text" name="Name" class="form-control" placeholder="Enter product name" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="productDescription" class="form-label">Description</label>
+        <input type="text" name="Description" class="form-control" placeholder="Enter product description" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="productSKU" class="form-label">SKU</label>
+        <input type="text" name="SKU" class="form-control" placeholder="Enter product SKU" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="productPrice" class="form-label">Price</label>
+        <input type="number" name="Price" class="form-control" placeholder="Enter product price" required step=".0001" />
+    </div>
+
+    <div class="mb-3">
+        <label for="productQuantity" class="form-label">Quantity</label>
+        <input type="number" name="quantity" class="form-control" placeholder="Enter product quantity" required min="1" />
+    </div>
+   
+
+    <div class="mb-3">
+
+       <label for="Category" class="form-label">Category</label>
+           <select name="CategoryID" class="form-control" >
+               @foreach(var category in Model){
+                           <option value="@category.Id">@category.Name</option>
+               }
+
+           </select>
+      
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
