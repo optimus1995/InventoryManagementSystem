@@ -12,7 +12,7 @@ namespace ApplicationCore.Contract
 
         public  Task<IEnumerable<OrderItems>> Result();
 
-        public Task<OrderDetails> CreateOrders(OrderDetails orders);
+        public Task<OrderDetails> CreateOrders(Orders orders);
 
     }
 }

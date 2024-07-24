@@ -78,7 +78,8 @@ namespace InventoryManagementSystem.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult SaveOrder(OrderDetails orders) {
+            public IActionResult SaveRecord(Orders orders)
+        { 
             try
             {
                 var i = (ClaimsIdentity)User.Identity;
@@ -87,24 +88,24 @@ namespace InventoryManagementSystem.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    var orderDetails = new OrderDetails
+                    var Order = new Orders
                     {
-                        TotalProductPrice = orders.TotalProductPrice,
-                        ProductId = orders.ProductId,
-                        ProductQuantity = orders.ProductQuantity,
                         TotalPrice = orders.TotalPrice,
+                        //ProductId = orders.ProductId,
+                        //ProductQuantity = orders.ProductQuantity,
+                        //TotalPrice = orders.TotalPrice,
                         Discount = orders.Discount,
                         TotalAmount = orders.TotalAmount,
                         CustomerId = orders.CustomerId,
-                        ProductPrice = orders.ProductPrice,
+                        //ProductPrice = orders.ProductPrice,
                         OrderStatus ="Processing",
-                        IsActive = true,
+                       IsActive = true,
                         CreatedAt = DateTime.Now,
                         CreatedBy = userid
 
                         //  Category=productData.Category,
                     };
-                    _ordersRepository.CreateOrders(orderDetails);
+                    _ordersRepository.CreateOrders(Order);
                     return RedirectToAction("Result");
                 }
                 else
@@ -134,7 +135,7 @@ namespace InventoryManagementSystem.Controllers
 
 
                 var categoryrecords = await _productsRepository.ShowByCatID(id, userid);
-                return View(categoryrecords);
+                return Json(categoryrecords);
 
             }
             catch (Exception ex)

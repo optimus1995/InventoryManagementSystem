@@ -18,6 +18,8 @@ namespace ApplicationCore.DapperEntity
         public DateTime? CreatedAt { get; set; }
         public string? UpdatedBy { get; set; }
          public string? OrderStatus { get; set; }
+        public bool? IsActive { get; set; } 
+        public List<OrderDetails> ListDetails { get; set; } = new List<OrderDetails>();
 
         public string? isActive { get; set; }
     }

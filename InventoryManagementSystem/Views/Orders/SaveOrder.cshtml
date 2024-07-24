@@ -7,7 +7,7 @@
 @model CustomerProductView
 
 <h1>Order</h1>
-<form class="form mt-3" method="post">
+<form class="form mt-3" method="post" onsubmit="AddProductstoDb()">
     <div class="mb-3">
         <div class="mb-3">
             <label for="Customer" class="form-label">Select Customer</label>
@@ -84,18 +84,21 @@
         <input type="number" id="DiscountedPrice" readonly name="TotalAmount" class="form-control" min="1" placeholder="" />
     </div>
 
-    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="button" class="btn btn-primary"onclick="AddDetailRecord()" >Add Record</button>
+    <button type="submit" id="Saveorderbtn" class="btn btn-primary">Save</button>
 </form>
 <div id="dynamictable" class="table-responsive">
     <table class="table table-bordered" id="orderstable">
         <thead>
             <tr>
-                <th class="text-center">
-                    Id
-                </th>
-                <th class="text-center">
-                    Name
-                </th>
+                <th class="text-center" >  ProductId    </th>
+                <th class="text-center"> Sr #  </th>
+
+                <th class="text-center"> Product Name  </th>
+                <th class="text-center"> Price Per Piece  </th>
+
+                <th class="text-center">  Quantity    </th>
+                <th class="text-center"> TotalPrice  </th>
             </tr>
         </thead>
         <tbody id="tbody">
@@ -105,9 +108,8 @@
 @section scripts {
     <script>
 
-
+        let totalamount = 0;
         function updateCustomer() {
-            debugger
             var customerdropdown = document.getElementById("customerDropdown");
             var customername = document.getElementById("CustomerName");
             var customerBillingAddress = document.getElementById("CustomerBillingAddress");
@@ -124,7 +126,7 @@
         }
 
 
-        function updatePrice() { debugger
+        function updatePrice() { 
             var dropdown = document.getElementById("productDropdown");
             var priceInput = document.getElementById("ProductPrice");
 
@@ -152,12 +154,11 @@
             pricerpoductTotal.value = total;
         }
         function Updatediscount() {
-            debugger
             var Discount = document.getElementById("Discount");
-            var priceTotal = document.getElementById("TotalPrice");
+            var priceTotal = totalamount;
             var discounted = document.getElementById("DiscountedPrice");
             var discountvalue = parseInt(Discount.value) || 0;
-            var price = parseInt(priceTotal.value) || 0;
+            var price = parseInt(priceTotal) || 0;
             var discountgiven = (price * discountvalue) / 100;
             var total = price - discountgiven;
             discounted.value = parseInt(total);
@@ -166,22 +167,19 @@
 
 
         function updateProductList() {
-            debugger;
             var s = document.getElementById("CategoryDropdown").value;
             $.ajax({
                 type: "GET",
                 url: "/Orders/ProductByCategory",
                 data: { Catid: s },
-                dataType: "view",
+                dataType: "Json",
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
-                    debugger;
                     console.log(response);
                     var productDropdown = document.getElementById("productDropdown");
                     productDropdown.innerHTML = '<option value="" disabled selected>Select Product</option>';
 
                     response.forEach(function (product) {
-                        debugger;
                         var option = document.createElement("option");
                         option.value = product.id;
                         option.text = product.name;
@@ -195,6 +193,103 @@
                     console.error(error);
                 }
             });
+        }
+
+        function AddDetailRecord() {
+            try {
+
+                let quantity = parseInt($("#Quantity").val(), 10); 
+                let totalPriceInput = $("#TotalPrice");
+
+                let dropdown = document.getElementById("productDropdown");
+                let selectedOption = dropdown.options[dropdown.selectedIndex];
+
+                let productName = selectedOption.text ;
+
+                let productID = selectedOption.value;
+                
+                let productPrice = parseFloat(selectedOption.getAttribute("data-price"));
+
+                let total = quantity * productPrice;
+                totalPriceInput.val(total);
+                let table = $('#orderstable').DataTable();
+                let count = table.rows().count() + 1;
+                let newRow = "<tr>" +
+                    "<td >" + productID + "</td>" +
+                    "<td>" + count + "</td>" +
+                    "<td>" + productName + "</td>" +
+                    "<td>" + productPrice + "</td>" +
+                    "<td>" + quantity + "</td>" +
+                    "<td>" + total + "</td>" +
+                    "</tr>";
+                totalamount += total;
+                table.row.add($(newRow)).draw(false);
+                console.log("Total Amount: " + totalamount);
+            } catch (ex) {
+                // Handle any errors
+                console.log("Error: " + ex.message);
+            }
+        }
+
+        function AddProductstoDb() {
+            debugger;
+            $.ajax({
+                type: "POST",
+
+                data: AjaxObjCall(),
+                url: "/Orders/SaveRecord",
+                dataType: "Json",
+        //        contentType: "application/json; charset=utf-8",
+                success: function (response) { debugger
+                    console.log("Success");
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
+
+
+
+        function AjaxObjCall() {debugger
+
+            let dropdown = document.getElementById("customerDropdown");
+            let selectedOption1 = dropdown.options[dropdown.selectedIndex];
+            let CustomerId = selectedOption1.value;
+            let discount = $("#Discount").val();
+            let finalprice = $("#DiscountedPrice").val();
+
+
+            var AjaxObjMaster = {
+                "CustomerId": CustomerId,
+                "Discount":discount,
+                "TotalAmount":finalprice,
+                        "TotalPrice": totalamount,
+                
+                "ListDetails": []
+            };
+
+
+            var tblDetail = $('#orderstable').DataTable();
+            var tblRows = tblDetail.rows().data();
+
+            if (tblRows.length > 0) {
+                $.each(tblRows, function (index, value) {
+                    debugger;
+                    var ListDetail = {
+                        "ProductId": value[0], 
+                        "ProductPrice": value[3],
+                        "ProductQuantity": value[4], 
+                        "TotalPrice": value[5]
+                    };
+
+                    AjaxObjMaster.ListDetails.push(ListDetail);
+                });
+            }
+            debugger
+            console.log("Data Sent: ", AjaxObjMaster); 
+            return AjaxObjMaster;
         }
 
     </script>

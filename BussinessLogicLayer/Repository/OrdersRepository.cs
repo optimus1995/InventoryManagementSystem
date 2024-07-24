@@ -185,7 +185,7 @@ where ord.IsActive =1";
                 return ordersRecord.ToList();
             }
         }
-        public async Task<OrderDetails> CreateOrders(OrderDetails orders)
+        public async Task<OrderDetails> CreateOrders(Orders orders)
         {
             var orderquery = "insert into Orders (CustomerId,TotalPrice,Discount,CreatedAt,CreatedBy,OrderStatus,TotalAmount,IsActive)" +
                         "VALUES (@CustomerId, @TotalPrice, @Discount, @CreatedAt, @CreatedBy,@OrderStatus,@TotalAmount, @IsActive) ;" +
