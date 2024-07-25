@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Infrastructure.Repository;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using System.Text.Json;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -39,10 +40,20 @@ namespace InventoryManagementSystem.Controllers
         var s = await _ordersRepository.Result();
             Console.WriteLine(s);
             return View(s);
-        
-        
         }
-       
+
+        [Route("Orders/ShowOrderDetails")]
+        [HttpGet]
+        public async Task<IActionResult> ResultbyOrderId(int Orderid)
+        {
+
+            var response = await _ordersRepository.ResultByOrderId(Orderid);
+            Console.WriteLine(response);
+            //var json = JsonSerializer.Serialize(response);
+            return Json(response);
+
+
+        }
 
         public IActionResult SaveRecord()
         {

@@ -40,6 +40,7 @@
                                         <th>Total Price</th>
                                         <th>Total Discount</th>
                                         <th>Total Amount</th>
+                                        <th>Detailed Record</th>
                                         <td> Order Status</td>
                                    
                                     </tr>
@@ -55,6 +56,10 @@
                                             <td>@records.Orders.TotalPrice </td>
                                             <td>@records.Orders.Discount  % </td>
                                             <td>@records.Orders.TotalAmount </td>
+                                         @*    <td><a class='btn btn-danger' onclick='ShowOrderDetails(@records.OrderId)'><i class="fas fa-receipt fa-solid"></i></a></td> *@
+                                            <a class="btn btn-primary" asp-action="ResultbyOrderId" asp-controller="Orders" asp-route-id="@records.OrderId">
+                                                <i class="fas fa-receipt fa-solid" aria-hidden="true"></i>
+                                            </a>
                                             <td>@records.Orders.OrderStatus</td>
                                             
 
@@ -75,6 +80,58 @@
     </div>
 
 </div>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#OrdersRecordbyId">
+    Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="OrdersRecordbyId" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+
+
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%">
+                            <thead>
+                                <tr>
+                                    <td> Order Status</td>
+
+                                </tr>
+
+                            </thead>
+                            <tbody>
+
+                               
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 @section scripts {
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -82,7 +139,122 @@
     <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
     <script src="/js/demo/datatables-demo.js"></script>
-<script>    
+<script>
+
+        //     try {
+
+        //         let quantity = parseInt($("#Quantity").val(), 10);
+        //         let totalPriceInput = $("#TotalPrice");
+
+        //         let dropdown = document.getElementById("productDropdown");
+        //         let selectedOption = dropdown.options[dropdown.selectedIndex];
+
+        //         let productName = selectedOption.text;
+
+        //         let productID = selectedOption.value;
+
+        //         let productPrice = parseFloat(selectedOption.getAttribute("data-price"));
+
+        //         let total = quantity * productPrice;
+        //         totalPriceInput.val(total);
+        //         let table = $('#orderstable').DataTable();
+        //         let newRow = "<tr>" +
+        //             "<td >" + productID + "</td>" +
+        //             "<td>" + productName + "</td>" +
+        //             "<td>" + productPrice + "</td>" +
+        //             "<td>" + quantity + "</td>" +
+        //             "<td>" + total + "</td>" +
+        //             "<td>" +
+        //             "<a class='btn btn-danger' onclick='deleterow(this)'>" +
+        //             "<i class='fas fa-trash' aria-hidden='true'></i></a>" +
+        //             "</td>" +
+        //             "</tr>";
+        //         totalamount += total;
+        //         table.row.add($(newRow)).draw(false);
+        //         console.log("Total Amount: " + totalamount);
+        //     } catch (ex) {
+        //         // Handle any errors
+        //         console.log("Error: " + ex.message);
+        //     }
+        //     console.log(id);
+        // }
+
+        // function ShowOrderDetails(id) {
+        //     $.ajax({
+        //         type: "GET",
+        //         url: "/Orders/ResultByOrderId",
+        //         data: { Orderid: id }, // Corrected parameter name to match the backend method
+        //         dataType: "json",
+        //         success: function (response) {
+        //             console.log(response);
+
+        //             // Clear previous table data
+        //             let table = $("#dataTable").DataTable(); 
+        //             table.clear().draw();
+
+        //             // Assuming response is an array of objects
+                  
+        //                 // Get data from the response object
+        //                 var customerName = item.customers.Name;
+        //                 var orderId = item.orderId; // Use camelCase for consistency
+        //                 var totalPrice = item.totalPrice;
+        //                 var discount = item.discount;
+
+        //                 // Loop through products to create rows
+        //                 response.products.forEach(function (product) {
+        //                     var productName = product.name;
+        //                     var productPrice = product.price;
+        //                     var quantity = product.quantity;
+        //                     var total = productPrice * quantity; // Calculate total price for the product
+
+        //                     // Create a new row and append it to the table
+        //                     let newRow = "<tr>" +
+        //                         "<td>" + customerName + "</td>" +
+        //                         "<td>" + productName + "</td>" +
+        //                         "<td>" + productPrice + "</td>" +
+        //                         "<td>" + quantity + "</td>" +
+        //                         "<td>" + total + "</td>" +
+        //                         "<td>" +
+        //                         "<a class='btn btn-danger' onclick='deleterow(this)'>" +
+        //                         "<i class='fas fa-trash' aria-hidden='true'></i></a>" +
+        //                         "</td>" +
+        //                         "</tr>";
+
+        //                     table.row.add($(newRow)).draw(false);
+        //                 });
+        //             });
+        //         },
+        //         error: function (xhr, status, error) {
+        //             console.log("Error:", error);
+        //             console.log("Status:", status);
+        //             console.log("Response:", xhr.responseText);
+        //         }
+        //     });
+        // }
+        function ShowOrderDetails(id) {
+            $.ajax({
+                type: "GET",
+                url: "/Orders/ResultByOrderId",
+                data: { Orderid: id },
+                dataType: "json",
+                success: function (response) {debugger
+                    console.log(response);
+                    var rec = response[0];
+                    console.log(rec);
+                    var cus = rec.customers;
+                    
+                    // forEach (var s in cus) { console.log(s.Name);
+                    // }
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error:", error);
+                    console.log("Status:", status);
+                    console.log("Response:", xhr.responseText);
+                }
+            });
+        }
+
+
     
     </script>
 

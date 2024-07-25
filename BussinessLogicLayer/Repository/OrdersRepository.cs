@@ -193,14 +193,14 @@ where ord.IsActive =1";
 
 
             var parameters = new DynamicParameters();
-            parameters.Add("@CustomerId", orders.CustomerId, DbType.Int32); 
+            parameters.Add("@CustomerId", orders.CustomerId, DbType.Int32);
             parameters.Add("@TotalPrice", orders.TotalPrice, DbType.Int32);
             parameters.Add("@Discount", orders.Discount, DbType.Int32);
             parameters.Add("@OrderStatus", orders.OrderStatus, DbType.String); // Assuming Price is a decimal
             parameters.Add("@CreatedAt", orders.CreatedAt, DbType.DateTime);
             parameters.Add("@CreatedBy", orders.CreatedBy, DbType.String);
             parameters.Add("@TotalAmount", orders.TotalAmount, DbType.Int32); // Assuming SKU is a string
-            parameters.Add("@IsActive", orders.IsActive, DbType.Boolean); 
+            parameters.Add("@IsActive", orders.IsActive, DbType.Boolean);
             using (var connection = _Context.CreateConnection())
             {
                 try
@@ -214,7 +214,7 @@ where ord.IsActive =1";
 
                     foreach (var detail in orders.ListDetails)
                     {
-                        
+
                         var orderId = @"INSERT INTO OrderItems (OrderId, ProductId, Quantity, Price, TotalPrice) 
                                           VALUES (@OrderId, @ProductId, @Quantity, @Price, @TotalPrice);";
 
@@ -240,20 +240,20 @@ where ord.IsActive =1";
 
                     //await connection.ExecuteAsync(orderId, itemParameters);
 
-                    var created = new  OrderDetails
+                    var created = new OrderDetails
                     {
-                     CustomerId=orders.CustomerId,
-                    TotalPrice=orders.TotalPrice,
-                    Discount=orders.Discount,
-                    OrderStatus=orders.OrderStatus,
-                    CreatedAt=orders.CreatedAt,
-                    CreatedBy=orders.CreatedBy,
-                    TotalAmount=orders.TotalAmount,
-                    OrderId = ordid,
-                    //ProductId=orders.ProductId
-                    //  TotalProductPrice = orders.TotalProductPrice,
-                    //    ProductQuantity = orders.ProductQuantity,
-                    //    ProductPrice = orders.ProductPrice,
+                        CustomerId = orders.CustomerId,
+                        TotalPrice = orders.TotalPrice,
+                        Discount = orders.Discount,
+                        OrderStatus = orders.OrderStatus,
+                        CreatedAt = orders.CreatedAt,
+                        CreatedBy = orders.CreatedBy,
+                        TotalAmount = orders.TotalAmount,
+                        OrderId = ordid,
+                        //ProductId=orders.ProductId
+                        //  TotalProductPrice = orders.TotalProductPrice,
+                        //    ProductQuantity = orders.ProductQuantity,
+                        //    ProductPrice = orders.ProductPrice,
 
 
 
@@ -271,5 +271,58 @@ where ord.IsActive =1";
             }
         }
 
+
+        public async Task<IEnumerable<OrderItems>> ResultByOrderId(int id)
+        {
+            try {
+                var query = @"
+SELECT  
+    orditem.ProductId,
+    orditem.TotalPrice,
+    orditem.OrderId,
+    orditem.Quantity,
+    orditem.Price,
+    ord.Id as OrderId,
+    ord.TotalPrice,
+    ord.Discount,
+    ord.TotalAmount,
+    ord.CreatedBy,
+    ord.OrderStatus,
+    ord.CustomerId,
+    prod.Id as ProductId,
+    prod.Name ,
+    cus.Id as CustomerId,
+    cus.Name
+FROM OrderItems orditem
+JOIN Orders ord ON orditem.OrderId = ord.Id 
+JOIN Products prod ON orditem.ProductId = prod.Id 
+JOIN Customers cus ON ord.CustomerId = cus.Id
+where ord.IsActive =1 and ord.Id=@id";
+
+                using (var connection = _Context.CreateConnection())
+                {
+                    var ordersRecord = await connection.QueryAsync<OrderItems, Orders, Products, Customers, OrderItems>(
+                        query,
+                        (orderItems, orders, products, customers) =>
+                        {
+                            orderItems.Orders = orders;
+                            orderItems.Products = products;
+                            orderItems.Customers = customers;
+                            return orderItems;
+                        }, new { id },
+                        splitOn: "OrderId,ProductId,CustomerId"
+                    );
+
+                    return ordersRecord.ToList();
+                }
+            }
+        
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex);
+                throw;
+            }
+             
+        }
     }
 }

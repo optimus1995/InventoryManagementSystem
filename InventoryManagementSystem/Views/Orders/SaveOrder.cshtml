@@ -100,7 +100,12 @@
         <label for="ProductQuantity" class="form-label">Amount to be Paid </label>
         <input type="number" id="DiscountedPrice" readonly name="TotalAmount" class="form-control" min="1" placeholder="" />
     </div>
+    
     <div style="text-align: right;">
+        <a class="btn btn-danger" asp-action="Result" asp-controller="Orders">
+            Cancel Order
+            <i class="fa fa-close" aria-hidden="true"></i>
+        </a>
         <button type="submit" id="Saveorderbtn" class="btn btn-primary">Save</button>
     </div>
 
