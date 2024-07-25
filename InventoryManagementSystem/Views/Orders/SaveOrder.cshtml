@@ -68,42 +68,46 @@
         <input type="number" id="Quantity" name="ProductQuantity" class="form-control" min="1" onchange="Updatetotal()" placeholder="" required />
     </div>
     <div class="mb-3">
-        <label for="Price" class="form-label"> Total Price </label>
+        <label for="Price" class="form-label"> Total Price</label>
         <input type="text" id="TotalPrice" readonly name="TotalPrice" class="form-control" placeholder="" />
     </div>
     <div class="mb-3">
         <label for="Price" class="form-label" hidden>Price</label>
         <input type="text" id="TotalProductPrice" readonly name="TotalProductPrice" class="form-control" placeholder="" hidden />
     </div>
+    <button type="button" class="btn btn-primary"onclick="AddDetailRecord()" >Add to Cart</button>
+    <div  id="dynamictable" class="table-responsive mb-3">
+        <table class="table table-bordered" id="orderstable">
+            <thead>
+                <tr>
+                    <th class="text-center">  ProductId    </th>
+                    <th class="text-center"> Product Name  </th>
+                    <th class="text-center"> Price Per Piece  </th>
+                    <th class="text-center">  Quantity    </th>
+                    <th class="text-center"> TotalPrice  </th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+        </table>
+    </div>
+
     <div class="mb-3">
         <label for="ProductQuantity" class="form-label">Discount </label>
         <input type="number" id="Discount" name="Discount" max="100" onchange="Updatediscount()" class="form-control" min="1" placeholder="" />
     </div>
-    <div class="mb-3">                   
+    <div class="mb-3">
         <label for="ProductQuantity" class="form-label">Amount to be Paid </label>
         <input type="number" id="DiscountedPrice" readonly name="TotalAmount" class="form-control" min="1" placeholder="" />
     </div>
+    <div style="text-align: right;">
+        <button type="submit" id="Saveorderbtn" class="btn btn-primary">Save</button>
+    </div>
 
-    <button type="button" class="btn btn-primary"onclick="AddDetailRecord()" >Add Record</button>
-    <button type="submit" id="Saveorderbtn" class="btn btn-primary">Save</button>
 </form>
-<div id="dynamictable" class="table-responsive">
-    <table class="table table-bordered" id="orderstable">
-        <thead>
-            <tr>
-                <th class="text-center" >  ProductId    </th>
 
-                <th class="text-center"> Product Name  </th>
-                <th class="text-center"> Price Per Piece  </th>
 
-                <th class="text-center">  Quantity    </th>
-                <th class="text-center"> TotalPrice  </th>
-            </tr>
-        </thead>
-        <tbody id="tbody">
-        </tbody>
-    </table>
-</div>
+
 @section scripts {
     <script>
 

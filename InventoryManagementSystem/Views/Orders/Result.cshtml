@@ -36,13 +36,12 @@
                                 <thead>
                                     <tr>
                                         <th>Order Id</th>
-
+                                        <td>Customer</td>
                                         <th>Total Price</th>
                                         <th>Total Discount</th>
                                         <th>Total Amount</th>
-                                        <th>Created By User</th>
                                         <td> Order Status</td>
-                                        <td>Customer</td>
+                                   
                                     </tr>
 
                                 </thead>
@@ -52,13 +51,12 @@
                                     {
                                         <tr>
                                             <td> @records.OrderId</td>
-                                            
+                                            <td>@records.Customers.Name</td>
                                             <td>@records.Orders.TotalPrice </td>
                                             <td>@records.Orders.Discount  % </td>
                                             <td>@records.Orders.TotalAmount </td>
-                                            <td>@records.Orders.CreatedBy </td>
                                             <td>@records.Orders.OrderStatus</td>
-                                            <td>@records.Customers.Name</td>
+                                            
 
 
                                           </tr>

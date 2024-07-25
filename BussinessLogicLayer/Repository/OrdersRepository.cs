@@ -147,7 +147,7 @@ namespace Infrastructure.Repository
         public async Task<IEnumerable<OrderItems>> Result()
         {
             var query = @"
-SELECT 
+SELECT  distinct
     orditem.ProductId,
     orditem.OrderId,
     orditem.Quantity,
