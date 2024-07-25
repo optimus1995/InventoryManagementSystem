@@ -212,20 +212,35 @@ where ord.IsActive =1";
                     var s = await connection.ExecuteScalarAsync<int>(orderquery, parameters);
                     int ordid = Convert.ToInt32(s);
 
-                    var orderId = @"INSERT INTO OrderItems (OrderId, ProductId, Quantity, Price, TotalPrice) 
-                                      VALUES (@OrderId, @ProductId, @Quantity, @Price, @TotalPrice);";
+                    foreach (var detail in orders.ListDetails)
+                    {
+                        
+                        var orderId = @"INSERT INTO OrderItems (OrderId, ProductId, Quantity, Price, TotalPrice) 
+                                          VALUES (@OrderId, @ProductId, @Quantity, @Price, @TotalPrice);";
 
-                    var itemParameters = new DynamicParameters();
-                    itemParameters.Add("@OrderId", s, DbType.Int32);
-                    itemParameters.Add("@ProductId", orders.ProductId, DbType.Int32);
-                    itemParameters.Add("@Quantity", orders.ProductQuantity, DbType.Int32);
-                    itemParameters.Add("@Price", orders.ProductPrice, DbType.Int32);
-                    itemParameters.Add("@TotalPrice", orders.TotalProductPrice, DbType.Int32);
+                        var itemParameters = new DynamicParameters();
+                        itemParameters.Add("@OrderId", s, DbType.Int32);
+                        itemParameters.Add("@ProductId", detail.ProductId, DbType.Int32);
+                        itemParameters.Add("@Quantity", detail.ProductQuantity, DbType.Int32);
+                        itemParameters.Add("@Price", detail.ProductPrice, DbType.Int32);
+                        itemParameters.Add("@TotalPrice", detail.TotalPrice, DbType.Int32);
+                        await connection.ExecuteAsync(orderId, itemParameters);
+
+                    }
+                    //var orderId = @"INSERT INTO OrderItems (OrderId, ProductId, Quantity, Price, TotalPrice) 
+                    //                  VALUES (@OrderId, @ProductId, @Quantity, @Price, @TotalPrice);";
+
+                    //var itemParameters = new DynamicParameters();
+                    //itemParameters.Add("@OrderId", s, DbType.Int32);
+                    //itemParameters.Add("@ProductId", orders.ProductId, DbType.Int32);
+                    //itemParameters.Add("@Quantity", orders.ProductQuantity, DbType.Int32);
+                    //itemParameters.Add("@Price", orders.ProductPrice, DbType.Int32);
+                    //itemParameters.Add("@TotalPrice", orders.TotalProductPrice, DbType.Int32);
 
 
-                    await connection.ExecuteAsync(orderId, itemParameters);
-                    
-                    var created = new OrderDetails
+                    //await connection.ExecuteAsync(orderId, itemParameters);
+
+                    var created = new  OrderDetails
                     {
                      CustomerId=orders.CustomerId,
                     TotalPrice=orders.TotalPrice,
@@ -234,15 +249,15 @@ where ord.IsActive =1";
                     CreatedAt=orders.CreatedAt,
                     CreatedBy=orders.CreatedBy,
                     TotalAmount=orders.TotalAmount,
-                    TotalProductPrice=orders.TotalProductPrice,
-                    ProductQuantity=orders.ProductQuantity,
-                    ProductPrice=orders.ProductPrice,
                     OrderId = ordid,
-                    ProductId=orders.ProductId
+                    //ProductId=orders.ProductId
+                    //  TotalProductPrice = orders.TotalProductPrice,
+                    //    ProductQuantity = orders.ProductQuantity,
+                    //    ProductPrice = orders.ProductPrice,
 
-                    
-                    
-                    
+
+
+
                     };
 
                     return created;

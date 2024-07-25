@@ -92,7 +92,6 @@
         <thead>
             <tr>
                 <th class="text-center" >  ProductId    </th>
-                <th class="text-center"> Sr #  </th>
 
                 <th class="text-center"> Product Name  </th>
                 <th class="text-center"> Price Per Piece  </th>
@@ -213,14 +212,17 @@
                 let total = quantity * productPrice;
                 totalPriceInput.val(total);
                 let table = $('#orderstable').DataTable();
-                let count = table.rows().count() + 1;
                 let newRow = "<tr>" +
                     "<td >" + productID + "</td>" +
-                    "<td>" + count + "</td>" +
                     "<td>" + productName + "</td>" +
                     "<td>" + productPrice + "</td>" +
                     "<td>" + quantity + "</td>" +
                     "<td>" + total + "</td>" +
+                    "<td>" +
+                    "<a class='btn btn-danger' onclick='deleterow(this)'>" +
+                    "<i class='fas fa-trash' aria-hidden='true'></i></a>" +
+                    "</td>" +
+
                     "</tr>";
                 totalamount += total;
                 table.row.add($(newRow)).draw(false);
@@ -231,22 +233,57 @@
             }
         }
 
-        function AddProductstoDb() {
-            debugger;
+        function AddProductstoDb() {debugger
             $.ajax({
+               
                 type: "POST",
 
                 data: AjaxObjCall(),
                 url: "/Orders/SaveRecord",
                 dataType: "Json",
         //        contentType: "application/json; charset=utf-8",
-                success: function (response) { debugger
+                success: function (response) { debugger;
                     console.log("Success");
+              //      Result();
+                     window.location.href = "https://localhost:44395/Orders/Result";
                 },
                 error: function (xhr, status, error) {
                     console.error(error);
                 }
             });
+        }
+        // function deleterow(button) {debugger
+        //     try {
+        //         var row = $(button).closest("tr");
+        //         var table = $('#orderstable').DataTable();
+        //         var totalvalue = row[4];
+        //         totalamount -= total;
+        //         table.row(row).remove().draw(false);
+
+
+        //     } catch (exception) {
+        //         console.log("Exception Error in deleting option: " + exception);
+        //     }
+        // }
+
+        function deleterow(button) {
+            try {
+                var row = $(button).closest("tr");
+                var table = $('#orderstable').DataTable();
+                var totalText = row.find('td:eq(4)').text().trim();
+                var totalValue = parseFloat(totalText);
+                if (isNaN(totalValue)) {
+                    console.log("Error: Unable to parse total value. Text: '" + totalText + "'");
+                    return;
+                }
+                totalamount -= totalValue;
+                table.row(row).remove().draw(false);
+                $("#Discount").val("");
+                $("#DiscountedPrice").val("");
+                console.log("Total Amount after deletion: " + totalamount);
+            } catch (exception) {
+                console.log("Exception Error in deleting option: " + exception);
+            }
         }
 
 
@@ -279,9 +316,9 @@
                     debugger;
                     var ListDetail = {
                         "ProductId": value[0], 
-                        "ProductPrice": value[3],
-                        "ProductQuantity": value[4], 
-                        "TotalPrice": value[5]
+                        "ProductPrice": value[2],
+                        "ProductQuantity": value[3], 
+                        "TotalPrice": value[4]
                     };
 
                     AjaxObjMaster.ListDetails.push(ListDetail);

@@ -79,7 +79,7 @@ namespace InventoryManagementSystem.Controllers
         }
         [HttpPost]
             public IActionResult SaveRecord(Orders orders)
-        { 
+        {
             try
             {
                 var i = (ClaimsIdentity)User.Identity;
@@ -88,38 +88,21 @@ namespace InventoryManagementSystem.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    var Order = new Orders
-                    {
-                        TotalPrice = orders.TotalPrice,
-                        //ProductId = orders.ProductId,
-                        //ProductQuantity = orders.ProductQuantity,
-                        //TotalPrice = orders.TotalPrice,
-                        Discount = orders.Discount,
-                        TotalAmount = orders.TotalAmount,
-                        CustomerId = orders.CustomerId,
-                        //ProductPrice = orders.ProductPrice,
-                        OrderStatus ="Processing",
-                       IsActive = true,
-                        CreatedAt = DateTime.Now,
-                        CreatedBy = userid
-
-                        //  Category=productData.Category,
-                    };
-                    _ordersRepository.CreateOrders(Order);
-                    return RedirectToAction("Result");
+                    orders.OrderStatus = "Processing";
+                    orders.IsActive = true;
+                    orders.CreatedAt = DateTime.Now;
+                    orders.CreatedBy = userid;
+                    _ordersRepository.CreateOrders(orders);
                 }
                 else
-                {
-                    return BadRequest(ModelState);
+                { return BadRequest(ModelState);
                 }
+                return Json("");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
-
-
-
         }
 
         public async Task <IActionResult> ProductByCategory(string Catid)
