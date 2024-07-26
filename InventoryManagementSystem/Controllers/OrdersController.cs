@@ -42,15 +42,15 @@ namespace InventoryManagementSystem.Controllers
             return View(s);
         }
 
-        [Route("Orders/ShowOrderDetails")]
+        [Route("Orders/Details")]
         [HttpGet]
-        public async Task<IActionResult> ResultbyOrderId(int Orderid)
+        public async Task<IActionResult> Details(int Orderid)
         {
 
             var response = await _ordersRepository.ResultByOrderId(Orderid);
             Console.WriteLine(response);
             //var json = JsonSerializer.Serialize(response);
-            return Json(response);
+            return View(response);
 
 
         }

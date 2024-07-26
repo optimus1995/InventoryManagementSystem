@@ -161,7 +161,9 @@ SELECT  distinct
     prod.Id as ProductId,
     prod.Name ,
     cus.Id as CustomerId,
-    cus.Name
+    cus.Name,
+    cus.ShippingAddress,
+    cus.BillingAddress
 FROM OrderItems orditem
 JOIN Orders ord ON orditem.OrderId = ord.Id 
 JOIN Products prod ON orditem.ProductId = prod.Id 
@@ -276,7 +278,8 @@ where ord.IsActive =1";
         {
             try {
                 var query = @"
-SELECT  
+SELECT 
+    orditem.Id ,
     orditem.ProductId,
     orditem.TotalPrice,
     orditem.OrderId,
@@ -287,12 +290,16 @@ SELECT
     ord.Discount,
     ord.TotalAmount,
     ord.CreatedBy,
+    ord.CreatedAt,
     ord.OrderStatus,
     ord.CustomerId,
     prod.Id as ProductId,
     prod.Name ,
+    
     cus.Id as CustomerId,
-    cus.Name
+    cus.Name,
+cus.ShippingAddress,
+    cus.BillingAddress
 FROM OrderItems orditem
 JOIN Orders ord ON orditem.OrderId = ord.Id 
 JOIN Products prod ON orditem.ProductId = prod.Id 

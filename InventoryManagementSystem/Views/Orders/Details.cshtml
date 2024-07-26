@@ -1,20 +1,11 @@
 ﻿ @using ApplicationCore.DapperEntity
-@model List<OrderItems>
-@await Component.InvokeAsync("Inventory")
+ @model List<OrderItems>
+
 <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
       rel="stylesheet">
 <link href="/css/sb-admin-2.min.css" rel="stylesheet">
 <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-<a class="btn btn-primary" asp-action="SaveOrder" asp-controller="Orders">
-    Add New
-    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-</a>
-@* <a class="btn btn-primary col-mb-2 float-right" asp-action="ExportRecord" asp-controller="Customers">
-    Export
-      <i class="fa-solid fa-file-export"></i>
-
-</a> *@
 <div id="wrapper">
     <div id="content-wrapper" class="d-flex flex-column">
 
@@ -25,9 +16,28 @@
                 <h1 class="h3 mb-2 text-gray-800">Orders</h1>
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Orders Record</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Order Detail</h6>
 
                     </div>
+                    <div>
+                        @foreach (var orderGroup in Model.GroupBy(o => o.OrderId))
+                        {
+                            var order = orderGroup.FirstOrDefault(); 
+
+                            <h1 class="h3 mb-2 text-gray-800"> <b>Customer Name :</b>@order.Customers.Name</h1>
+                            <h1 class="h3 mb-2 text-gray-800"><b>Order Id :</b> @order.OrderId</h1>
+
+                            @if (order.Orders?.CreatedAt.HasValue == true)
+                            {
+                                <h1 class="h3 mb-2 text-gray-800"><b>Order Date:</b> @order.Orders.CreatedAt.Value.ToString("MM/dd/yyyy")</h1>
+                            }
+                            else
+                            {
+                                <h1 class="h3 mb-2 text-gray-800"><b>Order Date:</b> No Date Available</h1>
+                            }
+                    }
+                    </div>
+
                     <div class="card mb-2 float-right">
                     </div>
                     <div class="card-body">
@@ -35,14 +45,14 @@
                             <table class="table table-bordered" id="dataTable" width="100%">
                                 <thead>
                                     <tr>
-                                        <th>Order Id</th>
-                                        <td>Customer</td>
+                                        <th>Order SubID</th>
+                                        <th>Product Name</th>
+                                        <th>Price Per Item</th>
+                                        <th>Quantity</th>
                                         <th>Total Price</th>
-                                        <th>Total Discount</th>
-                                        <th>Total Amount</th>
-                                        <th>Detailed Record</th>
-                                        <td> Order Status</td>
-                                   
+                                        <th> Status</th>
+
+
                                     </tr>
 
                                 </thead>
@@ -51,27 +61,40 @@
                                     @foreach (var records in Model)
                                     {
                                         <tr>
-                                            <td> @records.OrderId</td>
-                                            <td>@records.Customers.Name</td>
-                                            <td>@records.Orders.TotalPrice </td>
-                                            <td>@records.Orders.Discount  % </td>
-                                            <td>@records.Orders.TotalAmount </td>
-                                           <td>
-                                                @*     <a class='btn btn-danger' onclick='ShowOrderDetails(@records.OrderId)'><i class="fas fa-receipt fa-solid"></i></a></td> *@
-                                            <a class="btn btn-primary" asp-action="Details" asp-controller="Orders" asp-route-Orderid="@records.OrderId">
-                                                <i class="fas fa-receipt fa-solid" aria-hidden="true"></i>
-                                            </a>
+
+                                            <td>@records.Id</td>
+                                            <td>@records.Products.Name</td>
+                                            <td>@records.Price</td>
+                                            <td>@records.Quantity </td>
+                                            <td>@records.TotalPrice </td>
                                             <td>@records.Orders.OrderStatus</td>
-                                            
 
 
-                                          </tr>
+
+                                        </tr>
                                     }
                                 </tbody>
                             </table>
 
                         </div>
+
+
+
+                        <div style="float:right">
+                            @foreach (var orderGroup in Model.GroupBy(o => o.OrderId))
+                            {
+                                var order = orderGroup.FirstOrDefault();
+
+                                <h3 class="h3 mb-2 text-gray-800"> <b>Shipping Address  </b> @order.Customers.ShippingAddress</h3>
+                                <h3 class="h3 mb-2 text-gray-800"><b>Billing Address :</b> @order.Customers.BillingAddress</h3>
+                                <h2 class="h3 mb-2 text-gray-800"><b> Total Bill :</b> @order.Orders.TotalAmount</h2>
+
+
+                            }
+                        </div>
                     </div>
+               
+                
                 </div>
 
             </div>
@@ -88,10 +111,9 @@
     <script src="/vendor/jquery/jquery.min.js"></script>
     <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="/js/sb-admin-2.min.js"></script>
-    <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
     <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
     <script src="/js/demo/datatables-demo.js"></script>
-<script>
+    <script>
 
         //     try {
 
@@ -141,11 +163,11 @@
         //             console.log(response);
 
         //             // Clear previous table data
-        //             let table = $("#dataTable").DataTable(); 
+        //             let table = $("#dataTable").DataTable();
         //             table.clear().draw();
 
         //             // Assuming response is an array of objects
-                  
+
         //                 // Get data from the response object
         //                 var customerName = item.customers.Name;
         //                 var orderId = item.orderId; // Use camelCase for consistency
@@ -183,31 +205,9 @@
         //         }
         //     });
         // }
-        function ShowOrderDetails(id) {
-            $.ajax({
-                type: "GET",
-                url: "/Orders/ResultByOrderId",
-                data: { Orderid: id },
-                dataType: "json",
-                success: function (response) {debugger
-                    console.log(response);
-                    var rec = response[0];
-                    console.log(rec);
-                    var cus = rec.customers;
-                    
-                    // forEach (var s in cus) { console.log(s.Name);
-                    // }
-                },
-                error: function (xhr, status, error) {
-                    console.log("Error:", error);
-                    console.log("Status:", status);
-                    console.log("Response:", xhr.responseText);
-                }
-            });
-        }
+       
 
 
-    
     </script>
 
 }
