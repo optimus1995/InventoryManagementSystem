@@ -36,8 +36,16 @@ builder.Services.AddSerilog();
 builder.Host.UseSerilog();
 builder.Services.AddDefaultIdentity<IdentityUser>(option=> option .SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>(); 
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddAuthentication()
+.AddGoogle(options =>
+{
+    options.ClientId = "989657770936-sqru9cdhum2bcsorj11l844r3naj8par.apps.googleusercontent.com";
+                        
+
+    options.ClientSecret = "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";
+});
 var app = builder.Build();
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)

@@ -1,33 +1,105 @@
-﻿@page
-@model ExternalLoginModel
-@{
-    ViewData["Title"] = "Register";
-}
+﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 
-<h1>@ViewData["Title"]</h1>
-<h2 id="external-login-title">Associate your @Model.ProviderDisplayName account.</h2>
-<hr />
+namespace YourApp.Areas.Identity.Pages.Account
+{
+    [AllowAnonymous]
+    public class ExternalLoginModel : PageModel
+    {
+        private readonly SignInManager<IdentityUser>
+    _signInManager;
+    private readonly UserManager<IdentityUser>
+        _userManager;
+        private readonly IEmailSender _emailSender;
+        private readonly ILogger<ExternalLoginModel>
+            _logger;
 
-<p id="external-login-description" class="text-info">
-    You've successfully authenticated with <strong>@Model.ProviderDisplayName</strong>.
-    Please enter an email address for this site below and click the Register button to finish
-    logging in.
-</p>
+            public ExternalLoginModel(
+            SignInManager<IdentityUser>
+                signInManager,
+                UserManager<IdentityUser>
+                    userManager,
+                    IEmailSender emailSender,
+                    ILogger<ExternalLoginModel>
+                        logger)
+                        {
+                        _signInManager = signInManager;
+                        _userManager = userManager;
+                        _emailSender = emailSender;
+                        _logger = logger;
+                        }
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Email" class="form-control" autocomplete="email" placeholder="Please enter your email."/>
-                <label asp-for="Input.Email" class="form-label"></label>
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
-        </form>
-    </div>
-</div>
+                        [BindProperty]
+                        public InputModel Input { get; set; }
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+                        public string ProviderDisplayName { get; set; }
+
+                        public string ReturnUrl { get; set; }
+
+                        [TempData]
+                        public string ErrorMessage { get; set; }
+
+                        public class InputModel
+                        {
+                        [Required]
+                        [EmailAddress]
+                        public string Email { get; set; }
+                        }
+
+                        public IActionResult OnGet() => RedirectToPage("./Login");
+
+                        public IActionResult OnPost(string provider, string returnUrl = null)
+                        {
+                        var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
+                        var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+                        return new ChallengeResult(provider, properties);
+                        }
+
+                        public async Task<IActionResult>
+                            OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
+                            {
+                            returnUrl = returnUrl ?? Url.Content("~/");
+                            if (remoteError != null)
+                            {
+                            ErrorMessage = $"Error from external provider: {remoteError}";
+                            return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+                            }
+
+                            var info = await _signInManager.GetExternalLoginInfoAsync();
+                            if (info == null)
+                            {
+                            ErrorMessage = "Error loading external login information.";
+                            return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+                            }
+
+                            // Sign in the user with this external login provider if the user already has a login.
+                            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+                            if (result.Succeeded)
+                            {
+                            _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+                            return LocalRedirect(returnUrl);
+                            }
+                            if (result.IsLockedOut)
+                            {
+                            return RedirectToPage("./Lockout");
+                            }
+                            else
+                            {
+                            // If the user does not have an account, then ask the user to create an account.
+                            ReturnUrl = returnUrl;
+                            ProviderDisplayName = info.ProviderDisplayName;
+                            if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
+                            {
+

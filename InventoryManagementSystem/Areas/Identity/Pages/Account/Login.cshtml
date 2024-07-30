@@ -59,13 +59,29 @@
                                             <a class="btn btn-danger btn-user btn-block" asp-page="./ForgotPassword">
                                                 <i class="fab fa-user fa-fw"></i> Forgot your password.
                                             </a>
-                                            
+                                            <hr />
+                                           
+                                            <a class="btn btn-danger btn-user btn-block" asp-controller="Login" asp-action="Login">
+                                                <i class="fab fa-google fa-fw"></i> Login Using Google.
+                                            </a>
                                            
                                 </form>
                               </section>
                                     <hr>
-                                
-                                   
+
+                                    <form method="post" asp-controller="Login" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
+                                        <div>
+                                            @foreach (var provider in Model.ExternalLogins)
+                                            {
+                                                <button type="submit" class="btn btn-primary"
+                                                        name="provider" value="@provider.Name"
+                                                        title="Log in using your @provider.DisplayName account">
+                                                    @provider.DisplayName 
+                                                    sad
+                                                </button>
+                                            }
+                                        </div>
+                                    </form>
 
 
 
