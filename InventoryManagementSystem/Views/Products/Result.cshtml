@@ -1,5 +1,5 @@
 ﻿ @using ApplicationCore.DapperEntity
-@model List<Products>
+@model ProductViewModel
 @await Component.InvokeAsync("Inventory")
 <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -33,6 +33,18 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
+                            <a class="btn btn-primary" asp-action="Result" asp-controller="Products" asp-route-catid="">
+                                All Products
+                                <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                            </a>
+                            @foreach (var records in Model.Categories)
+                                    {
+                                <a class="btn btn-primary" asp-action="Result" asp-controller="Products" asp-route-catid="@records.Id">
+                                @records.Name
+                                <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                            </a>
+                                    }
+                            <hr />
                             <table class="table table-bordered" id="dataTable" width="100%" >
                                 <thead>
                                     <tr>
@@ -53,7 +65,7 @@
                                 </thead>
                                 <tbody>
 
-                                    @foreach (var records in Model)
+                                    @foreach (var records in Model.Products)
                                     {
                                         <tr>
                                             <td hidden> @records.Id</td>

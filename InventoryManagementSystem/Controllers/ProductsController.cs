@@ -31,18 +31,31 @@ namespace InventoryManagementSystem.Controllers
 
         [Route("Products/Result")]
         [HttpGet]
-        public async Task <IActionResult> Result()
+        public async Task <IActionResult> Result(int catid)
         {
             try
             {
+               
                 var i = (ClaimsIdentity)User.Identity;
                 var id = i.FindFirst(ClaimTypes.NameIdentifier);
                 string userid = id.Value;
-                
+                var categories = await _categoryRepository.GetAll();
+                List<Products> records;
+                if (catid == null|| catid==0)
+                {
 
+                     records = (List<Products>)await _productsRepository.GetAll(userid);
+                }
+                else {
+                     records = (List<Products>)await _productsRepository.ShowByCatID(catid, userid);
+                }
+                var viewModel = new ProductViewModel
+                {
+                    Products = records,
+                    Categories = (List<Category>)categories
+                };
 
-                var records = await _productsRepository.GetAll(userid);
-                return View(records);
+                return View(viewModel);
 
             }
             catch (Exception ex)
@@ -50,6 +63,7 @@ namespace InventoryManagementSystem.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+        
         [Route("Products/ShowProducts")]
         [HttpGet]
         public async Task<IActionResult> ShowProducts(int id) 
@@ -70,13 +84,8 @@ namespace InventoryManagementSystem.Controllers
             {
                 return StatusCode(500, "Internal server error");
             }
-
-
-
         }
-
-      
-        [Route("Products/SaveProduct")]
+          [Route("Products/SaveProduct")]
         [HttpGet]
         public async Task<IActionResult> SaveProduct()
         {
