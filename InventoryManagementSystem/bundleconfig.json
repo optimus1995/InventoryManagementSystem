@@ -1,0 +1,44 @@
+[
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/css/site.css",
+      "wwwroot/css/sb-admin-2.css",
+      "wwwroot/css/sb-admin-2.min.css"
+
+
+
+    ],
+    "minify": {
+      "enabled": false,
+      "renameLocals": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/js/site.min.js",
+    "inputFiles": [
+      "wwwroot/css/site.js",
+      "wwwroot/css/demo/chart-area-demo.js",
+      "wwwroot/css/demo/chart-bar-demo.js",
+      "wwwroot/css/demo/chart-pie-demo.js",
+      "wwwroot/css/demo/datatables-demo.js",
+      "wwwroot/vendor/chart.js/Chart.min.js",
+      "wwwroot/vendor/jquery/jquery.min.js",
+      "wwwroot/vendor/bootstrap/js/bootstrap.bundle.min.js",
+      "wwwroot/vendor/jquery-easing/jquery.easing.min.js",
+      "wwwroot/js/sb-admin-2.min.js",
+      "wwwroot/vendor/datatables/jquery.dataTables.min.js",
+      "wwwroot/vendor/datatables/dataTables.bootstrap4.min.js",
+      "wwwroot/js/demo/chart-area-demo.js",
+      "wwwroot/js/demo/chart-pie-demo.js",
+      "wwwrootwwwroot/css/sb-admin-2.js",
+      "wwwrootwwwroot/css/sb-admin-2.min.js"
+    ],
+    "minify": {
+      "enabled": false,
+      "renameLocals": true
+    }
+
+  }
+
+]

@@ -8,6 +8,10 @@ using ApplicationCore.Contract;
 using ApplicationCore.Context;
 using Infrastructure.Repository;
 using Infrastructure.Services;
+using Microsoft.CodeAnalysis.Options;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,7 +41,31 @@ builder.Host.UseSerilog();
 builder.Services.AddDefaultIdentity<IdentityUser>(option=> option .SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddRazorPages()
+    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+    .AddDataAnnotationsLocalization();
 
+
+//builder.Services.AddControllersWithViews().AddViewLocalization();
+builder.Services.AddLocalization(options =>
+{ 
+var supportedCultures = new[]
+{
+new CultureInfo("en-US"),
+new CultureInfo ("ur-PK"),
+new CultureInfo ("en-UK")
+}
+//var localizationOptions - new RequestLocalizationOptions
+//builder.Services.Configure<RequestLocalizationOptions>(options =>
+//options.DefaultRequestCulture = new RequestCulture("en"),
+//options.SupportedCulture
+options.DefaultRequestPath
+    }
+); 
+
+
+
+ 
 builder.Services.AddAuthentication()
 .AddGoogle(options =>
 {
