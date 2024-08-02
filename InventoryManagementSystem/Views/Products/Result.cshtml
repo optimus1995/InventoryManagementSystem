@@ -1,5 +1,7 @@
 ﻿ @using ApplicationCore.DapperEntity
 @model ProductViewModel
+@using  Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @await Component.InvokeAsync("Inventory")
 <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -9,6 +11,9 @@
 <a class="btn btn-primary" asp-action="SaveProduct" asp-controller="Products"> Add New
     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
 </a>
+
+<h1> @Localizer["Welcome"] </h1>
+
 <a class="btn btn-primary col-mb-2 float-right" asp-action="ExportRecord" asp-controller="Products">
     Export
     @* <i class="fas fa-pencil-alt" aria-hidden="true"></i> *@  <i class="fa-solid fa-file-export"></i>

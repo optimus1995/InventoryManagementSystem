@@ -2,3 +2,11 @@
     ViewData["Title"] = "Home Page";
 }
 @await Component.InvokeAsync("Inventory")
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+
+<h1> @Localizer["Welcome"] </h1>
+
+<h1>@Localizer["List"]</h1>

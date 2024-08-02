@@ -1,6 +1,12 @@
 ﻿ @using ApplicationCore.DapperEntity
 @model List<Products>
 @await Component.InvokeAsync("Inventory")
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+
+<h1> @Localizer["Welcome"] </h1>
+
 @*
 <h1 class="h3 mb-2 text-gray-800">Products Record</h1>
                     <div class="card shadow mb-4">
