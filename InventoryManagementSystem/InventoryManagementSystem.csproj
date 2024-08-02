@@ -44,9 +44,4 @@
     <ProjectReference Include="..\DataAccessLayer\ApplicationCore.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Resources\Controllers\" />
-    <Folder Include="Resources\Views\" />
-  </ItemGroup>
-
 </Project>

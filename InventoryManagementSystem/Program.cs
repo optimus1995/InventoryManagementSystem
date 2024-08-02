@@ -22,6 +22,23 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddTransient<IEmailSender, EmailServices>();
+
+//builder.Services.AddSingleton<LanguageServices>();
+builder.Services.AddRazorPages();
+
+
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+
+var supportedCultures = new[] { "ar" };
+var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
+    .AddSupportedUICultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+
+
+
+
 //builder.Services.AddScoped<Serilog.ILogger ,Logger>();
 
 builder.Services.AddSingleton<IEmailSender, EmailServices>();
@@ -41,27 +58,31 @@ builder.Host.UseSerilog();
 builder.Services.AddDefaultIdentity<IdentityUser>(option=> option .SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddRazorPages()
-    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-    .AddDataAnnotationsLocalization();
+//builder.Services.AddRazorPages()
+//    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+//    .AddViewLocalization()
+//    .AddDataAnnotationsLocalization(options => 
+//    options.DataAnnotationLocalizerProvider =(type, factory) 
+    
+//    )
+//    ;
 
 
-//builder.Services.AddControllersWithViews().AddViewLocalization();
-builder.Services.AddLocalization(options =>
-{ 
-var supportedCultures = new[]
-{
-new CultureInfo("en-US"),
-new CultureInfo ("ur-PK"),
-new CultureInfo ("en-UK")
-}
-//var localizationOptions - new RequestLocalizationOptions
-//builder.Services.Configure<RequestLocalizationOptions>(options =>
-//options.DefaultRequestCulture = new RequestCulture("en"),
-//options.SupportedCulture
-options.DefaultRequestPath
-    }
-); 
+////builder.Services.AddControllersWithViews().AddViewLocalization();
+//builder.Services.AddLocalization(options =>
+//{
+//    var supportedCultures = new[]
+//    {
+//new CultureInfo("en-US"),
+//new CultureInfo ("ur-PK"),
+//new CultureInfo ("en-UK")
+//};
+////var localizationOptions - new RequestLocalizationOptions
+////builder.Services.Configure<RequestLocalizationOptions>(options =>
+////options.DefaultRequestCulture = new RequestCulture("en"),
+////options.SupportedCulture
+//    }
+//); 
 
 
 
@@ -90,10 +111,10 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.UseRequestLocalization(localizationOptions);
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 
 app.UseAuthorization();

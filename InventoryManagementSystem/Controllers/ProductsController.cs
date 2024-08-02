@@ -11,6 +11,7 @@ using System.Data;
 using IronXL;
 using Infrastructure.Repository;
 using ClosedXML.Excel;
+using Microsoft.Extensions.Localization;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -18,12 +19,13 @@ namespace InventoryManagementSystem.Controllers
     public class ProductsController : Controller
     {
 
-
+        private IStringLocalizer<ProductsController> _stringLocalizer;
         private readonly IProductsRepository _productsRepository;
         private readonly ICategoryRepository _categoryRepository;
 
-        public ProductsController(IProductsRepository productsRepository, ICategoryRepository categoryRepository)
+        public ProductsController(IProductsRepository productsRepository, ICategoryRepository categoryRepository, IStringLocalizer<ProductsController>  stringLocalizer)
         {
+            _stringLocalizer = stringLocalizer;
             _productsRepository = productsRepository;
             _categoryRepository = categoryRepository;
         }
@@ -270,7 +272,35 @@ public async Task<IActionResult> ExportRecord()
         }
     }
 
-}
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> ResultName()
+        {
+            var article = _stringLocalizer["Article"];
+
+            return Ok(article.Value);
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
 
 
 }
