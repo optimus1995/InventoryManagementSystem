@@ -22,7 +22,7 @@ namespace Infrastructure.Services
             _localizer= factory.Create("SharedResource", assemblyName.Name);
         }
         public LocalizedString GetKey(string key) {
-
+            Console.WriteLine(key);
             return _localizer[key];
         
         

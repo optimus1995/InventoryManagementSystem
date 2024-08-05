@@ -1,12 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+ @inject Infrastructure.Services.LanguageServices LanguageServices
 @await Component.InvokeAsync("Inventory")
 
 @using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer Localizer
 
 
-<h1> @Localizer["Welcome"] </h1>
+<h1>@LanguageServices.GetKey("Welcome").Value</h1>
+<h1>@LanguageServices.GetKey("Record").Value</h1>
+<h1>@LanguageServices.GetKey("My Name is" ).Value Usama</h1>
 
-<h1>@Localizer["List"]</h1>

@@ -117,10 +117,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="List" xml:space="preserve">
-    <value>Liste</value>
+  <data name="Add New" xml:space="preserve">
+    <value>نیا شامل کریں</value>
+  </data>
+  <data name="Billing Address" xml:space="preserve">
+    <value>بل کا پتہ</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>قسم</value>
+  </data>
+  <data name="Created By" xml:space="preserve">
+    <value>بنائی گئی</value>
+  </data>
+  <data name="Created Date" xml:space="preserve">
+    <value>تشکیل کی تاریخ</value>
+  </data>
+  <data name="Customer List" xml:space="preserve">
+    <value>گاہک کی فہرست</value>
+  </data>
+  <data name="Designation" xml:space="preserve">
+    <value>عہدہ</value>
+  </data>
+  <data name="Get Records" xml:space="preserve">
+    <value>ریکارڈ حاصل کریں</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>نام</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>قیمت</value>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>مصنوعات</value>
+  </data>
+  <data name="Record" xml:space="preserve">
+    <value>Record </value>
+  </data>
+  <data name="Shipping Address" xml:space="preserve">
+    <value>شپنگ ایڈریس</value>
+  </data>
+  <data name="Total Products" xml:space="preserve">
+    <value>کل مصنوعات</value>
+  </data>
+  <data name="Total Quantity Available" xml:space="preserve">
+    <value>کل مقدار دستیاب ہے۔</value>
   </data>
   <data name="Welcome" xml:space="preserve">
-    <value>Bienvenue</value>
+    <value>خوش آمدید</value>
   </data>
 </root>

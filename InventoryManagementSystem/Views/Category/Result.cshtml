@@ -77,6 +77,7 @@
 
 @using ApplicationCore.DapperEntity
 @model List<Category>
+@inject Infrastructure.Services.LanguageServices LanguageServices
 
 <!-- Custom fonts for this template -->
 <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -109,10 +110,10 @@
                                     <tr>
                                         <th hidden>ID</th>
 
-                                        <th>Name</th>
-                                        <th>Total Products</th>
+                                        <th>@LanguageServices.GetKey("Name").Value</th>
+                                        <th>@LanguageServices.GetKey("Total Products").Value</th>
                                         <th>
-                                            Get Records
+                                            @LanguageServices.GetKey("Get Records").Value
                                         </th>
                                         <th>Edit</th>
                                     </tr>

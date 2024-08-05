@@ -2,11 +2,14 @@
 @model List<Products>
 @await Component.InvokeAsync("Inventory")
 @using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer Localizer
+@inject Infrastructure.Services.LanguageServices LanguageServices
 
 
-<h1> @Localizer["Welcome"] </h1>
 
+<h1> Welcome to The Inventory System </h1>
+<h1>@LanguageServices.GetKey("Welcome")</h1>
+<h1>@LanguageServices.GetKey("Record").Value</h1>
+<h1>@LanguageServices.GetKey("Record").Value</h1>
 @*
 <h1 class="h3 mb-2 text-gray-800">Products Record</h1>
                     <div class="card shadow mb-4">

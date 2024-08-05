@@ -1,13 +1,14 @@
 ﻿ @using ApplicationCore.DapperEntity
 @model List<Customers>
 @await Component.InvokeAsync("Inventory")
+@inject Infrastructure.Services.LanguageServices LanguageServices
 <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
       rel="stylesheet">
 <link href="/css/sb-admin-2.min.css" rel="stylesheet">
 <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 <a class="btn btn-primary" asp-action="SaveRecord" asp-controller="Customers">
-    Add New
+    @LanguageServices.GetKey("Add New").Value
     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
 </a>
 @* <a class="btn btn-primary col-mb-2 float-right" asp-action="ExportRecord" asp-controller="Customers">
@@ -37,12 +38,12 @@
                                     <tr>
                                         <th hidden>ID</th>
 
-                                        <th>Name</th>
+                                        <th>@LanguageServices.GetKey("Name").Value</th>
                                         <th>Email</th>
-                                        <th>Billing Address</th>
-                                        <th>Shipping Address</th>
-                                        <th>Created Date</th>
-                                        <td> Created By</td>
+                                        <th>@LanguageServices.GetKey("Billing Address").Value</th>
+                                        <th>@LanguageServices.GetKey("Shipping Address").Value</th>
+                                        <th>@LanguageServices.GetKey("Created Date").Value</th>
+                                        <td> @LanguageServices.GetKey("Created By").Value</td>
                                         <th>Actions</th>
                                     </tr>
 

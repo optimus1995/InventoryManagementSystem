@@ -2,7 +2,7 @@
 using ApplicationCore.Contract;
 using ApplicationCore.DapperEntity;
 using System.Security.Claims;
-
+using Microsoft.AspNetCore.Localization;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +10,7 @@ using Infrastructure.Repository;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using System.Text.Json;
+using Infrastructure.Services;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -19,8 +20,9 @@ namespace InventoryManagementSystem.Controllers
         private readonly IProductsRepository _productsRepository;
         private readonly ICustomersRepository _customersRepository;
         private readonly ICategoryRepository _categoryRepository;
-        public OrdersController(ICategoryRepository categoryRepository ,ICustomersRepository customersRepository, IOrdersRepository ordersRepository , IProductsRepository productsRepository)
-        { 
+        private LanguageServices _languageServices;
+        public OrdersController(LanguageServices languageServices, ICategoryRepository categoryRepository ,ICustomersRepository customersRepository, IOrdersRepository ordersRepository , IProductsRepository productsRepository)
+        {   _languageServices = languageServices;
             _categoryRepository = categoryRepository;
             _customersRepository = customersRepository; 
             _ordersRepository = ordersRepository;
@@ -30,17 +32,23 @@ namespace InventoryManagementSystem.Controllers
 
         public IActionResult Index( )
         {
+
             return View();
         }
 
         [Route("Orders/Result")]
         [HttpGet]
         public async Task<IActionResult> Result() {
-        
+            
+
+           
+            //get culture information
+         //   var currentCulture = Thread.CurrentThread.CurrentUICulture.Name;
         var s = await _ordersRepository.Result();
             Console.WriteLine(s);
             return View(s);
         }
+       
 
         [Route("Orders/Details")]
         [HttpGet]

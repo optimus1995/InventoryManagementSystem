@@ -91,7 +91,7 @@
 </head>
 
 <body id="page-top">
-     
+  
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -128,6 +128,14 @@
                 Interface
             </div>
 
+
+
+
+
+
+
+
+
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" asp-area="" asp-controller="Products" asp-action="Result" asp-route-id="">
@@ -159,6 +167,32 @@
                 </a>
             </li>
             <!-- Nav Item - Pages Collapse Menu -->
+
+          @* 
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages1"
+                   aria-expanded="true" aria-controls="collapsePages1">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>@Localizer["Select Language"]</span>
+                </a>
+                <div id="collapsePages1" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">@Localizer["Language Change"]</h6>
+                        <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="en-US" class="dropdown-item">
+                            <i class="flag-icon flag-icon-gb"></i> English
+                        </a>
+                        <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="fr-FR" class="dropdown-item">
+                            <i class="flag-icon flag-icon-fr"></i> French
+                        </a>
+                    </div>
+                </div>
+            </li>
+
+ *@
+
+
+
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                    aria-expanded="true" aria-controls="collapsePages">
@@ -395,8 +429,50 @@
 
                         <partial name="_LoginPartial" />
                     </ul>
+                   @*  <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdownLanguages" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-fw fa-folder"></i>
+                       Select Language
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownLanguages">
+                            <h6 class="dropdown-header">@Localizer["Language Change"]</h6>
+                            <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="en-US" class="dropdown-item">
+                                <i class="flag-icon flag-icon-gb"></i> English
+                            </a>
+                            <a asp-controller="Home" asp-action="ChangeLanguage" asp-route-culture="fr-FR" class="dropdown-item">
+                                <i class="flag-icon flag-icon-fr"></i> French
+                            </a>
+                        </div>
+                    </li> *@
 
                 </nav>
+
+@* 
+                <form asp-controller="Home" asp-action="ChangeLanguage" method="post">
+                    <div class="mb-3">
+                        <label for="Category" class="form-label">Category</label>
+                        <select name="culture" class="form-control">
+                            <option value="fr-FR">French</option>
+                            <option value="en-US">English</option>
+                        </select>
+                    </div>
+                </form> *@
+
+
+                <form asp-controller="Home" asp-action="ChangeLanguage" method="post">
+                    <div class="mb-3">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="languageDropdown" data-toggle="dropdown" aria-expanded="false">
+                                Select Language
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                                <li><button class="dropdown-item" type="submit" name="culture" value="fr-FR">Urdu</button></li>
+                                <li><button class="dropdown-item" type="submit" name="culture" value="en-US">English</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+
                 <!-- End of Topbar -->
                 <!-- Begin Page Content -->
                 <!-- /.container-fluid -->

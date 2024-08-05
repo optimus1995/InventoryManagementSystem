@@ -1,4 +1,6 @@
 ﻿ @using ApplicationCore.DapperEntity
+ @inject Infrastructure.Services.LanguageServices LanguageServices
+
 @model ProductViewModel
 @using  Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
@@ -11,11 +13,12 @@
 <a class="btn btn-primary" asp-action="SaveProduct" asp-controller="Products"> Add New
     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
 </a>
+</a>
 
-<h1> @Localizer["Welcome"] </h1>
+
 
 <a class="btn btn-primary col-mb-2 float-right" asp-action="ExportRecord" asp-controller="Products">
-    Export
+    @LanguageServices.GetKey("Export").Value
     @* <i class="fas fa-pencil-alt" aria-hidden="true"></i> *@  <i class="fa-solid fa-file-export"></i>
 
 </a>
@@ -55,12 +58,12 @@
                                     <tr>
                                         <th hidden>ID</th>
 
-                                        <th>Name</th>
+                                        <th> @LanguageServices.GetKey("Name").Value</th>
                                         <th>Description</th>
                                         <th>SKU</th>
-                                        <th>Price</th>
-                                        <th>Total Quantity Available</th>
-                                        <th>Created date</th>
+                                        <th> @LanguageServices.GetKey("Price").Value</th>
+                                        <th> @LanguageServices.GetKey("Total Quantity Available").Value</th>
+                                        <th> @LanguageServices.GetKey("Created Date").Value</th>
                                         <td hidden> CategoryId </td>
                                         <td> Category  </td>
                                         <td> User</td>

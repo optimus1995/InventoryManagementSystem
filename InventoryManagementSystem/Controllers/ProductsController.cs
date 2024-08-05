@@ -37,7 +37,8 @@ namespace InventoryManagementSystem.Controllers
         {
             try
             {
-               
+
+
                 var i = (ClaimsIdentity)User.Identity;
                 var id = i.FindFirst(ClaimTypes.NameIdentifier);
                 string userid = id.Value;

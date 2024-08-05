@@ -117,10 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="List" xml:space="preserve">
-    <value>Detailed List</value>
+  <data name="Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Customer List" xml:space="preserve">
+    <value>Customer List</value>
+  </data>
+  <data name="Designation" xml:space="preserve">
+    <value>Designation</value>
+  </data>
+  <data name="Get Records" xml:space="preserve">
+    <value>Get Records</value>
+  </data>
+  <data name="My Name is" xml:space="preserve">
+    <value>Hello ! My Name Is</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>Products</value>
+  </data>
+  <data name="Record" xml:space="preserve">
+    <value>Record </value>
+  </data>
+  <data name="Total Products" xml:space="preserve">
+    <value>Total Products</value>
+  </data>
+  <data name="Total Quantity Available" xml:space="preserve">
+    <value>Total Quantity Available</value>
   </data>
   <data name="Welcome" xml:space="preserve">
-    <value>Welcome to Products Page</value>
+    <value>Welcome !</value>
   </data>
 </root>
