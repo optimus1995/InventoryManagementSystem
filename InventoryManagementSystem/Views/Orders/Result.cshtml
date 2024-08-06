@@ -10,43 +10,33 @@
       rel="stylesheet">
 <link href="/css/sb-admin-2.min.css" rel="stylesheet">
 <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-<a class="btn btn-primary" asp-action="SaveOrder" asp-controller="Orders">
-    Add New
-    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-</a>
-@* <a class="btn btn-primary col-mb-2 float-right" asp-action="ExportRecord" asp-controller="Customers">
-    Export
-      <i class="fa-solid fa-file-export"></i>
 
-</a> *@
 
 <div id="wrapper">
     <div id="content-wrapper" class="d-flex flex-column">
-
-        <!-- Main Content -->
-        <div id="content">
-            <div class="container-fluid">
-
-                <h1 class="h3 mb-2 text-gray-800">Orders</h1>
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Orders Record</h6>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="m-0 font-weight-bold text-primary">Orders </h6>
+                            <a class="btn btn-primary" asp-action="SaveOrder" asp-controller="Orders">
+                                @LanguageServices.GetKey("Add New").Value
+                                <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
 
-                    </div>
-                    <div class="card mb-2 float-right">
-                    </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="dataTable" width="100%">
                                 <thead>
                                     <tr>
                                         <th>Order Id</th>
-                                        <td>Customer</td>
+                                        <th>Customer</th>
                                         <th>Total Price</th>
                                         <th>Total Discount</th>
                                         <th>Total Amount</th>
                                         <th>Detailed Record</th>
-                                        <td> Order Status</td>
+                                        <th> Order Status</th>
                                    
                                     </tr>
 
@@ -78,14 +68,10 @@
                         </div>
                     </div>
                 </div>
-
-            </div>
-
         </div>
-
     </div>
 
-</div>
+
 
 
 
@@ -191,7 +177,7 @@
         function ShowOrderDetails(id) {
             $.ajax({
                 type: "GET",
-                url: "/Orders/ResultByOrderId",
+                url: "/Orders/Detail",
                 data: { Orderid: id },
                 dataType: "json",
                 success: function (response) {debugger

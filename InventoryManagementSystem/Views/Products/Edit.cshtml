@@ -3,50 +3,58 @@
 @using ApplicationCore.DapperEntity
 
 @model  Products
-<h1>Update Record</h1>
-<form class="form mt-3" id="Updateform" method="post">
 
-    <div class="mb-3">
+<div class="card mt-4 ">
+    <div class="card-header">
+        <h5 class=" font-weight-bold text-primary">Update Product</h5>
+    </div>
+    <div class="card-body">
+
+<form class="form mt-3" id="Updateform" method="post">
+    <div class="row">
+    <div class="mb-3 col-md-6">
         <label for="ProductID" class="form-label">Id</label>
         <input type="text" asp-for="Id" class="form-control" disabled />
     </div>
 
-    <div class="mb-3">
+                <div class="mb-3 col-md-6">
         <label for="productName" class="form-label">Name</label>
         <input type="text" asp-for="Name" class="form-control" placeholder="Enter product name" required />
     </div>
-
-    <div class="mb-3">
-        <label for="productDescription" class="form-label">Description</label>
+    </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label for="productDescription" class="form-label">Description</label>
         <input type="text" asp-for="Description" class="form-control" placeholder="Enter product description" required />
     </div>
-
-    <div class="mb-3">
+                    <div class="mb-3 col-md-6">
         <label for="productSKU" class="form-label">SKU</label>
         <input type="text" asp-for="SKU" class="form-control" placeholder="Enter product SKU" required />
     </div>
+    </div>
 
-    <div class="mb-3">
-        <label for="productPrice" class="form-label">Price</label>
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label for="productPrice" class="form-label">Price</label>
         <input type="number" asp-for="Price" class="form-control" placeholder="Enter product price" required step=".0001"  />
     </div>
 
-    <div class="mb-3">
+                        <div class="mb-3 col-md-6">
         <label for="productQuantity" class="form-label">Quantity</label>
         <input type="number" asp-for="quantity" class="form-control" placeholder="Enter product quantity" required min="1"  />
     </div>
-    <div class="mb-3">
-        @* <label for="CategoryID" class="form-label">Category</label> *@
-       @*  <select asp-for="CategoryID" class="form-control">
-            
-            @foreach (var category in ViewBag.Category)
-            {
-                <option value="@category.Id">@category.Name</option>
-                }
-        </select> *@
-        <label asp-for="CategoryID" class="form-label">Category</label>
-        <select class="form-control" asp-for="CategoryID" asp-items="@(new SelectList(@ViewBag.Category,"Id","Name"))"></select>
     </div>
 
+    <div class="row col-md-6">
+      
+        <label asp-for="CategoryID" class="form-label">Category</label>
+        <select class="form-control" asp-for="CategoryID" asp-items="@(new SelectList(@ViewBag.Category,"Id","Name"))"></select>
+          
+            </div>
+            <br />
+          
     <button type="submit" class="btn btn-primary">Save</button>
+           
 </form>
+</div>
+</div>

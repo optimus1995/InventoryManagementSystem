@@ -57,7 +57,7 @@ namespace InventoryManagementSystem.Controllers
                     Products = records,
                     Categories = (List<Category>)categories
                 };
-
+                ViewBag.SelectedCategoryId = catid;
                 return View(viewModel);
 
             }
@@ -78,7 +78,7 @@ namespace InventoryManagementSystem.Controllers
                 string userid = uid.Value;
 
 
-
+                ViewBag.SelectedCategoryId = id;
                 var records = await _productsRepository.ShowByCatID(id, userid);
                 return View(records);
 

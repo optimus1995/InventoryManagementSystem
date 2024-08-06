@@ -63,6 +63,15 @@ namespace InventoryManagementSystem.Controllers
 
         }
 
+        public async Task<IActionResult> GetAll()
+        {
+            var s = await _ordersRepository.Result();
+            return View(s);
+        }
+
+
+
+
         public IActionResult SaveRecord()
         {
             return View();
@@ -146,6 +155,20 @@ namespace InventoryManagementSystem.Controllers
             }
             return Json("");
         }
+
+
+   
+
+
+
+
+
+
+
+
+
+
+
 
     }
 }

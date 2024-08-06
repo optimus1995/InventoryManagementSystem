@@ -7,30 +7,26 @@
       rel="stylesheet">
 <link href="/css/sb-admin-2.min.css" rel="stylesheet">
 <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-<a class="btn btn-primary" asp-action="SaveRecord" asp-controller="Customers">
-    @LanguageServices.GetKey("Add New").Value
-    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-</a>
-@* <a class="btn btn-primary col-mb-2 float-right" asp-action="ExportRecord" asp-controller="Customers">
-    Export
-      <i class="fa-solid fa-file-export"></i>
 
-</a> *@
+
 <div id="wrapper">
     <div id="content-wrapper" class="d-flex flex-column">
 
         <!-- Main Content -->
-        <div id="content">
-            <div class="container-fluid">
+         
 
-                <h1 class="h3 mb-2 text-gray-800">Products</h1>
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Customers List</h6>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="m-0 font-weight-bold text-primary">Customers Record</h6>
+                            <a class="btn btn-primary" asp-action="SaveRecord" asp-controller="Customers">
+                                @LanguageServices.GetKey("Add New").Value
+                                <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
 
-                    </div>
-                    <div class="card mb-2 float-right">
-                    </div>
+                 
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="dataTable" width="100%">
@@ -78,9 +74,8 @@
                     </div>
                 </div>
 
-            </div>
 
-        </div>
+      
 
     </div>
 

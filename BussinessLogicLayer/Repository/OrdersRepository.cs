@@ -331,5 +331,28 @@ where ord.IsActive =1 and ord.Id=@id";
             }
              
         }
+
+
+
+        public async Task<( int CustomersCount, int OrdersCount)> GetCount()
+        {
+            // Correct SQL query to get counts
+            var query = @"
+        SELECT 
+            (SELECT COUNT(*) FROM Customers) AS CustomersCount,
+            (SELECT COUNT(*) FROM Orders) AS OrdersCount"
+
+            ;
+
+
+            using (var connection = _Context.CreateConnection())
+            {
+                // Execute the query and get the result as a single row
+                var result = await connection.QuerySingleAsync<( int CustomersCount, int OrdersCount)>(query);
+                return result;
+            }
+        }
+
+
     }
 }

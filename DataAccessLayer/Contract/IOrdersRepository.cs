@@ -14,6 +14,7 @@ namespace ApplicationCore.Contract
         public Task<IEnumerable<OrderItems>> ResultByOrderId(int Orderid);
 
         public Task<OrderDetails> CreateOrders(Orders orders);
+        public Task<(int CustomersCount, int OrdersCount)> GetCount();
 
     }
 }

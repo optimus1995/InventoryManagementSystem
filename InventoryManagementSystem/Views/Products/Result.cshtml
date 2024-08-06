@@ -1,6 +1,15 @@
 ﻿ @using ApplicationCore.DapperEntity
  @inject Infrastructure.Services.LanguageServices LanguageServices
+@{
+    var selectedCategoryId = ViewBag.SelectedCategoryId as int?;
+    var allProductsButtonClass = (ViewBag.SelectedCategoryId == null || ViewBag.SelectedCategoryId == 0) ? "btn btn-success" : "btn btn-primary";
 
+}  
+<style>
+    .active-category {
+        background-color: yellow;
+        color: red    }
+</style>
 @model ProductViewModel
 @using  Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
@@ -10,49 +19,48 @@
       rel="stylesheet">
 <link href="/css/sb-admin-2.min.css" rel="stylesheet">
 <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-<a class="btn btn-primary" asp-action="SaveProduct" asp-controller="Products"> Add New
-    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-</a>
-</a>
 
-
-
-<a class="btn btn-primary col-mb-2 float-right" asp-action="ExportRecord" asp-controller="Products">
-    @LanguageServices.GetKey("Export").Value
-    @* <i class="fas fa-pencil-alt" aria-hidden="true"></i> *@  <i class="fa-solid fa-file-export"></i>
-
-</a>
-<a href="/vendor/datatables/dataTablesasdas.bootstrap4.min.css">as</a>
 <div id="wrapper">
     <div id="content-wrapper" class="d-flex flex-column">
 
         <!-- Main Content -->
-        <div id="content">
-            <div class="container-fluid">
+        
+            <div class="card">
 
-                <h1 class="h3 mb-2 text-gray-800">Products</h1>
-                <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Products Record</h6>
-                        
-                    </div> 
-                    <div class="card mb-2 float-right">
-                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="m-0 font-weight-bold text-primary">Products Record</h6>
+                            <div class="d-flex">
+                                <a class="btn btn-primary mr-2" asp-action="SaveProduct" asp-controller="Products">
+                                    Add New
+                                    <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                                </a>
+                                <a class="btn btn-primary" asp-action="ExportRecord" asp-controller="Products">
+                                    @LanguageServices.GetKey("Export").Value
+                                </a>
+                            </div>
+                        </div>
                     </div>
+
                     <div class="card-body">
                         <div class="table-responsive">
-                            <a class="btn btn-primary" asp-action="Result" asp-controller="Products" asp-route-catid="">
+                          
+                            <a class="@allProductsButtonClass" asp-action="Result" asp-controller="Products" asp-route-catid="">
                                 All Products
-                                <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                             </a>
-                            @foreach (var records in Model.Categories)
-                                    {
-                                <a class="btn btn-primary" asp-action="Result" asp-controller="Products" asp-route-catid="@records.Id">
-                                @records.Name
-                                <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-                            </a>
-                                    }
+
+                         
+                           @foreach (var records in Model.Categories)
+{
+                                var buttonClass = ViewBag.SelectedCategoryId == @records.Id ? "btn btn-success" : "btn btn-primary";
+
+                          <a class="@buttonClass" asp-action="Result" asp-controller="Products" asp-route-catid="@records.Id">
+                                   @records.Name
+                                 </a>
+}
+
                             <hr />
+ 
                             <table class="table table-bordered" id="dataTable" width="100%" >
                                 <thead>
                                     <tr>
@@ -64,9 +72,9 @@
                                         <th> @LanguageServices.GetKey("Price").Value</th>
                                         <th> @LanguageServices.GetKey("Total Quantity Available").Value</th>
                                         <th> @LanguageServices.GetKey("Created Date").Value</th>
-                                        <td hidden> CategoryId </td>
-                                        <td> Category  </td>
-                                        <td> User</td>
+                                        <th hidden> CategoryId </th>
+                                        <th> Category  </th>
+                                        <th> User</th>
                                         <th>Actions</th>
                                     </tr>
 
@@ -88,10 +96,10 @@
                                             <td> @records.AspNetUsers.UserName</td>
 
                                             <td>
-                                                <a class="btn btn-primary" asp-action="Edit" asp-controller="Customers" asp-route-id="@records.Id">
+                                                <a class="btn btn-primary" asp-action="Edit" asp-controller="Products" asp-route-id="@records.Id">
                                                     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                                                 </a>
-                                                <a class="btn btn-danger" asp-action="Delete" asp-controller="Customers" asp-route-id="@records.Id">
+                                                <a class="btn btn-danger" asp-action="Delete" asp-controller="Products" asp-route-id="@records.Id">
                                                     <i class="fas fa-trash" aria-hidden="true"></i>
                                                 </a>
                                             </td>
@@ -102,11 +110,11 @@
 
                         </div>
                     </div>
-                </div>
+              
 
             </div>
 
-        </div>
+    
 
     </div>
 

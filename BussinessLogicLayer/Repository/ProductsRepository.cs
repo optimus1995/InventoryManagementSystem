@@ -381,9 +381,12 @@ namespace Infrastructure.Repository
             var query = @"
         SELECT 
             (SELECT COUNT(*) FROM Products) AS ProductCount, 
-            (SELECT COUNT(*) FROM Category) AS CategoryCount";
+            (SELECT COUNT(*) FROM Category) AS CategoryCount
+ "
 
-            // Using a connection to the database
+            ;
+
+
             using (var connection = _Context.CreateConnection())
             {
                 // Execute the query and get the result as a single row

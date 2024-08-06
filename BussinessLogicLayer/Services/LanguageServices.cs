@@ -15,8 +15,6 @@ namespace Infrastructure.Services
         private readonly IStringLocalizer _localizer;
         public LanguageServices(IStringLocalizer stringLocalizer, IStringLocalizerFactory factory  )
         {
-                 
-
             var type = typeof( SharedResource );
             var assemblyName = new AssemblyName(type.GetTypeInfo().Assembly.FullName);
             _localizer= factory.Create("SharedResource", assemblyName.Name);
@@ -24,10 +22,6 @@ namespace Infrastructure.Services
         public LocalizedString GetKey(string key) {
             Console.WriteLine(key);
             return _localizer[key];
-        
-        
         }
-
-
     }
 }

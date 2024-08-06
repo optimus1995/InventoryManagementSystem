@@ -6,10 +6,15 @@
 @using ApplicationCore.DapperEntity
 @model CustomerProductView
 
-<h1>Order</h1>
+<div class="card mt-4 ">
+    <div class="card-header">
+        <h5 class="m-0 font-weight-bold text-primary">Order</h5>
+    </div>
+    <div class="card-body">
+
 <form class="form mt-3" method="post" onsubmit="AddProductstoDb()">
-    <div class="mb-3">
-        <div class="mb-3">
+    <div class="row">
+        <div class="col-md-6">
             <label for="Customer" class="form-label">Select Customer</label>
             <select name="CustomerId" id="customerDropdown" class="form-control" onchange="updateCustomer()">
                 <option value="" disabled selected>Select Customer</option>
@@ -20,24 +25,28 @@
                 }
             </select>
         </div>
-
+        <div class="col-md-6">
 
         <label class="form-label" hidden>CustomerId</label>
         <input type="text" id="CustomerId" name="CustomerId" class="form-control" value="@Model.CustomerId" hidden />
-    </div>
-    <div class="mb-3">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
         <label for="CustomerName" class="form-label">Customer Name</label>
         <input type="text" id="CustomerName" name="CustomerName" class="form-control" disabled />
     </div>
-    <div class="mb-3">
+    <div class="col-md-6">
         <label for="CustomerBillingAddress" class="form-label">Billing Address</label>
         <input type="text" id="CustomerBillingAddress" name="CustomerBillingAddress" disabled class="form-control" />
-    </div>
-    <div class="mb-3">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
         <label for="CustomerShippingAddress" class="form-label">Shipping Address</label>
         <input type="text" id="CustomerShippingAddress" name="CustomerShippingAddress" class="form-control" placeholder="" disabled />
     </div>
-    <div class="mb-3">
+    <div class="col-md-6">
         <label for="Category" class="form-label">Categories</label>
         <select name="CategoryId" id="CategoryDropdown" class="form-control" required onchange="updateProductList()">
             <option value="" disabled selected>Select category</option>
@@ -47,7 +56,9 @@
             }
         </select>
     </div>
-    <div class="mb-3">
+            </div>
+            <div class="row">
+                <div class="col-md-6">
         <label for="Products" class="form-label">Products</label>
         <select name="ProductId" id="productDropdown" class="form-control" onchange="updatePrice()">
             <option value="" disabled selected>Select Product</option>
@@ -59,23 +70,35 @@
         </select>
     </div>
    
-    <div class="mb-3">
+    <div class="col-md-6">
         <label for="ProductQuantity" class="form-label">Price Per Piece <span style="color: red;">*</span></label>
         <input type="text" id="ProductPrice" readonly name="ProductPrice" class="form-control" min="1" placeholder="" required />
     </div>
-    <div class="mb-3">
+            </div>
+            <div class="row">
+                <div class="col-md-6">
         <label for="ProductQuantity" class="form-label">Quantity <span style="color: red;">*</span></label>
         <input type="number" id="Quantity" name="ProductQuantity" class="form-control" min="1" onchange="Updatetotal()" placeholder="" required />
     </div>
-    <div class="mb-3">
+    <div class="col-md-6">
         <label for="Price" class="form-label"> Total Price</label>
         <input type="text" id="TotalPrice" readonly name="TotalPrice" class="form-control" placeholder="" />
     </div>
-    <div class="mb-3">
-        <label for="Price" class="form-label" hidden>Price</label>
+            </div>
+            <br />
+            <div class="row">
+                <div >
+                    <label for="Price" class="form-label" hidden>Price</label>
         <input type="text" id="TotalProductPrice" readonly name="TotalProductPrice" class="form-control" placeholder="" hidden />
-    </div>
+    </div> 
+    
+    <div class="col-md-6">
     <button type="button" class="btn btn-primary"onclick="AddDetailRecord()" >Add to Cart</button>
+    </div>
+    </div>
+    <br />
+    <div class="row">
+       
     <div  id="dynamictable" class="table-responsive mb-3">
         <table class="table table-bordered" id="orderstable">
             <thead>
@@ -91,26 +114,32 @@
             </tbody>
         </table>
     </div>
+    </div>
 
-    <div class="mb-3">
+<div class="row">
+    <div class="col-md-6">
         <label for="ProductQuantity" class="form-label">Discount </label>
         <input type="number" id="Discount" name="Discount" max="100" onchange="Updatediscount()" class="form-control" min="1" placeholder="" />
     </div>
-    <div class="mb-3">
+    <div class="col-md-6">
         <label for="ProductQuantity" class="form-label">Amount to be Paid </label>
         <input type="number" id="DiscountedPrice" readonly name="TotalAmount" class="form-control" min="1" placeholder="" />
     </div>
+    </div>
     
-    <div style="text-align: right;">
+    <div class="row">
+        <div class="col-md-6"></div>
+    <div style="text-align: right;" class="col-md-6">
         <a class="btn btn-danger" asp-action="Result" asp-controller="Orders">
             Cancel Order
             <i class="fa fa-close" aria-hidden="true"></i>
         </a>
         <button type="submit" id="Saveorderbtn" class="btn btn-primary">Save</button>
     </div>
-
+    </div>
 </form>
-
+</div>
+</div>
 
 
 @section scripts {

@@ -132,11 +132,17 @@
   <data name="Created Date" xml:space="preserve">
     <value>تشکیل کی تاریخ</value>
   </data>
+  <data name="Customer" xml:space="preserve">
+    <value>صارف</value>
+  </data>
   <data name="Customer List" xml:space="preserve">
     <value>گاہک کی فہرست</value>
   </data>
   <data name="Designation" xml:space="preserve">
     <value>عہدہ</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>ترمیم</value>
   </data>
   <data name="Get Records" xml:space="preserve">
     <value>ریکارڈ حاصل کریں</value>

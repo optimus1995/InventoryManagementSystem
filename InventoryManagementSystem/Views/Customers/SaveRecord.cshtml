@@ -10,32 +10,38 @@
 }\
 
 @using ApplicationCore.DapperEntity
-
-<h1>Customer Data</h1>
-<form class="form mt-3" id="saveform" method="post">
-
-
-    <div class="mb-3">
-        <label for="Name" class="form-label">Name</label>
-        <input type="text" name="Name" class="form-control" placeholder="Enter Customer name" required />
+<div class="card mt-4 ">
+    <div class="card-header">
+        <h5 class="font-weight-bold text-primary">Customer Data</h5>
     </div>
+    <div class="card-body">
+        <form class="form mt-3" id="saveform" method="post">
 
-    <div class="mb-3">
-        <label for="Email" class="form-label">Email</label>
-        <input type="email" name="Email" class="form-control" placeholder="Enter Email" />
+            <!-- Row 1: Name and Email -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="Name" class="form-label">Name</label>
+                    <input type="text" name="Name" class="form-control" placeholder="Enter Customer name" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="Email" class="form-label">Email</label>
+                    <input type="email" name="Email" class="form-control" placeholder="Enter Email" />
+                </div>
+            </div>
+
+            <!-- Row 2: Billing Address and Shipping Address -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="BillingAddress" class="form-label">Billing Address</label>
+                    <input type="text" name="BillingAddress" class="form-control" placeholder="Billing Address" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="ShippingAddress" class="form-label">Shipping Address</label>
+                    <input type="text" name="ShippingAddress" class="form-control" placeholder="Shipping Address" />
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
     </div>
-
-    <div class="mb-3">
-        <label for="BillingAddress" class="form-label">Billing Address</label>
-        <input type="text" name="BillingAddress" class="form-control" placeholder="Billing Address" required />
-    </div>
-
-    <div class="mb-3">
-        <label for="ShippingAddress" class="form-label">Shipping Address</label>
-        <input type="text" name="ShippingAddress" class="form-control" placeholder="Shipping Address" />
-    </div>
-
-
-
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
+</div>

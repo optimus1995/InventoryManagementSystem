@@ -3,38 +3,44 @@
 @model IEnumerable<Category>
 
 
+<div class="card mt-4 ">
+    <div class="card-header">
+        <h5 class=" font-weight-bold text-primary">Add Product</h5>
+    </div>
+    <div class="card-body">
 
-<h1>Add Product</h1>
+
 <form class="form mt-3" id="saveform" method="post">
-
-  
-    <div class="mb-3">
+    <div class="row">
+    <div class="col-md-6 mb-3">
         <label for="productName" class="form-label">Name</label>
         <input type="text" name="Name" class="form-control" placeholder="Enter product name" required />
     </div>
 
-    <div class="mb-3">
-        <label for="productDescription" class="form-label">Description</label>
+                <div class="col-md-6 mb-3">
+                    <label for="productDescription" class="form-label">Description</label>
         <input type="text" name="Description" class="form-control" placeholder="Enter product description" required />
     </div>
-
-    <div class="mb-3">
-        <label for="productSKU" class="form-label">SKU</label>
+    </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="productSKU" class="form-label">SKU</label>
         <input type="text" name="SKU" class="form-control" placeholder="Enter product SKU" required />
     </div>
 
-    <div class="mb-3">
+                <div class="col-md-6 mb-3">
         <label for="productPrice" class="form-label">Price</label>
         <input type="number" name="Price" class="form-control" placeholder="Enter product price" required step=".0001" />
     </div>
-
-    <div class="mb-3">
+    </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
         <label for="productQuantity" class="form-label">Quantity</label>
         <input type="number" name="quantity" class="form-control" placeholder="Enter product quantity" required min="1" />
     </div>
-   
 
-    <div class="mb-3">
+
+                <div class="col-md-6 mb-3">
 
        <label for="Category" class="form-label">Category</label>
            <select name="CategoryID" class="form-control" >
@@ -45,6 +51,8 @@
            </select>
       
     </div>
-
+    </div>
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
+</div>
+</div>

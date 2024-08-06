@@ -5,5 +5,9 @@
     {
         public int ProductCount { get; set; }
         public int CategoryCount { get; set; }
+
+        public int CustomersCount { get; set; }
+
+        public int OrdersCount { get; set; }
     }
 }

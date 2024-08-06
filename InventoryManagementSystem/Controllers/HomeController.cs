@@ -22,7 +22,7 @@ namespace InventoryManagementSystem.Controllers
         {
 
 
-         ViewData["Product"] = _stringLocalizer["Welcome"].Value;
+    
             return View();
         }
 
