@@ -42,6 +42,7 @@ namespace InventoryManagementSystem.Controllers
                 var i = (ClaimsIdentity)User.Identity;
                 var id = i.FindFirst(ClaimTypes.NameIdentifier);
                 string userid = id.Value;
+
                 var categories = await _categoryRepository.GetAll();
                 List<Products> records;
                 if (catid == null|| catid==0)
@@ -94,7 +95,7 @@ namespace InventoryManagementSystem.Controllers
         {
             //  List<Category> categories = new List<Category>();
            
-            var categories = await _categoryRepository.GetAll();
+            var categories = await _categoryRepository.GetAllCategories ();
             
             Console.WriteLine(categories);
 
@@ -284,22 +285,19 @@ public async Task<IActionResult> ExportRecord()
             return Ok(article.Value);
 
         }
+        public async Task<IActionResult> GraphResult()
+        {
+            try
+            {
+                var record = await _productsRepository.GetCountforChart();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                return Json(record);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
     }
 

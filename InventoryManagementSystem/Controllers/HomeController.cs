@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using System.Diagnostics;
 using Infrastructure.Repository;
+using ApplicationCore.Contract;
+using ApplicationCore.DapperEntity;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -11,6 +13,7 @@ namespace InventoryManagementSystem.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IStringLocalizer<HomeController> _stringLocalizer;
+      
 
         public HomeController(ILogger<HomeController> logger, IStringLocalizer<HomeController> stringLocalizer)
         {
@@ -53,5 +56,8 @@ namespace InventoryManagementSystem.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        
+
     }
 }

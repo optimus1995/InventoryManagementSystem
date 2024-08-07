@@ -397,56 +397,27 @@ namespace Infrastructure.Repository
 
 
 
+        public async Task<IEnumerable<ProductCategoryGraph>> GetCountforChart()
+        {
+            // Correct SQL query to get counts of products per category
+            var query = @"
+    SELECT 
+        c.Name AS CategoryName, 
+        COUNT(p.Id) AS ProductCount
+    FROM 
+        Category c
+    LEFT JOIN 
+        Products p ON c.Id = p.CategoryId
+    GROUP BY 
+        c.Name;";
 
-        //public async  Task<Products> UpdateProducts(Products product)
-        //{int Id=product.Id;
-        //    var query = "Update  Products (Name, Description, SKU, Price, Quantity ,CreatedAt,IsActive) " +
-        //                 "VALUES (@Name, @Description, @SKU, @Price, @Quantity,@CreatedAt, @IsActive) where Id='@Id; ";
+            using (var connection = _Context.CreateConnection())
+            {
+                // Execute the query and get the results as a list of ProductCategoryGraph
+                var result = await connection.QueryAsync<ProductCategoryGraph>(query);
+                return result;
+            }
+        }
 
-
-        //    var parameters = new DynamicParameters();
-        //    parameters.Add("@Id", product.Id, DbType.Int32);
-        //    parameters.Add("@Name", product.Name, DbType.String); ;
-        //    parameters.Add("@Description", product.Description, DbType.String);
-        //    parameters.Add("@SKU", product.SKU, DbType.Int32); // Assuming SKU is a string
-        //    parameters.Add("@Price", product.Price, DbType.Int32); // Assuming Price is a decimal
-        //    parameters.Add("@Quantity", product.quantity, DbType.Int32);
-        //    parameters.Add("@CreatedAt", product.CreatedAt, DbType.DateTime);
-        //    parameters.Add("@IsActive", true, DbType.Int32);
-
-        //    using (var connection = _Context.CreateConnection())
-        //    {
-        //        try
-        //        {
-        //            if (connection.State != System.Data.ConnectionState.Open)
-        //            {
-        //                connection.Open();
-        //            }
-        //            await connection.ExecuteAsync(query, parameters);
-
-        //            var created = new Products
-        //            {
-
-        //                // Use the newly generated Id
-        //                Id = product.Id,
-        //                Name = product.Name,
-        //                Description = product.Description,
-        //                SKU = product.SKU,
-        //                Price = product.Price,
-        //                quantity = product.quantity,
-        //                CreatedAt = product.CreatedAt,
-        //                IsActive = product.IsActive
-        //            };
-
-        //            return created;
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            // Handle the exception as necessary
-        //            Console.WriteLine($"An error occurred: {ex.Message}");
-        //            throw;
-        //        }
-        //    }
-        //}
     }
 }

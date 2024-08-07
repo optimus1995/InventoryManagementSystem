@@ -11,5 +11,6 @@ namespace ApplicationCore.Contract
         public Task<Category> GetrecordforUpdate(int id);
         public Task<IEnumerable<Category>> GetAll();
         public Task DeleteRecord(int id);
+        public Task<IEnumerable<Category>> GetAllCategories();
     }
 }

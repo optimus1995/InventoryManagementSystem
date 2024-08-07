@@ -13,5 +13,6 @@ namespace ApplicationCore.Contract
         public Task<IEnumerable<Products>> GetAll(string userid);
         public Task DeleteRecord(int id);
         public Task<(int ProductCount, int CategoryCount)> GetCount();
+        public Task<IEnumerable<ProductCategoryGraph>> GetCountforChart();
     }
 }

@@ -65,6 +65,31 @@ namespace Infrastructure.Repository
                 }
             }
         }
+        public async Task<IEnumerable<Category>> GetAllCategories()
+        {
+            try
+            {
+                var q = " SELECT c.ID,  c.Name FROM Category c";
+                using (var connection = _Context.CreateConnection())
+                {
+                    var data = await connection.QueryAsync<Category>(q);
+                    var query = data.ToList();
+                    // logger.LogInformation("Fetched categories with product counts: {@query}", query);
+
+                    return query;
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception as necessary
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw;
+            }
+
+        }
+
 
 
         public async Task<IEnumerable<Category>> GetAll()

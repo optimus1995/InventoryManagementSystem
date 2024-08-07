@@ -19,14 +19,14 @@
         <div class="col-xl-8 col-lg-7">
 
             <!-- Area Chart -->
-            <div class="card shadow mb-4">
+            <div class="card shadow mb-4 " >
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">Area Chart</h6>
                 </div>
                 <div class="card-body">
                     <div class="chart-area">
                         <canvas id="myAreaChart"></canvas>
-                    </div>
+                     </div>
                     <hr>
                     Styling for the area chart can be found in the
                     <code>/js/demo/chart-area-demo.js</code> file.
@@ -34,7 +34,7 @@
             </div>
 
             <!-- Bar Chart -->
-            <div class="card shadow mb-4">
+            <div class="card shadow mb-4" hidden>
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">Bar Chart</h6>
                 </div>
@@ -55,7 +55,7 @@
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Donut Chart</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Products</h6>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
@@ -63,8 +63,8 @@
                         <canvas id="myPieChart"></canvas>
                     </div>
                     <hr>
-                    Styling for the donut chart can be found in the
-                    <code>/js/demo/chart-pie-demo.js</code> file.
+                    <h3>Total Products: <span id="totalProductCount">0</span></h3>
+                    
                 </div>
             </div>
         </div>
@@ -75,53 +75,127 @@
 @section Scripts {
 <script>
     $(document).ready(function () {
-        ShowOrders();
-    
-    
+     //   ShowOrders();
+        // ShowProductsRecordGraph();
+        updateChart();
     })
-        // function ShowOrders() {
-        //     $.ajax({
-        //         type: "GET",
-        //         url: "/Orders/GetAll",
-               
-        //         dataType: "json",
-        //         success: function (response) {
-        //             debugger;
-                    
+        function ShowProductsRecordGraph() {debugger
 
-        //             // forEach (var s in cus) { console.log(s.Name);
-        //             // }
+            $.ajax({
+                type: "GET",
+                url: "/Products/GraphResult",
+
+                dataType: "json",
+                success: function (response) {
+                    debugger;
+                    response.forEach((item, index) => {
+                        console.log(`Item ${index + 1}:`, item);
+                    });
+                    console.log( response);
+
+                    updateChart(response);
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error:", error);
+                    console.log("Status:", status);
+                    console.log("Response:", xhr.responseText);
+                }
+            });
+        }
+
+        // function updateChart(data) {
+        //     debugger;
+        //     const categoryNames = data.map(item => item.categoryName);
+        //     const productCounts = data.map(item => item.productCount);
+          
+
+        //     const ctx = document.getElementById('categoryChart').getContext('2d');
+
+        //     new Chart(ctx, {
+        //         type: 'bar',
+        //         data: {
+        //             labels: categoryNames,
+        //             datasets: [{
+        //                 label: 'Number of Products per Category',
+        //                 data: productCounts,
+        //                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        //                 borderColor: 'rgba(54, 162, 235, 1)',
+        //                 borderWidth: 1
+        //             }]
         //         },
-        //         error: function (xhr, status, error) {
-        //             console.log("Error:", error);
-        //             console.log("Status:", status);
-        //             console.log("Response:", xhr.responseText);
+        //         options: {
+        //             scales: {
+        //                 y: {
+        //                     beginAtZero: true
+        //                 }
+        //             }
         //         }
         //     });
         // }
+        // // Function to fetch data and update the chart
+        function updateChart() {
+            $.ajax({
+                type: "GET",
+                url: "/Products/GraphResult",
+                dataType: "json",
+                success: function (response) {debugger
+                    // Extract category names and product counts from the response
+                    const categoryNames = response.map(item => item.categoryName);
+                    const productCounts = response.map(item => item.productCount);
 
-        // function ShowOrders() {
-        //     $.ajax({
-        //         type: "GET",
-        //         url: "/Orders/GetAll",
-        //         dataType: "json",
-        //         success: function (response) {
-        //             // Extracting data for the chart
-        //             const labels = response.map(order => order.month);
-        //             const data = response.map(order => order.totalPrice);
+                    const totalProductCount = productCounts.reduce((acc, count) => acc + count, 0);
 
-        //             // Updating the chart
-        //             myLineChart.data.labels = labels;
-        //             myLineChart.data.datasets[0].data = data;
-        //             myLineChart.update();
-        //         },
-        //         error: function (xhr, status, error) {
-        //             console.log("Error:", error);
-        //             console.log("Status:", status);
-        //             console.log("Response:", xhr.responseText);
-        //         }
-        //     });
-        // }
+                    document.getElementById('totalProductCount').textContent = totalProductCount;
+
+                    // Create or update the Pie chart
+                    var ctx = document.getElementById("myPieChart").getContext('2d');
+
+                    if (window.myPieChart) {debugger
+                        // If chart already exists, update it
+                        window.myPieChart.data.labels = categoryNames;
+                        window.myPieChart.data.datasets[0].data = productCounts;
+                        window.myPieChart.update();
+                    } else {debugger
+                        // Create a new chart
+                        window.myPieChart = new Chart(ctx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: categoryNames,
+                                datasets: [{
+                                    data: productCounts,
+                                    backgroundColor: ['red', 'black', 'orange'],
+                                    hoverBackgroundColor: ['#8B0000', '#A9A9A9', '#FF8C00'],
+                                    hoverBorderColor: "rgba(234, 236, 244, 1)" 
+
+                                }],
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                tooltips: {
+                                    backgroundColor: "rgb(255,255,255)",
+                                    bodyFontColor: "#858796",
+                                    borderColor: '#dddfeb',
+                                    borderWidth: 1,
+                                    xPadding: 15,
+                                    yPadding: 15,
+                                    displayColors: false,
+                                    caretPadding: 10,
+                                },
+                                legend: {
+                                    display: true // Show legend for better understanding of categories
+                                },
+                                cutoutPercentage: 80,
+                            },
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error:", error);
+                    console.log("Status:", status);
+                    console.log("Response:", xhr.responseText);
+                }
+            });
+        }
 
 
 
@@ -236,17 +310,6 @@
                 }
             }
         });
-
-
-
-
-
-
-
-
-
-
-
 
 </script>
 
