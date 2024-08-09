@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Actions" xml:space="preserve">
+    <value>کارروائی</value>
+  </data>
   <data name="Add New" xml:space="preserve">
     <value>نیا شامل کریں</value>
   </data>
@@ -138,11 +141,23 @@
   <data name="Customer List" xml:space="preserve">
     <value>گاہک کی فہرست</value>
   </data>
+  <data name="Customers" xml:space="preserve">
+    <value>سارفین</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>تفصیل</value>
+  </data>
   <data name="Designation" xml:space="preserve">
     <value>عہدہ</value>
   </data>
+  <data name="Detail Record" xml:space="preserve">
+    <value>تفصیلی ریکارڈ</value>
+  </data>
   <data name="Edit" xml:space="preserve">
     <value>ترمیم</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>ای میل</value>
   </data>
   <data name="Get Records" xml:space="preserve">
     <value>ریکارڈ حاصل کریں</value>
@@ -152,6 +167,12 @@
   </data>
   <data name="Name" xml:space="preserve">
     <value>نام</value>
+  </data>
+  <data name="Order Id" xml:space="preserve">
+    <value>آرڈر کی شناخت</value>
+  </data>
+  <data name="Order Status" xml:space="preserve">
+    <value>حیثیت</value>
   </data>
   <data name="Price" xml:space="preserve">
     <value>قیمت</value>
@@ -165,13 +186,34 @@
   <data name="Shipping Address" xml:space="preserve">
     <value>شپنگ ایڈریس</value>
   </data>
+  <data name="Total Amount" xml:space="preserve">
+    <value>کل قیمت</value>
+  </data>
+  <data name="Total Category" xml:space="preserve">
+    <value>کل زمرہ</value>
+  </data>
+  <data name="Total Discount" xml:space="preserve">
+    <value>کل ڈسکاؤنٹ</value>
+  </data>
+  <data name="Total Orders" xml:space="preserve">
+    <value>کل آرڈرز</value>
+  </data>
+  <data name="Total Price" xml:space="preserve">
+    <value>کل قیمت</value>
+  </data>
   <data name="Total Products" xml:space="preserve">
     <value>کل مصنوعات</value>
   </data>
   <data name="Total Quantity Available" xml:space="preserve">
     <value>کل مقدار دستیاب ہے۔</value>
   </data>
+  <data name="User" xml:space="preserve">
+    <value>صارف</value>
+  </data>
   <data name="Welcome" xml:space="preserve">
     <value>خوش آمدید</value>
+  </data>
+  <data name="Welcome to Inventory Management System" xml:space="preserve">
+    <value>انوینٹری مینجمنٹ سسٹم میں خوش آمدید</value>
   </data>
 </root>

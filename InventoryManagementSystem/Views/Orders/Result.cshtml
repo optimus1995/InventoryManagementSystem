@@ -30,13 +30,18 @@
                             <table class="table table-bordered" id="dataTable" width="100%">
                                 <thead>
                                     <tr>
-                                        <th>Order Id</th>
-                                        <th>Customer</th>
-                                        <th>Total Price</th>
-                                        <th>Total Discount</th>
-                                        <th>Total Amount</th>
-                                        <th>Detailed Record</th>
-                                        <th> Order Status</th>
+                                <th @LanguageServices.GetKey("Order Id").Value></th><th>
+                                    @LanguageServices.GetKey("Customer").Value
+                                </th>
+                                <th>
+                                    @LanguageServices.GetKey("Total Price").Value
+                                </th>
+                                <th>
+                                @LanguageServices.GetKey("Total Discount").Value
+                                    </th> 
+                                    <th> @LanguageServices.GetKey("Total Amount").Value</th>
+                                <th> @LanguageServices.GetKey("Detail Record").Value</th>
+                                <th>@LanguageServices.GetKey("Order Status").Value</th>
                                    
                                     </tr>
 

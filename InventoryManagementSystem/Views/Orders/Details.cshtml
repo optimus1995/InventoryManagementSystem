@@ -4,106 +4,112 @@
 <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
       rel="stylesheet">
+      @inject Infrastructure.Services.LanguageServices LanguageServices
 <link href="/css/sb-admin-2.min.css" rel="stylesheet">
 <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-<div id="wrapper">
-    <div id="content-wrapper" class="d-flex flex-column">
 
-        <!-- Main Content -->
-        <div id="content">
-            <div class="container-fluid">
+<div id="content-wrapper" class="d-flex flex-column">
 
-                <h1 class="h3 mb-2 text-gray-800">Orders</h1>
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Order Detail</h6>
+    <!-- Main Content -->
 
-                    </div>
-                    <div>
-                        @foreach (var orderGroup in Model.GroupBy(o => o.OrderId))
-                        {
-                            var order = orderGroup.FirstOrDefault(); 
+    <div class="card  shadow mb-4">
 
-                            <h1 class="h3 mb-2 text-gray-800"> <b>Customer Name :</b>@order.Customers.Name</h1>
-                            <h1 class="h3 mb-2 text-gray-800"><b>Order Id :</b> @order.OrderId</h1>
-
-                            @if (order.Orders?.CreatedAt.HasValue == true)
-                            {
-                                <h1 class="h3 mb-2 text-gray-800"><b>Order Date:</b> @order.Orders.CreatedAt.Value.ToString("MM/dd/yyyy")</h1>
-                            }
-                            else
-                            {
-                                <h1 class="h3 mb-2 text-gray-800"><b>Order Date:</b> No Date Available</h1>
-                            }
-                    }
-                    </div>
-
-                    <div class="card mb-2 float-right">
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%">
-                                <thead>
-                                    <tr>
-                                        <th>Order SubID</th>
-                                        <th>Product Name</th>
-                                        <th>Price Per Item</th>
-                                        <th>Quantity</th>
-                                        <th>Total Price</th>
-                                        <th> Status</th>
-
-
-                                    </tr>
-
-                                </thead>
-                                <tbody>
-
-                                    @foreach (var records in Model)
-                                    {
-                                        <tr>
-
-                                            <td>@records.Id</td>
-                                            <td>@records.Products.Name</td>
-                                            <td>@records.Price</td>
-                                            <td>@records.Quantity </td>
-                                            <td>@records.TotalPrice </td>
-                                            <td>@records.Orders.OrderStatus</td>
+        <div class="card-header py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="m-0 font-weight-bold text-primary">Order Record</h2>
+            </div>
+           
 
 
 
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-
-                        </div>
 
 
 
-                        <div style="float:right">
-                            @foreach (var orderGroup in Model.GroupBy(o => o.OrderId))
-                            {
-                                var order = orderGroup.FirstOrDefault();
-
-                                <h3 class="h3 mb-2 text-gray-800"> <b>Shipping Address  </b> @order.Customers.ShippingAddress</h3>
-                                <h3 class="h3 mb-2 text-gray-800"><b>Billing Address :</b> @order.Customers.BillingAddress</h3>
-                                <h2 class="h3 mb-2 text-gray-800"><b> Total Bill :</b> @order.Orders.TotalAmount</h2>
-
-
-                            }
-                        </div>
-                    </div>
-               
-                
-                </div>
 
             </div>
+       
 
+        <div class="card-body">
+            <div class="table-responsive">
+            
+
+
+
+
+
+            @foreach (var orderGroup in Model.GroupBy(o => o.OrderId))
+            {
+                var order = orderGroup.FirstOrDefault();
+
+                <h6 h6 class="m-0 font-weight-bold text-primary"> <b>Customer Name :</b>@order.Customers.Name</h6>
+                <h6 h6 class="m-0 font-weight-bold text-primary"><b>Order Id :</b> @order.OrderId</h6>
+
+                @if (order.Orders?.CreatedAt.HasValue == true)
+                {
+                    <h6 h6 class="m-0 font-weight-bold text-primary"><b>Order Date:</b> @order.Orders.CreatedAt.Value.ToString("MM/dd/yyyy")</h6>
+                }
+                else
+                {
+                    <h6 h6 class="m-0 font-weight-bold text-primary"><b>Order Date:</b> No Date Available</h6>
+                }
+            }
+
+
+                <hr />
+
+            <div style="float:right">
+                @foreach (var orderGroup in Model.GroupBy(o => o.OrderId))
+                {
+                    var order = orderGroup.FirstOrDefault();
+
+                    <h3 h6 class="m-0 font-weight-bold text-primary"> <b>Shipping Address  </b> @order.Customers.ShippingAddress</h3>
+                    <h3 h6 class="m-0 font-weight-bold text-primary"><b>Billing Address :</b> @order.Customers.BillingAddress</h3>
+                    <h3 h6 class="m-0 font-weight-bold text-primary"><b> Total Bill :</b> @order.Orders.TotalAmount</h3>
+
+
+                }
+            </div>
+                <table class="table table-bordered" id="dataTable" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Order SubID</th>
+                            <th>Product Name</th>
+                            <th>Price Per Item</th>
+                            <th>Discount</th>
+                            <th>Total Price</th>
+                            <th> Status</th>
+                      
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var records in Model)
+                        {
+                            <tr>
+                                <td> @records.OrderId</td>
+                                <td>@records.Customers.Name</td>
+                                <td>@records.Orders.TotalPrice </td>
+                                <td>@records.Orders.Discount  % </td>
+                                <td>@records.Orders.TotalAmount </td>
+                                
+                                <td>@records.Orders.OrderStatus</td>
+
+
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
         </div>
+
 
     </div>
 
-</div>
+
 
 
 

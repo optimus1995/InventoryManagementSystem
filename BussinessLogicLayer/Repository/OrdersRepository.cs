@@ -12,9 +12,9 @@ using System.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
 namespace Infrastructure.Repository
 {
+
     public class OrdersRepository : IOrdersRepository
     {
-
 
         private DapperContext _Context;
 
