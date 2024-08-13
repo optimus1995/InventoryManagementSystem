@@ -34,7 +34,7 @@
                 </div>
                 <div class="card-body">
                     <div class="chart-bar">
-                        <canvas id="myBarChart"></canvas>
+                        <canvas id="myAreaChart"></canvas>
                     </div>
                     <hr>
                     
@@ -53,7 +53,7 @@
                 <!-- Card Body -->
                 <div class="card-body">
                     <div class="chart-pie pt-4">
-                        <canvas id="myPieChart"></canvas>
+                        <canvas id="myPieChart1"></canvas>
                     </div>
                     <hr>
                     <h3>Total Products: <span id="totalProductCount">0</span></h3>
@@ -72,6 +72,7 @@
      //   ShowOrders();
         // ShowProductsRecordGraph();
         updateChart();
+           updateChart1();
     })
         function ShowProductsRecordGraph() {debugger
 
@@ -142,7 +143,7 @@
                     document.getElementById('totalProductCount').textContent = totalProductCount;
 
                     // Create or update the Pie chart
-                    var ctx = document.getElementById("myPieChart").getContext('2d');
+                    var ctx = document.getElementById("myPieChart1").getContext('2d');
 
                     if (window.myPieChart) {debugger
                         // If chart already exists, update it
@@ -157,7 +158,7 @@
                                 labels: categoryNames,
                                 datasets: [{
                                     data: productCounts,
-                                    backgroundColor: ['red', 'black', 'orange'],
+                                    backgroundColor: ['red', 'black', 'orange','green','voilet','grey','purple'],
                                     hoverBackgroundColor: ['#8B0000', '#A9A9A9', '#FF8C00'],
                                     hoverBorderColor: "rgba(234, 236, 244, 1)" 
 
@@ -304,6 +305,114 @@
                 }
             }
         });
+
+
+
+
+        var barChart;
+
+        function updateChart1() {
+            $.ajax({
+                type: "GET",
+                url: "/Orders/BarGraphResult",
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+
+                    // Prepare data for the chart
+                    var labels = [];
+                    var data = [];
+
+
+                    response.forEach(function (item) {
+                        debugger
+                        console.log(item);
+                        labels.push(item.year + '-' + item.month); // e.g., "2024-08"
+                        data.push(item.amount);
+                    });
+                   
+                    // Destroy previous chart instance if it exists
+                    if (window.barChart) {
+                        window.barChart.destroy();
+                    }
+
+                    // Get the context of the canvas element we want to select
+                    var ctx = document.getElementById('myAreaChart').getContext('2d');
+
+                    // Create the bar chart with customizations
+                    window.barChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Total Ordered Amount',
+                                data: data,
+                                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1,
+                                barThickness: 30,
+                                maxBarThickness: 40
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Months',
+                                        font: {
+                                            size: 16,
+                                            family: 'Arial'
+                                        },
+                                        color: '#000000',
+                                        padding: 10
+                                    },
+                                    ticks: {
+                                        font: {
+                                            size: 14,
+                                            family: 'Arial'
+                                        },
+                                        color: '#000000',
+                                        padding: 10
+                                    },
+                                    barPercentage: 0.5,
+                                    categoryPercentage: 0.8
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Amount',
+                                        font: {
+                                            size: 16,
+                                            family: 'Arial'
+                                        },
+                                        color: '#000000',
+                                        padding: 10
+                                    },
+                                    ticks: {
+                                        font: {
+                                            size: 14,
+                                            family: 'Arial'
+                                        },
+                                        color: '#000000',
+                                        padding: 10
+                                    }
+                                }
+                            }
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error:", error);
+                    console.log("Status:", status);
+                    console.log("Response:", xhr.responseText);
+                }
+            });
+        }
+
+   
 
 </script>
 

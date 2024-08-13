@@ -69,6 +69,12 @@ namespace InventoryManagementSystem.Controllers
             return View(s);
         }
 
+        public async Task<IActionResult> GetBarChartResult()
+        {
+            var s = await _ordersRepository.BarChartOrderDetail();
+            return View(s);
+        }
+
 
 
 
@@ -157,7 +163,20 @@ namespace InventoryManagementSystem.Controllers
         }
 
 
-   
+        public async Task<IActionResult> BarGraphResult()
+        {
+            try
+            {
+                var record = await _ordersRepository.BarChartOrderDetail();
+
+                return Json(record);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
 
 
 

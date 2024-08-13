@@ -353,6 +353,32 @@ where ord.IsActive =1 and ord.Id=@id";
             }
         }
 
+        public async Task<IEnumerable<BarChartOrder>> BarChartOrderDetail()
+        {
+            var orderquery = "RecordforBarChart"; 
+            using (var connection = _Context.CreateConnection())
+            {
+                try
+                {
+                    if (connection.State != ConnectionState.Open)
+                    {
+                        connection.Open();
+                    }
+                    var result = await connection.QueryAsync<BarChartOrder>(
+                        orderquery,
+                        commandType: CommandType.StoredProcedure
+                    );
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    throw;
+                }
+            }
+        }
+
+
 
     }
 }

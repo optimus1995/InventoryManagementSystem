@@ -16,8 +16,12 @@ namespace InventoryManagementSystem.Controllers
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
 
-        public LoginController(UserManager<IdentityUser> _userManager, SignInManager<IdentityUser> _signInManager)
+
+        private readonly RoleManager<IdentityRole> _roleManager;
+
+        public LoginController(RoleManager<IdentityRole> roleManager,UserManager<IdentityUser> _userManager, SignInManager<IdentityUser> _signInManager)
         {
+            _roleManager = roleManager;
             userManager = _userManager;
             signInManager = _signInManager;
         }
@@ -99,6 +103,10 @@ namespace InventoryManagementSystem.Controllers
             return View(model);
         }
 
+
+
+
+
         [AllowAnonymous]
         [HttpPost]
         public IActionResult ExternalLogin(string provider, string returnUrl)
@@ -109,9 +117,6 @@ namespace InventoryManagementSystem.Controllers
 
             return new ChallengeResult(provider, properties);
         }
-
-
-
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallback(string? returnUrl, string? remoteError)
         {
@@ -180,7 +185,41 @@ namespace InventoryManagementSystem.Controllers
             }
         }
 
+        //[HttpGet]
+        //public async Task<IActionResult> EditRole(string roleId)
+        //{
+        //    //First Get the role information from the database
+        //    IdentityRole? role = await _roleManager.FindByIdAsync(roleId);
+        //    if (role == null)
+        //    {
+        //        // Handle the scenario when the role is not found
+        //        return View("Error");
+        //    }
 
+        //    //Populate the EditRoleViewModel from the data retrived from the database
+        //    var model = new EditRoleViewModel
+        //    {
+        //        Id = role.Id,
+        //        RoleName = role.Name,
+        //        Description = role.Description,
+        //        Users = new List<string>()
+        //        // You can add other properties here if needed
+        //    };
+
+        //    // Retrieve all the Users
+        //    foreach (var user in _userManager.Users.ToList())
+        //    {
+        //        // If the user is in this role, add the username to
+        //        // Users property of EditRoleViewModel. 
+        //        // This model object is then passed to the view for display
+        //        if (await _userManager.IsInRoleAsync(user, role.Name))
+        //        {
+        //            model.Users.Add(user.UserName);
+        //        }
+        //    }
+
+        //    return View(model);
+        //}
 
 
 

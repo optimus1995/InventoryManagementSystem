@@ -126,7 +126,6 @@ namespace Infrastructure.Repository
             }
         }
 
-
         public async Task<IEnumerable<Products>> GetAll(string userid)
         {
             //var i = 7;

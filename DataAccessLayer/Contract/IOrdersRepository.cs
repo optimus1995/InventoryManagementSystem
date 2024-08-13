@@ -13,6 +13,8 @@ namespace ApplicationCore.Contract
         public  Task<IEnumerable<OrderItems>> Result();
         public Task<IEnumerable<OrderItems>> ResultByOrderId(int Orderid);
 
+        public Task<IEnumerable<BarChartOrder>> BarChartOrderDetail();
+
         public Task<OrderDetails> CreateOrders(Orders orders);
         public Task<(int CustomersCount, int OrdersCount)> GetCount();
 
