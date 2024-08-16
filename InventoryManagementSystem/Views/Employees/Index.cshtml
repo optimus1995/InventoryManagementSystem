@@ -1,0 +1,215 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+ @using ApplicationCore.DapperEntity
+@model List<AspNetUsers>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@inject Infrastructure.Services.LanguageServices LanguageServices
+
+
+<link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+      rel="stylesheet">
+<link href="/css/sb-admin-2.min.css" rel="stylesheet">
+<link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+
+<div id="wrapper">
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Employees </h6>
+                   
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @LanguageServices.GetKey("EmailId").Value
+                                </th>
+                                <th>
+                                    @LanguageServices.GetKey("Id").Value
+                                </th>
+                                <th>
+                                    @LanguageServices.GetKey("User Id").Value
+                                </th>
+                                <th>
+                                    @LanguageServices.GetKey("Role").Value
+                                </th>
+                                <th>
+                                    @LanguageServices.GetKey("User Lock").Value
+                                </th>
+                                <th>
+                                    @LanguageServices.GetKey("Update Role").Value
+                                </th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+
+                            @foreach (var records in Model)
+                            {
+                                <tr>
+                                    <td> @records.NormalizedEmail</td>
+                                    <td>@records.Id</td>
+                                    <td>@records.UserName </td>
+                                    <td>@records.AspNetRoles.NormalizedName </td>
+                                            @{
+                                                DateTimeOffset? lockoutEnd = records.LockOutEnd;
+                                            }
+                                    <td>
+                                                @if (records.AspNetRoles.NormalizedName == "SUPERADMIN")
+                                                {
+                                            <a class="btn btn-success">
+                                                <i class="fa fa-user-tie"></i>
+                                            </a>
+                                                }
+                                                else
+                                                {
+                                                    @if (!lockoutEnd.HasValue || lockoutEnd <= DateTimeOffset.Now)
+                                                    {
+                                                <a class="btn btn-danger" onclick="SetUsertoLockedOut('@records.Id');">
+                                                    <i class="fa fa-lock-open"></i>
+                                                </a>
+                                                    }
+                                                    else
+                                                    {
+                                                <a class="btn btn-danger" onclick="SetUsertoUnlock('@records.Id');">
+                                                    <i class="fa fa-lock"></i>
+                                                </a>
+                                                    }
+                                                }
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-primary" asp-action="RoleUpdate" asp-controller="Employees" asp-route-userid="@records.Id">
+                                            Update
+                                        </a>
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section scripts {
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="/js/sb-admin-2.min.js"></script>
+    <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="/js/demo/datatables-demo.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+
+
+
+
+        function SetUsertoLockedOut(id) {
+            $.ajax({
+                type: "POST",
+                url: "/Login/LockoutUser",
+                data: { userId: id },
+                dataType: "json",
+                success: function (response) {
+                    if (response.success) {
+                        // Show SweetAlert on success
+                        Swal.fire({
+                            title: 'Good job!',
+                            text: 'User has been locked out successfully!',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            // Redirect to another page after closing the SweetAlert
+                            window.location.href = '/Employees/Index'; // Adjust the URL as needed
+                        });
+                    } else {
+                        // Show SweetAlert on error
+                        Swal.fire({
+                            title: 'Oops!',
+                            text: response.message || 'Something went wrong.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error:", error);
+                    console.log("Status:", status);
+                    console.log("Response:", xhr.responseText);
+
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Failed to process the request.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+
+
+        function SetUsertoUnlock(id) {
+            $.ajax({
+                type: "POST",
+                url: "/Login/UnlockUserLockOut",
+                data: { userId: id },
+                dataType: "json",
+                success: function (response) {
+                    if (response.success) {
+                        // Show SweetAlert on success
+                        Swal.fire({
+                            title: 'Good job!',
+                            text: 'User has been Unlocked successfully!',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href = '/Employees/Index'; // Adjust the URL as needed
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Oops!',
+                            text: response.message || 'Something went wrong.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error:", error);
+                    console.log("Status:", status);
+                    console.log("Response:", xhr.responseText);
+
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Failed to process the request.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+
+
+
+    </script>
+
+}s

@@ -221,6 +221,42 @@ namespace InventoryManagementSystem.Controllers
         //    return View(model);
         //}
 
+        public async Task<IActionResult> LockoutUser(string userId)
+        {
+            // Find the user by ID
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Set LockoutEnd to a specific time (e.g., 2 minutes from now)
+            await userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow.AddDays(2));
+
+            // Optionally, you can also set the user as locked out
+            await userManager.SetLockoutEnabledAsync(user, true);
+
+
+            return Json(new { success = true, message = "User unlocked successfully." });
+        }
+        public async Task<IActionResult> UnlockUserLockOut(string userId)
+        {
+            // Find the user by ID
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Set LockoutEnd to a specific time (e.g., 2 minutes from now)
+            await userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow);
+
+            // Optionally, you can also set the user as locked out
+            await userManager.SetLockoutEnabledAsync(user, true);
+
+
+            return Json(new { success = true, message = "User unlocked successfully." });
+        }
 
 
 

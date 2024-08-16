@@ -1,0 +1,26 @@
+﻿@using ApplicationCore.DapperEntity
+@{
+}
+@model AspNetRoles
+<div class="card mt-4 ">
+    <div class="card-header">
+        <h5 class="m-0 font-weight-bold text-primary">Update Record</h5>
+    </div>
+    <div class="card-body">
+        <form class="form" id="Updateform" method="post">
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label for="RoleId" class="form-label">Id</label>
+                    <input type="text" class="form-control" disabled />
+                </div>
+
+                <div class="mb-3 col-md-6">
+
+                    <label class="form-label">Category</label>
+                    <select class="form-control" asp-items="@(new SelectList(@ViewBag.AspNetRoles,"RoleId","NormalizedName"))"></select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+</div>

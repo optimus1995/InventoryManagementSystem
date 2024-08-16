@@ -1,0 +1,33 @@
+﻿ @using ApplicationCore.DapperEntity
+@model AspNetUserRoleAssigned
+<div class="card mt-4 ">
+    <div class="card-header">
+        <h5 class="m-0 font-weight-bold text-primary">Update Record</h5>
+    </div>
+    <div class="card-body">
+        <form class="form" id="Updateform" method="post">
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label asp-for="UserId" class="form-label">Id</label>
+                    <input type="text" asp-for="UserId" value="@Model.UserName" class="form-control" disabled />
+                </div>
+              
+
+                <div class="mb-3 col-md-6">
+
+                    <label  class="form-label">Roles</label>
+                <select class="form-control"  asp-for="RoleId" asp-items="@(new SelectList(@ViewBag.Roles,"Id","Name"))"></select>
+
+                </div> 
+                
+
+
+            </div>
+            <div class="row ">
+                <div class="mb-3 col-md-6 float-right">
+            <button   type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

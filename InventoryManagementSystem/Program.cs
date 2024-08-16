@@ -324,9 +324,11 @@ internal class Program
         builder.Services.AddScoped<ICustomersRepository, CustomersRepository>();
         builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
+        builder.Services.AddScoped<IEmployeesRepository, EmployeeRepository>();
+
         builder.Services.AddSerilog();
         builder.Host.UseSerilog();
-
+       
         builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
