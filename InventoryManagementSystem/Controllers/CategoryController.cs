@@ -3,19 +3,25 @@ using Microsoft.AspNetCore.Authorization;
 using Serilog;
 using ApplicationCore.DapperEntity;
 using ApplicationCore.Contract;
+using ApplicationCore.UseCases.Category.Create;
+using MediatR;
+using ApplicationCore.UseCases.Category.Delete;
+using ApplicationCore.UseCases.Category.Update;
 
 namespace InventoryManagementSystem.Controllers
 {
-    [Authorize(Roles ="Administrator") ]
+    [Authorize(Roles = "ADMIN,Admin,  SUPERADMIN, SuperAdmin")]
 
     public class CategoryController : Controller
     {  private readonly ICategoryRepository _categoryRepository;
         public readonly ILogger<CategoryController> logger;
+        private readonly IMediator _mediator;
 
-        public CategoryController(ICategoryRepository categoryRepository, ILogger<CategoryController> _log)
+        public CategoryController(ICategoryRepository categoryRepository, ILogger<CategoryController> _log,IMediator mediator )
         {
             _categoryRepository = categoryRepository;
             logger = _log;
+            _mediator = mediator;
         }
 
         [Route("Category/Result")]
@@ -47,18 +53,40 @@ namespace InventoryManagementSystem.Controllers
         }
 
         [HttpPost]
-        public IActionResult Save(Category category)
+        //public IActionResult Save(Category category)
+        //{
+        //    try
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            var Category = new Category
+        //            {
+        //                Name = category.Name
+
+        //            };
+        //            _categoryRepository.Create(Category);
+        //            return RedirectToAction("Result");
+        //        }
+        //        else
+        //        {
+        //            return BadRequest(ModelState);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Internal server error: {ex.Message}");
+        //    }
+        //}
+
+        [HttpPost]
+        public async Task<IActionResult> Save(CreateCategoryRequest command,CancellationToken cancellation)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var Category = new Category
-                    {
-                        Name = category.Name
-                        
-                    };
-                    _categoryRepository.Create(Category);
+                    command.IsActive = 1;
+                    var response = await _mediator.Send(command,cancellation);
                     return RedirectToAction("Result");
                 }
                 else
@@ -84,20 +112,16 @@ namespace InventoryManagementSystem.Controllers
         }
 
 
-        public IActionResult Edit(Category category)
+        public IActionResult Edit(UpdateCategoryRequest request, CancellationToken cancellationToken)
         {
 
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var Category = new Category
-                    {
-                        Id = category.Id,
-                        Name = category.Name,
-                       
-                    };
-                    _categoryRepository.Update(Category);
+                   
+                  //  _categoryRepository.Update(Category);
+                    _mediator.Send(request,cancellationToken);
                     return RedirectToAction("Result");
                 }
                 else
@@ -112,12 +136,13 @@ namespace InventoryManagementSystem.Controllers
 
         }
 
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _categoryRepository.DeleteRecord(id);
-            return RedirectToAction("Result");
+            var request = new DeleteCategoryRequest { Id = id };
+            await _mediator.Send(request);
 
-        }
+            return RedirectToAction("Result");
+            }
 
     }
 }

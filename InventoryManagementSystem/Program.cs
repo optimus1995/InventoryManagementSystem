@@ -213,6 +213,10 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 using InventoryManagementSystem.Controllers;
+using Microsoft.CodeAnalysis.FlowAnalysis;
+using Microsoft.Extensions.DependencyInjection;
+using ApplicationCore.UseCases.Category.Create;
+using MediatR;
 
 internal class Program
 {
@@ -258,64 +262,26 @@ internal class Program
                 options.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider());
             });
         #endregion
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // Add services to the container.
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString));
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
         builder.Services.AddTransient<IEmailSender, EmailServices>();
-      //  builder.Services.AddTransient<IStringLocalizer, LanguageServices>();
-
+        //   builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+        //. 
         builder.Services.AddRazorPages();
+        //builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateCategoryHandler).Assembly));
 
-        // Add localization services
-        //builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-
-        //builder.Services.Configure<RequestLocalizationOptions>(options =>
-        //{
-        //    var supportedCultures = new[]
-        //    {
-        //        new CultureInfo("en-US"),
-        //        new CultureInfo("fr"),
-        //    };
-
-        //    options.DefaultRequestCulture = new RequestCulture("fr");
-        //    options.SupportedCultures = supportedCultures;
-        //    options.SupportedUICultures = supportedCultures;
-
-        //    // Add QueryStringRequestCultureProvider for testing purposes
-        //    options.RequestCultureProviders.Clear();
-        //    options.RequestCultureProviders.Add(new QueryStringRequestCultureProvider());
-        //});
-
+        //        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
+        //    Assembly.GetExecutingAssembly(),
+        //    Assembly.Load("ApplicationCore") 
+        // //   Assembly.Load("Infrastructure")   // Additional assemblies if needed
+        //));
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
+        
         builder.Services.AddControllersWithViews()
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddDataAnnotationsLocalization();
-
-        // Singleton, Scoped and Transient services
         builder.Services.AddSingleton<IEmailSender, EmailServices>();
         builder.Services.AddSingleton<DapperContext>();
 
