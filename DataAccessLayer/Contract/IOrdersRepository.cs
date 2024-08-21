@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.DapperEntity;
+using ApplicationCore.UseCases.Orders.Create;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,9 @@ namespace ApplicationCore.Contract
         public  Task<IEnumerable<OrderItems>> Result();
         public Task<IEnumerable<OrderItems>> ResultByOrderId(int Orderid);
 
-        public Task<IEnumerable<BarChartOrder>> BarChartOrderDetail();
+        public Task<IEnumerable<BarChartResponse>> BarChartOrderDetail();
 
-        public Task<OrderDetails> CreateOrders(Orders orders);
+        public Task< SaveOrdersResponse> CreateOrders(ApplicationCore.UseCases.Orders.Create.SaveOrdersRequest orders);
         public Task<(int CustomersCount, int OrdersCount)> GetCount();
 
     }

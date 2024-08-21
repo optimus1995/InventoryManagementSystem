@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.DapperEntity;
+using ApplicationCore.UseCases.Employee.UpdateRole;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace ApplicationCore.Contract
 
         //   public Task<IEnumerable<AspNetUsers>> GetRoleData(string userid);
          public Task<AspNetUsers> GetRoleData(string id);
-        public Task<AspNetUserRoles> UpdateRoles(AspNetUserRoles Asproles);
+        public Task<UpdateRoleRequest> UpdateRoles(UpdateRoleRequest Asproles);
+       // object UpdateRoles(UpdateRoleRequest request);
     }
 }

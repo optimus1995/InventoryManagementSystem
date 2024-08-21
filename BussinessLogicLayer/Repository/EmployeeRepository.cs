@@ -13,6 +13,7 @@ using System.Data;
 using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Data.SqlTypes;
+using ApplicationCore.UseCases.Employee.UpdateRole;
 
 
 namespace Infrastructure.Repository
@@ -130,7 +131,7 @@ WHERE
             }
         }
 
-        public async Task<AspNetUserRoles> UpdateRoles(AspNetUserRoles asproles)
+        public async Task<UpdateRoleRequest> UpdateRoles(UpdateRoleRequest asproles)
         {
             var query = "UPDATE AspNetUserRoles SET RoleId = @RoleId WHERE UserId = @UserId";
             var parameters = new DynamicParameters();

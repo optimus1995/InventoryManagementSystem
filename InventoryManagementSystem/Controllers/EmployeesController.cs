@@ -1,7 +1,10 @@
 ﻿using ApplicationCore.Contract;
 using ApplicationCore.DapperEntity;
 using ApplicationCore.Enum;
+
+using ApplicationCore.UseCases.Employee.UpdateRole;
 using Infrastructure.Repository;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -12,76 +15,42 @@ namespace InventoryManagementSystem.Controllers
 
     {
         private readonly IEmployeesRepository _EmployeesRepository;
+        private readonly IMediator _mediator;
 
-        public EmployeesController( IEmployeesRepository employeesRepository)
+        public EmployeesController(IEmployeesRepository employeesRepository, IMediator mediator)
         {
-             
             _EmployeesRepository = employeesRepository;
             _EmployeesRepository = employeesRepository;
+            _mediator = mediator;
         }
         [Authorize(Roles = "ADMIN,Admin,  SUPERADMIN, SuperAdmin")]
-        public async  Task <IActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             var s = await _EmployeesRepository.GetAll();
             return View(s);
         }
-        //public async Task<IActionResult> RoleUpdate(string userid)
-        //{
-        //    var role = await _EmployeesRepository.GetRoleData(userid);
-        //    if (role == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    var s = role.ToList();
-        //    ViewBag.UserName = s;
-        //    // Assuming UserName is a property of AspNetRoles
-        //    return View(role);
-        //}
 
         [Authorize(Roles = "SuperAdmin")]
-        public async Task<IActionResult> RoleUpdate(string userid)
+        public async Task<IActionResult> RoleUpdate(string UserId, CancellationToken cancellationToken)
         {
-            try
-            {
-                ViewBag.Roles = await _EmployeesRepository.GetAllRoles();
+            ViewBag.Roles = await _EmployeesRepository.GetAllRoles();
 
-                var role =await  _EmployeesRepository.GetRoleData(userid);
-
-                var viewModel = new AspNetUserRoleAssigned
-                {
-                    UserId = role.Id,
-                    UserName = role.UserName,
-                    RoleId = role.AspNetUserRoles.RoleId,
-                    RoleName = role.AspNetRoles.NormalizedName,
-                };
-                return View(viewModel);
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Internal server error");
-            }
+            var getrolerequest = new  GetRoleRequest();
+            getrolerequest.Id = UserId;
+            var viewModel = await  _mediator.Send(getrolerequest, cancellationToken);
+            return View(viewModel);
         }
         [HttpPost]
         [Authorize(Roles = "SuperAdmin")]
-        public IActionResult RoleUpdate(AspNetUserRoles AspUserRoles)
+        public IActionResult RoleUpdate(UpdateRoleRequest updaterolerequest, CancellationToken cancellationToken)
         {
 
             try
             {
-                if (ModelState.IsValid)
-                {
-                    var AspNetUserRoles = new AspNetUserRoles
-                    {
-                        RoleId = AspUserRoles.RoleId,
-                        UserId = AspUserRoles.UserId                    };
-                    _EmployeesRepository.UpdateRoles(AspNetUserRoles);
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    return BadRequest(ModelState);
-                }
+
+                var viewModel =  _mediator.Send(updaterolerequest, cancellationToken);
+                return RedirectToAction("Index");
+                
             }
             catch (Exception ex)
             {

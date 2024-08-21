@@ -138,8 +138,8 @@ namespace InventoryManagementSystem.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var request = new DeleteCategoryRequest { Id = id };
-            await _mediator.Send(request);
+    //        var request = new DeleteCategoryRequest { Id = id };
+            await _mediator.Send(id);
 
             return RedirectToAction("Result");
             }

@@ -12,6 +12,9 @@ using IronXL;
 using Infrastructure.Repository;
 using ClosedXML.Excel;
 using Microsoft.Extensions.Localization;
+using MediatR;
+using ApplicationCore.UseCases.Products.Create;
+using ApplicationCore.UseCases.Products.Update;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -22,12 +25,14 @@ namespace InventoryManagementSystem.Controllers
         private IStringLocalizer<ProductsController> _stringLocalizer;
         private readonly IProductsRepository _productsRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IMediator _mediator;
 
-        public ProductsController(IProductsRepository productsRepository, ICategoryRepository categoryRepository, IStringLocalizer<ProductsController>  stringLocalizer)
+        public ProductsController( IMediator mediator ,IProductsRepository productsRepository, ICategoryRepository categoryRepository, IStringLocalizer<ProductsController>  stringLocalizer)
         {
             _stringLocalizer = stringLocalizer;
             _productsRepository = productsRepository;
             _categoryRepository = categoryRepository;
+            _mediator = mediator;
         }
 
 
@@ -102,34 +107,61 @@ namespace InventoryManagementSystem.Controllers
             return View(categories);
         }
 
+
+        //public async Task<IActionResult> SaveProduct(Products productData, CancellationToken cancellation)
+        //{
+        //    try
+        //    {
+
+        //        var categories = await _categoryRepository.GetAll();
+        //        var category = categories.Where(x => x.Id == productData.CategoryID);
+
+        //        var i = (ClaimsIdentity)User.Identity;
+        //        var id = i.FindFirst(ClaimTypes.NameIdentifier);
+        //        var userid = id.Value;
+        //        productData.UserId = userid;
+        //        if (ModelState.IsValid)
+        //        {
+
+        //            var response = await _mediator.Send(productData, cancellation);
+        //            return RedirectToAction("Result");
+        //        }
+        //        else
+        //        {
+        //            return BadRequest(ModelState);
+        //        }
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Internal server error: {ex.Message}");
+        //    }
+        //}
         [HttpPost]
-        public async Task< IActionResult> SaveProduct( Products productData)
+        public async Task<IActionResult> SaveProduct(CreateProductsRequest productData, CancellationToken cancellation)
         {
             try
             {
-                var categories = await _categoryRepository.GetAll();
-                var category = categories.Where(x => x.Id == productData.CategoryID);
+                //var categories = await _categoryRepository.GetAll();
+                //var category = categories.FirstOrDefault(x => x.Id == productData.CategoryID);
+                //if (category == null)
+                //{
+                //    ModelState.AddModelError(nameof(productData.CategoryID), "Invalid Category ID");
+                //    return BadRequest(ModelState);
+                //}
 
-                var i = (ClaimsIdentity)User.Identity;
-                var id = i.FindFirst(ClaimTypes.NameIdentifier);
-                var userid= id.Value;
+                var identity = (ClaimsIdentity)User.Identity;
+                var idClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
+                if (idClaim == null)
+                {
+                    return StatusCode(500, "User ID not found");
+                }
+
+                productData.UserId = idClaim.Value;
 
                 if (ModelState.IsValid)
                 {
-                    var Products = new Products
-                    {
-                        Name = productData.Name,
-                        Description = productData.Description,
-                        SKU = productData.SKU,
-                        Price = productData.Price,
-                        quantity = productData.quantity,
-                        CreatedAt = DateTime.Now,
-                        CategoryID = productData.CategoryID,
-                        UserId = userid
-
-                        //  Category=productData.Category,
-                    };
-                     _productsRepository.CreateProducts(Products);
+                    var response = await _mediator.Send(productData, cancellation);
                     return RedirectToAction("Result");
                 }
                 else
@@ -139,6 +171,7 @@ namespace InventoryManagementSystem.Controllers
             }
             catch (Exception ex)
             {
+                // Log the exception (consider using a logging library like Serilog)
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
@@ -157,26 +190,19 @@ namespace InventoryManagementSystem.Controllers
         }
 
 
-        public IActionResult Edit(Products productData)
+        public async Task<IActionResult> EditAsync(UpdateProductsRequest productData,CancellationToken cancellationToken)
         {
 
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var Products = new Products
-                    {   Id=productData.Id,
-                        Name = productData.Name,
-                        Description = productData.Description,
-                        SKU = productData.SKU,
-                        Price = productData.Price,
-                        quantity = productData.quantity,
-                        LastUpdatedAt = DateTime.Now,
-                        CategoryID = productData.CategoryID
-                    };
-                    _productsRepository.UpdateProducts(Products);
+                    var response = await _mediator.Send(productData, cancellationToken);
                     return RedirectToAction("Result");
                 }
+                   
+                   
+                
                 else
                 {
                     return BadRequest(ModelState);

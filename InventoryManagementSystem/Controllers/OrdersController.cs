@@ -11,6 +11,11 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using System.Text.Json;
 using Infrastructure.Services;
+using System.Threading;
+using MediatR;
+using ApplicationCore.UseCases.Orders.Read;
+using ApplicationCore.UseCases.Orders.Create;
+using ApplicationCore.UseCases.Orders.GetBarChart;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -21,12 +26,14 @@ namespace InventoryManagementSystem.Controllers
         private readonly ICustomersRepository _customersRepository;
         private readonly ICategoryRepository _categoryRepository;
         private LanguageServices _languageServices;
-        public OrdersController(LanguageServices languageServices, ICategoryRepository categoryRepository ,ICustomersRepository customersRepository, IOrdersRepository ordersRepository , IProductsRepository productsRepository)
+        private readonly IMediator  _mediator;
+        public OrdersController(LanguageServices languageServices, ICategoryRepository categoryRepository ,ICustomersRepository customersRepository, IOrdersRepository ordersRepository , IProductsRepository productsRepository, IMediator mediator)
         {   _languageServices = languageServices;
             _categoryRepository = categoryRepository;
             _customersRepository = customersRepository; 
             _ordersRepository = ordersRepository;
              _productsRepository = productsRepository;
+            _mediator = mediator;
         }
 
 
@@ -38,17 +45,13 @@ namespace InventoryManagementSystem.Controllers
 
         [Route("Orders/Result")]
         [HttpGet]
-        public async Task<IActionResult> Result() {
-            
+        public async Task<IActionResult> Result(CancellationToken cancellationToken)
+        {
+            var request = new ReadOrdersRequest();
+            var response = await _mediator.Send(request, cancellationToken);
 
-           
-            //get culture information
-         //   var currentCulture = Thread.CurrentThread.CurrentUICulture.Name;
-        var s = await _ordersRepository.Result();
-            Console.WriteLine(s);
-            return View(s);
+            return View(response.Orders);
         }
-       
 
         [Route("Orders/Details")]
         [HttpGet]
@@ -69,10 +72,10 @@ namespace InventoryManagementSystem.Controllers
             return View(s);
         }
 
-        public async Task<IActionResult> GetBarChartResult()
+        public async Task<IActionResult> GetBarChartResult(BarChartRequest request, CancellationToken cancellationToken)
         {
-            var s = await _ordersRepository.BarChartOrderDetail();
-            return View(s);
+            var response = await _mediator.Send(request, cancellationToken);
+            return View(response);
         }
 
 
@@ -84,59 +87,21 @@ namespace InventoryManagementSystem.Controllers
         }
 
         [HttpGet]
-       
-        public async Task< IActionResult> SaveOrder()
 
+        public async Task<IActionResult> SaveOrder()
         {
+            var request = new CreateOrdersRequest();
             
-            var i = (ClaimsIdentity)User.Identity;
-            var id = i.FindFirst(ClaimTypes.NameIdentifier);
-            var userid = id.Value;
-            var customerid = 1;
-            var customer = await _customersRepository.GetrecordforUpdate(customerid);
-            var products = (await _productsRepository.GetAll(userid)).ToList() ;
-            var customers = (await _customersRepository.GetAll(userid)).ToList();
-            var category = (await _categoryRepository.GetAll()).ToList();
 
-            Console.WriteLine(products);
-            var model = new CustomerProductView
-            {
-                CustomerId = customer.Id,
-                CustomerBillingAddress = customer.BillingAddress,
-                CustomerShippingAddress = customer.ShippingAddress,
-                CustomerName = customer.Name,
-                Products = products,
-                Customers = customers,
-                Categories= category
-            };
-            return View(model);
+            var response = await _mediator.Send(request);
+            return View(response);
         }
         [HttpPost]
-            public IActionResult SaveRecord(Orders orders)
+            public IActionResult SaveRecord(SaveOrdersRequest request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var i = (ClaimsIdentity)User.Identity;
-                var id = i.FindFirst(ClaimTypes.NameIdentifier);
-                var userid = id.Value;
-
-                if (ModelState.IsValid)
-                {
-                    orders.OrderStatus = "Processing";
-                    orders.IsActive = true;
-                    orders.CreatedAt = DateTime.Now;
-                    orders.CreatedBy = userid;
-                    _ordersRepository.CreateOrders(orders);
-                }
-                else
-                { return BadRequest(ModelState);
-                }
-                return Json("");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+           
+            var response = _mediator.Send(request, cancellationToken);
+            return RedirectToAction("Result");
         }
 
         public async Task <IActionResult> ProductByCategory(string Catid)
@@ -177,17 +142,6 @@ namespace InventoryManagementSystem.Controllers
             }
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
+

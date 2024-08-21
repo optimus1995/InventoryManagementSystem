@@ -10,6 +10,8 @@ using ApplicationCore.Context;
 using Dapper;
 using System.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
+using ApplicationCore.UseCases.Orders.Create;
+using ApplicationCore.UseCases.Orders.GetBarChart;
 namespace Infrastructure.Repository
 {
 
@@ -187,7 +189,7 @@ where ord.IsActive =1";
                 return ordersRecord.ToList();
             }
         }
-        public async Task<OrderDetails> CreateOrders(Orders orders)
+        public async Task<SaveOrdersResponse> CreateOrders(SaveOrdersRequest orders)
         {
             var orderquery = "insert into Orders (CustomerId,TotalPrice,Discount,CreatedAt,CreatedBy,OrderStatus,TotalAmount,IsActive)" +
                         "VALUES (@CustomerId, @TotalPrice, @Discount, @CreatedAt, @CreatedBy,@OrderStatus,@TotalAmount, @IsActive) ;" +
@@ -242,7 +244,7 @@ where ord.IsActive =1";
 
                     //await connection.ExecuteAsync(orderId, itemParameters);
 
-                    var created = new OrderDetails
+                    var created = new SaveOrdersResponse
                     {
                         CustomerId = orders.CustomerId,
                         TotalPrice = orders.TotalPrice,
@@ -272,8 +274,6 @@ where ord.IsActive =1";
                 }
             }
         }
-
-
         public async Task<IEnumerable<OrderItems>> ResultByOrderId(int id)
         {
             try {
@@ -331,9 +331,6 @@ where ord.IsActive =1 and ord.Id=@id";
             }
              
         }
-
-
-
         public async Task<( int CustomersCount, int OrdersCount)> GetCount()
         {
             // Correct SQL query to get counts
@@ -352,8 +349,7 @@ where ord.IsActive =1 and ord.Id=@id";
                 return result;
             }
         }
-
-        public async Task<IEnumerable<BarChartOrder>> BarChartOrderDetail()
+        public async Task<IEnumerable<BarChartResponse>> BarChartOrderDetail()
         {
             var orderquery = "RecordforBarChart"; 
             using (var connection = _Context.CreateConnection())
@@ -364,7 +360,7 @@ where ord.IsActive =1 and ord.Id=@id";
                     {
                         connection.Open();
                     }
-                    var result = await connection.QueryAsync<BarChartOrder>(
+                    var result = await connection.QueryAsync<BarChartResponse>(
                         orderquery,
                         commandType: CommandType.StoredProcedure
                     );
@@ -377,8 +373,5 @@ where ord.IsActive =1 and ord.Id=@id";
                 }
             }
         }
-
-
-
     }
 }
