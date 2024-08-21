@@ -75,8 +75,8 @@
 
 
 
-@using ApplicationCore.DapperEntity
-@model List<Category>
+@using ApplicationCore.UseCases.Category.Read;
+@model ReadCategoryResponse
 @inject Infrastructure.Services.LanguageServices LanguageServices
 @await Component.InvokeAsync("Inventory")
 <!-- Custom fonts for this template -->
@@ -130,12 +130,13 @@
                                 </thead>
                                 <tbody>
 
-                                    @foreach (var records in Model)
+                            @foreach (var records in Model.Categories)
                                     {
                                         <tr>
                                             <td hidden> @records.Id</td>
                                             <td> @records.Name </td>
-                                            <td>@records.Count</td>
+                                    
+                                    <td> @records.Count </td>
                                             <td>
 
                                                 <a class="btn btn-primary" asp-action="ShowProducts" asp-controller="Products" asp-route-id="@records.Id">Products</a>

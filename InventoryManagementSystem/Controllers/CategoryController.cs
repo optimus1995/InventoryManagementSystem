@@ -7,6 +7,8 @@ using ApplicationCore.UseCases.Category.Create;
 using MediatR;
 using ApplicationCore.UseCases.Category.Delete;
 using ApplicationCore.UseCases.Category.Update;
+using System.Threading;
+using ApplicationCore.UseCases.Category.Read;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -26,14 +28,17 @@ namespace InventoryManagementSystem.Controllers
 
         [Route("Category/Result")]
         [HttpGet]
+        //done
         public async Task<IActionResult> Result()
         {
             try
             {
-            //    logger.LogInformation("Category/Result endpoint visited at {DT}", DateTime.UtcNow);
-            //    logger.LogInformation("About page visited at {DT}",
-            //DateTime.UtcNow.ToLongTimeString());
-                var records = await _categoryRepository.GetAll();
+                var request = new ReadCategoryRequest();
+                var cancellationToken = new CancellationToken();
+
+                var records = await _mediator.Send(request, cancellationToken);
+
+                // Pass the list of records to the view
                 return View(records);
                 Log.Information("Result", records);
 
@@ -53,32 +58,10 @@ namespace InventoryManagementSystem.Controllers
         }
 
         [HttpPost]
-        //public IActionResult Save(Category category)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            var Category = new Category
-        //            {
-        //                Name = category.Name
-
-        //            };
-        //            _categoryRepository.Create(Category);
-        //            return RedirectToAction("Result");
-        //        }
-        //        else
-        //        {
-        //            return BadRequest(ModelState);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Internal server error: {ex.Message}");
-        //    }
-        //}
+       
 
         [HttpPost]
+        //done
         public async Task<IActionResult> Save(CreateCategoryRequest command,CancellationToken cancellation)
         {
             try
@@ -101,8 +84,11 @@ namespace InventoryManagementSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int id, CancellationToken cancellationToken)
         {
+            var request= new FetchCategoryRequest();
+            request.Id= id;
+           var response =  _mediator.Send(request, cancellationToken);
             var category = await _categoryRepository.GetrecordforUpdate(id);
             if (category == null)
             {

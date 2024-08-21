@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity.Data;
 using ApplicationCore.DapperEntity;
 using ApplicationCore.Contract;
 using ApplicationCore.Context;
+using ApplicationCore.UseCases.Category.Update;
 
 namespace Infrastructure.Repository
 { 
@@ -118,13 +119,13 @@ namespace Infrastructure.Repository
         }
 
 
-        public async Task<Category> GetrecordforUpdate(int id)
+        public async Task<FetchCategoryResponse> GetrecordforUpdate(int id)
         {
             var query = "SELECT * FROM Category WHERE Id = @Id";
 
             using (var connection = _Context.CreateConnection())
             {
-                var category = await connection.QuerySingleOrDefaultAsync<Category>(query, new { Id = id });
+                var category = await connection.QuerySingleOrDefaultAsync<FetchCategoryResponse>(query, new { Id = id });
                 return category;
             }
         }

@@ -16,6 +16,7 @@ using MediatR;
 using ApplicationCore.UseCases.Orders.Read;
 using ApplicationCore.UseCases.Orders.Create;
 using ApplicationCore.UseCases.Orders.GetBarChart;
+using ApplicationCore.UseCases.Orders.GetGraphChart;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -45,6 +46,7 @@ namespace InventoryManagementSystem.Controllers
 
         [Route("Orders/Result")]
         [HttpGet]
+        //done 
         public async Task<IActionResult> Result(CancellationToken cancellationToken)
         {
             var request = new ReadOrdersRequest();
@@ -72,6 +74,7 @@ namespace InventoryManagementSystem.Controllers
             return View(s);
         }
 
+        //done
         public async Task<IActionResult> GetBarChartResult(BarChartRequest request, CancellationToken cancellationToken)
         {
             var response = await _mediator.Send(request, cancellationToken);
@@ -87,7 +90,7 @@ namespace InventoryManagementSystem.Controllers
         }
 
         [HttpGet]
-
+        //done
         public async Task<IActionResult> SaveOrder()
         {
             var request = new CreateOrdersRequest();
@@ -97,6 +100,7 @@ namespace InventoryManagementSystem.Controllers
             return View(response);
         }
         [HttpPost]
+        
             public IActionResult SaveRecord(SaveOrdersRequest request, CancellationToken cancellationToken)
         {
            
@@ -127,21 +131,12 @@ namespace InventoryManagementSystem.Controllers
             return Json("");
         }
 
-
-        public async Task<IActionResult> BarGraphResult()
+        public async Task<IActionResult> BarGraphResult(GraphChartRequest request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var record = await _ordersRepository.BarChartOrderDetail();
+            var response = await _mediator.Send(request, cancellationToken);
+            return Json(response);
 
-                return Json(record);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
         }
-
     }
 }
 
