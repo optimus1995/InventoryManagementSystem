@@ -3,8 +3,8 @@
 *@
 @{
 }
- @using ApplicationCore.DapperEntity
-@model List<AspNetUsers>
+ @using ApplicationCore.UseCases.Employee.Read
+@model ReadEmployeesResponse
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
 @inject Infrastructure.Services.LanguageServices LanguageServices
@@ -55,7 +55,7 @@
                         </thead>
                         <tbody>
 
-                            @foreach (var records in Model)
+                            @foreach (var records in Model.AspNetUsers)
                             {
                                 <tr>
                                     <td> @records.NormalizedEmail</td>

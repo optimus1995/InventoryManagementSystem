@@ -1,7 +1,7 @@
 ﻿using ApplicationCore.Contract;
 using ApplicationCore.DapperEntity;
 using ApplicationCore.Enum;
-
+using ApplicationCore.UseCases.Employee.Read;
 using ApplicationCore.UseCases.Employee.UpdateRole;
 using Infrastructure.Repository;
 using MediatR;
@@ -20,13 +20,14 @@ namespace InventoryManagementSystem.Controllers
         public EmployeesController(IEmployeesRepository employeesRepository, IMediator mediator)
         {
             _EmployeesRepository = employeesRepository;
-            _EmployeesRepository = employeesRepository;
             _mediator = mediator;
         }
         [Authorize(Roles = "ADMIN,Admin,  SUPERADMIN, SuperAdmin")]
-        public async Task<IActionResult> Index()
+        //done
+        public async Task<IActionResult> Index(ReadEmployeesRequest request ,CancellationToken cancellationToken)
         {
-            var s = await _EmployeesRepository.GetAll();
+            var s = await _mediator.Send(request, cancellationToken);
+           // var s = await _EmployeesRepository.GetAll();
             return View(s);
         }
         //done

@@ -17,6 +17,7 @@ using ApplicationCore.UseCases.Orders.Read;
 using ApplicationCore.UseCases.Orders.Create;
 using ApplicationCore.UseCases.Orders.GetBarChart;
 using ApplicationCore.UseCases.Orders.GetGraphChart;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -47,8 +48,9 @@ namespace InventoryManagementSystem.Controllers
         [Route("Orders/Result")]
         [HttpGet]
         //done 
-        public async Task<IActionResult> Result(CancellationToken cancellationToken)
+        public async Task<IActionResult> Result()
         {
+            var cancellationToken= new CancellationToken(); 
             var request = new ReadOrdersRequest();
             var response = await _mediator.Send(request, cancellationToken);
 
@@ -84,28 +86,25 @@ namespace InventoryManagementSystem.Controllers
 
 
 
-        public IActionResult SaveRecord()
-        {
-            return View();
-        }
-
+     
         [HttpGet]
         //done
         public async Task<IActionResult> SaveOrder()
         {
             var request = new CreateOrdersRequest();
             
-
-            var response = await _mediator.Send(request);
+            var canelation  = new CancellationToken();
+            var response = await _mediator.Send(request, canelation);
             return View(response);
         }
         [HttpPost]
         
-            public IActionResult SaveRecord(SaveOrdersRequest request, CancellationToken cancellationToken)
+            public IActionResult SaveRecord(SaveOrdersRequest request)
         {
-           
+            var cancellationToken =new CancellationToken();
+
             var response = _mediator.Send(request, cancellationToken);
-            return RedirectToAction("Result");
+            return Json ("OK");
         }
 
         public async Task <IActionResult> ProductByCategory(string Catid)

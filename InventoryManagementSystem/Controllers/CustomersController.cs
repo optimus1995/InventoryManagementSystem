@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Infrastructure.Repository;
 using DocumentFormat.OpenXml.Spreadsheet;
+using MediatR;
+using ApplicationCore.UseCases.Customers.Create;
+using ApplicationCore.UseCases.Customers.Update;
+using ApplicationCore.UseCases.Customers.Read;
 namespace InventoryManagementSystem.Controllers
 {
     [Authorize]
@@ -19,33 +23,24 @@ namespace InventoryManagementSystem.Controllers
         }
 
         private readonly ICustomersRepository _customersRepository;
+        private readonly IMediator _mediator;
 
-        public CustomersController(ICustomersRepository customersRepository )
+
+        public CustomersController(ICustomersRepository customersRepository, IMediator mediator)
         {
             _customersRepository = customersRepository;
+            _mediator = mediator;
         }
 
         [HttpGet]
         [Route("Customers/Result")]
   
-        public async Task<IActionResult> Result()
+        public async Task<IActionResult> Result(ReadCustomersRequest request, CancellationToken cancellation)
         {
-            try
-            {
-                var i = (ClaimsIdentity)User.Identity;
-                var id = i.FindFirst(ClaimTypes.NameIdentifier);
-                string userid = id.Value;
+                var records = await  _mediator.Send(request, cancellation);
+                
+            return View(records);
 
-
-
-                var records = await _customersRepository.GetAll(userid);
-                return View(records);
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Internal server error");
-            }
         }
         //[Route("Products/ShowProducts")]
         //[HttpGet]
@@ -82,48 +77,19 @@ namespace InventoryManagementSystem.Controllers
 
         [HttpPost]
         [Route("Customers/SaveRecord")]
-        public IActionResult SaveProduct(Customers customerData)
+        public IActionResult SaveProduct(SaveCustomersRequest customerData, CancellationToken cancellationToken)
         {
-            try
-            {
-               
-                var i = (ClaimsIdentity)User.Identity;
-                var id = i.FindFirst(ClaimTypes.NameIdentifier);
-                var userid = id.Value;
-
-                if (ModelState.IsValid)
-                {
-                    var Customers = new Customers
-                    {
-                        Name = customerData.Name,
-                        Email = customerData.Email,
-                        BillingAddress = customerData.BillingAddress,
-                        ShippingAddress = customerData.ShippingAddress,
-                        
-                        CreatedAt = DateTime.Now,
-                        CreatedBy = userid
-
                         //  Category=productData.Category,
-                    };
-                     _customersRepository.CreateRecord(Customers);
+
+            var s =  _mediator.Send (customerData,cancellationToken);
                     return RedirectToAction("SaveRecord");
-                }
-                else
-                {
-                    return BadRequest(ModelState);
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(FetchCustomersRequest request, CancellationToken cancellationToken)
         {
-
-            var customer = await _customersRepository.GetrecordforUpdate(id);
+            
+            var customer = await _mediator.Send(request , cancellationToken);
             if (customer == null)
             {
                 return NotFound();
@@ -132,42 +98,11 @@ namespace InventoryManagementSystem.Controllers
         }
         [HttpPost]
 
-        public IActionResult Edit(Customers customerData)
+        public IActionResult Edit(UpdateCustomersRequest customerData, CancellationToken cancellationToken)
         {
-            var i = (ClaimsIdentity)User.Identity;
-            var id = i.FindFirst(ClaimTypes.NameIdentifier);
-            var userid = id.Value;
 
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    var Customers = new Customers
-                    {
-                        Id = customerData.Id,
-                        Name = customerData.Name,
-                        Email = customerData.Email,
-                        BillingAddress = customerData.BillingAddress,
-                        ShippingAddress = customerData.ShippingAddress,
-
-                        UpdatedAt = DateTime.Now,
-                        UpdatedBy = userid
-
-                        //  Category=productData.Category,
-                    };
-                    _customersRepository.Update(Customers);
-                    return RedirectToAction("Result");
-
-                }
-                else
-                {
-                    return BadRequest(ModelState);
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            var result = _mediator.Send(customerData, cancellationToken);
+            return RedirectToAction("Result");
 
         }
 

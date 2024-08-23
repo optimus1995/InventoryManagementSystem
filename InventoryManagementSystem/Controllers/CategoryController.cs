@@ -48,8 +48,6 @@ namespace InventoryManagementSystem.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
-
-
         [Route("Category/Save")]
         [HttpGet]
         public IActionResult Save()
@@ -89,12 +87,12 @@ namespace InventoryManagementSystem.Controllers
             var request= new FetchCategoryRequest();
             request.Id= id;
            var response =  _mediator.Send(request, cancellationToken);
-            var category = await _categoryRepository.GetrecordforUpdate(id);
-            if (category == null)
+       //     var category = await _categoryRepository.GetrecordforUpdate(id);
+            if (response == null)
             {
                 return NotFound();
             }
-            return View(category);
+            return View(response);
         }
 
 

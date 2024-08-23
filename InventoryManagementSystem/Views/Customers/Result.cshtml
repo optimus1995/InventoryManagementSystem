@@ -1,5 +1,5 @@
-﻿ @using ApplicationCore.DapperEntity
-@model List<Customers>
+﻿ @using ApplicationCore.UseCases.Customers.Read
+@model ReadCustomersResponse
 @await Component.InvokeAsync("Inventory")
 @inject Infrastructure.Services.LanguageServices LanguageServices
 <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -46,7 +46,7 @@
                                 </thead>
                                 <tbody>
 
-                                    @foreach (var records in Model)
+                                    @foreach (var records in Model.Customers)
                                     {
                                         <tr>
                                             <td hidden> @records.Id</td>

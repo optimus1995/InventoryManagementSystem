@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ApplicationCore.DapperEntity;
 using Microsoft.AspNetCore.Http;
 
+
 namespace ApplicationCore.UseCases.Orders.Create
 {
     public class CreateOrdersHandler : IRequestHandler<CreateOrdersRequest, CreateOrdersResponse>
@@ -34,7 +35,7 @@ namespace ApplicationCore.UseCases.Orders.Create
         {
             var userid = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-         //   var customer = await _customersRepository.GetrecordforUpdate(request.CustomerId);
+            //   var customer = await _customersRepository.GetrecordforUpdate(request.CustomerId);
             var products = (await _productsRepository.GetAll(userid)).ToList();
             var customers = (await _customersRepository.GetAll(userid)).ToList();
             var categories = (await _categoryRepository.GetAll()).ToList();
