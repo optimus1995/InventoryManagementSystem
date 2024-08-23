@@ -29,7 +29,7 @@ namespace InventoryManagementSystem.Controllers
             var s = await _EmployeesRepository.GetAll();
             return View(s);
         }
-
+        //done
         [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> RoleUpdate(string UserId, CancellationToken cancellationToken)
         {
@@ -42,6 +42,7 @@ namespace InventoryManagementSystem.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "SuperAdmin")]
+        //done
         public IActionResult RoleUpdate(UpdateRoleRequest updaterolerequest, CancellationToken cancellationToken)
         {
 

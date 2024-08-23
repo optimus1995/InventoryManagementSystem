@@ -130,7 +130,7 @@ namespace InventoryManagementSystem.Controllers
             }
             return Json("");
         }
-
+        //done
         public async Task<IActionResult> BarGraphResult(GraphChartRequest request, CancellationToken cancellationToken)
         {
             var response = await _mediator.Send(request, cancellationToken);

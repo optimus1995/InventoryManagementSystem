@@ -121,7 +121,7 @@ namespace InventoryManagementSystem.Controllers
             }
 
         }
-
+        //done
         public async Task<IActionResult> Delete(int id)
         {
     //        var request = new DeleteCategoryRequest { Id = id };
