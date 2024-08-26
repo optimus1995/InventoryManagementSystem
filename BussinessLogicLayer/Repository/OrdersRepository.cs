@@ -20,7 +20,8 @@ namespace Infrastructure.Repository
 
         private DapperContext _Context;
 
-        public OrdersRepository(DapperContext dapperContext) {
+        public OrdersRepository(DapperContext dapperContext)
+        {
             _Context = dapperContext;
 
         }
@@ -276,7 +277,8 @@ where ord.IsActive =1";
         }
         public async Task<IEnumerable<OrderItems>> ResultByOrderId(int id)
         {
-            try {
+            try
+            {
                 var query = @"
 SELECT 
     orditem.Id ,
@@ -323,15 +325,15 @@ where ord.IsActive =1 and ord.Id=@id";
                     return ordersRecord.ToList();
                 }
             }
-        
+
             catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex);
                 throw;
             }
-             
+
         }
-        public async Task<( int CustomersCount, int OrdersCount)> GetCount()
+        public async Task<(int CustomersCount, int OrdersCount)> GetCount()
         {
             // Correct SQL query to get counts
             var query = @"
@@ -345,13 +347,13 @@ where ord.IsActive =1 and ord.Id=@id";
             using (var connection = _Context.CreateConnection())
             {
                 // Execute the query and get the result as a single row
-                var result = await connection.QuerySingleAsync<( int CustomersCount, int OrdersCount)>(query);
+                var result = await connection.QuerySingleAsync<(int CustomersCount, int OrdersCount)>(query);
                 return result;
             }
         }
         public async Task<IEnumerable<BarChartResponse>> BarChartOrderDetail()
         {
-            var orderquery = "RecordforBarChart"; 
+            var orderquery = "RecordforBarChart";
             using (var connection = _Context.CreateConnection())
             {
                 try

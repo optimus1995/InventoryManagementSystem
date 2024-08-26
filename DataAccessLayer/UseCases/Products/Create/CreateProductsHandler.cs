@@ -7,6 +7,7 @@ using System.Text;
 using ApplicationCore.DapperEntity;
 using System.Security.Claims;
 using Microsoft.Identity.Client;
+using Microsoft.AspNetCore.Http;
 namespace ApplicationCore.UseCases.Products.Create
 {
     public class CreateProductsHandler : IRequestHandler<CreateProductsRequest, CreateProductsResponse>
@@ -17,12 +18,14 @@ namespace ApplicationCore.UseCases.Products.Create
         private readonly IProductsRepository _productsRepository;
 
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IHttpContextAccessor  _httpContextAccessor;
 
-        public CreateProductsHandler(IProductsRepository ProductsRepository, ICategoryRepository categoryRepository)
+        public CreateProductsHandler(IProductsRepository ProductsRepository, ICategoryRepository categoryRepository, IHttpContextAccessor httpContextAccessor)
         {
 
             _productsRepository = ProductsRepository;
             _categoryRepository = categoryRepository;
+            _httpContextAccessor = httpContextAccessor;
 
         }
 
@@ -30,8 +33,9 @@ namespace ApplicationCore.UseCases.Products.Create
         {
             //var categories = await _categoryRepository.GetAll();
             //var category = categories.Where(x => x.Id == productData.CategoryID);
+            var userid = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-           
+
 
             var Products = new ApplicationCore.DapperEntity.Products
             {
@@ -42,7 +46,7 @@ namespace ApplicationCore.UseCases.Products.Create
                 quantity = productData.quantity,
                 CreatedAt = DateTime.Now,
                 CategoryID = productData.CategoryID,
-                UserId= productData.UserId
+                UserId= userid
                 
 
                 };

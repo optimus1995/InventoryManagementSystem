@@ -128,7 +128,7 @@
         //     });
         // }
         // // Function to fetch data and update the chart
-        function updateChart() {
+        function updateChart() {debugger
             $.ajax({
                 type: "GET",
                 url: "/Products/GraphResult",
@@ -314,23 +314,20 @@
         function updateChart1() {
             $.ajax({
                 type: "GET",
-                url: "/Orders/BarGraphResult",
+                url: "/Orders/GetBarChartResult",
                 dataType: "json",
-                success: function (response) {
+                success: function (response) {debugger
                     console.log(response);
 
-                    // Prepare data for the chart
                     var labels = [];
                     var data = [];
 
-
                     response.forEach(function (item) {
-                        debugger
                         console.log(item);
                         labels.push(item.year + '-' + item.month); // e.g., "2024-08"
                         data.push(item.amount);
                     });
-                   
+
                     // Destroy previous chart instance if it exists
                     if (window.barChart) {
                         window.barChart.destroy();

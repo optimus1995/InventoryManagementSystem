@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ApplicationCore.DapperEntity;
-using ApplicationCore.UseCases.Category.Update;
+using ApplicationCore.UseCases.Category.UpdateCategory;
 
 namespace ApplicationCore.UseCases.Customers.Update
 {

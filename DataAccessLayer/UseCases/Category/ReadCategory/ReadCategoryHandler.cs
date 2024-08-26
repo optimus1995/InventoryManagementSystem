@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ApplicationCore.DapperEntity;
 
-namespace ApplicationCore.UseCases.Category.Read
+namespace ApplicationCore.UseCases.Category.ReadCategory
 {
     public class ReadCategoryHandler : IRequestHandler<ReadCategoryRequest, ReadCategoryResponse>
     {

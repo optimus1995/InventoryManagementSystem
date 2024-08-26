@@ -2,7 +2,6 @@
 using ApplicationCore.DapperEntity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
@@ -12,64 +11,23 @@ using MediatR;
 using ApplicationCore.UseCases.Customers.Create;
 using ApplicationCore.UseCases.Customers.Update;
 using ApplicationCore.UseCases.Customers.Read;
+using ApplicationCore.UseCases.Customers.Delete;
 namespace InventoryManagementSystem.Controllers
 {
     [Authorize]
     public class CustomersController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        private readonly ICustomersRepository _customersRepository;
         private readonly IMediator _mediator;
-
-
-        public CustomersController(ICustomersRepository customersRepository, IMediator mediator)
+        public CustomersController(IMediator mediator)
         {
-            _customersRepository = customersRepository;
             _mediator = mediator;
         }
-
-        [HttpGet]
-        [Route("Customers/Result")]
-  
         public async Task<IActionResult> Result(ReadCustomersRequest request, CancellationToken cancellation)
         {
-                var records = await  _mediator.Send(request, cancellation);
-                
+            var records = await _mediator.Send(request, cancellation);
+
             return View(records);
-
         }
-        //[Route("Products/ShowProducts")]
-        //[HttpGet]
-        //public async Task<IActionResult> ShowProducts(int id)
-        //{
-        //    try
-        //    {
-        //        var i = (ClaimsIdentity)User.Identity;
-        //        var uid = i.FindFirst(ClaimTypes.NameIdentifier);
-        //        string userid = uid.Value;
-
-
-
-        //        var records = await _productsRepository.ShowByCatID(id, userid);
-        //        return View(records);
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, "Internal server error");
-        //    }
-
-
-
-        //}
-
-
-
-
         public IActionResult SaveRecord()
         {
             return View();
@@ -79,17 +37,15 @@ namespace InventoryManagementSystem.Controllers
         [Route("Customers/SaveRecord")]
         public IActionResult SaveProduct(SaveCustomersRequest customerData, CancellationToken cancellationToken)
         {
-                        //  Category=productData.Category,
-
-            var s =  _mediator.Send (customerData,cancellationToken);
-                    return RedirectToAction("SaveRecord");
+            var s = _mediator.Send(customerData, cancellationToken);
+            return RedirectToAction("SaveRecord");
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(FetchCustomersRequest request, CancellationToken cancellationToken)
         {
-            
-            var customer = await _mediator.Send(request , cancellationToken);
+
+            var customer = await _mediator.Send(request, cancellationToken);
             if (customer == null)
             {
                 return NotFound();
@@ -106,9 +62,12 @@ namespace InventoryManagementSystem.Controllers
 
         }
 
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int id, CancellationToken cancellationToken)
         {
-            _customersRepository.DeleteRecord(id);
+            //_customersRepository.DeleteRecord(id);
+            var request = new DeleteCustomersRequest();
+            request.Id = id;
+            var result = _mediator.Send(request, cancellationToken);
             return RedirectToAction("Result");
 
         }

@@ -16,30 +16,24 @@ using MediatR;
 using ApplicationCore.UseCases.Orders.Read;
 using ApplicationCore.UseCases.Orders.Create;
 using ApplicationCore.UseCases.Orders.GetBarChart;
-using ApplicationCore.UseCases.Orders.GetGraphChart;
+using ApplicationCore.UseCases.Products.GetGraphChart;
 using Microsoft.AspNetCore.Http.HttpResults;
+using ApplicationCore.UseCases.Orders.SpecificOrder;
 
 namespace InventoryManagementSystem.Controllers
 {
     public class OrdersController : Controller
     {
-        private readonly IOrdersRepository _ordersRepository;
-        private readonly IProductsRepository _productsRepository;
-        private readonly ICustomersRepository _customersRepository;
-        private readonly ICategoryRepository _categoryRepository;
         private LanguageServices _languageServices;
-        private readonly IMediator  _mediator;
-        public OrdersController(LanguageServices languageServices, ICategoryRepository categoryRepository ,ICustomersRepository customersRepository, IOrdersRepository ordersRepository , IProductsRepository productsRepository, IMediator mediator)
-        {   _languageServices = languageServices;
-            _categoryRepository = categoryRepository;
-            _customersRepository = customersRepository; 
-            _ordersRepository = ordersRepository;
-             _productsRepository = productsRepository;
+        private readonly IMediator _mediator;
+        public OrdersController(LanguageServices languageServices, IMediator mediator)
+        {
+
             _mediator = mediator;
         }
 
 
-        public IActionResult Index( )
+        public IActionResult Index()
         {
 
             return View();
@@ -50,7 +44,7 @@ namespace InventoryManagementSystem.Controllers
         //done 
         public async Task<IActionResult> Result()
         {
-            var cancellationToken= new CancellationToken(); 
+            var cancellationToken = new CancellationToken();
             var request = new ReadOrdersRequest();
             var response = await _mediator.Send(request, cancellationToken);
 
@@ -59,76 +53,80 @@ namespace InventoryManagementSystem.Controllers
 
         [Route("Orders/Details")]
         [HttpGet]
-        public async Task<IActionResult> Details(int Orderid)
+        public async Task<IActionResult> Details(int Orderid, CancellationToken cancellationToken)
         {
-
-            var response = await _ordersRepository.ResultByOrderId(Orderid);
+            var request = new SpecificOrdersRequest();
+            request.Id = Orderid;
+            var response = await _mediator.Send(request, cancellationToken);
             Console.WriteLine(response);
+            var result = response.Orders;
             //var json = JsonSerializer.Serialize(response);
-            return View(response);
+            return View(result);
 
 
         }
 
-        public async Task<IActionResult> GetAll()
-        {
-            var s = await _ordersRepository.Result();
-            return View(s);
-        }
+        //public async Task<IActionResult> GetAll()
+        //{
+        //    var s = await _ordersRepository.Result();
+        //    return View(s);
+        //}
 
         //done
         public async Task<IActionResult> GetBarChartResult(BarChartRequest request, CancellationToken cancellationToken)
         {
             var response = await _mediator.Send(request, cancellationToken);
-            return View(response);
+            var result = response.barChartOrders;
+            return Json(result);
+
         }
 
 
 
 
-     
+
         [HttpGet]
         //done
         public async Task<IActionResult> SaveOrder()
         {
             var request = new CreateOrdersRequest();
-            
-            var canelation  = new CancellationToken();
+
+            var canelation = new CancellationToken();
             var response = await _mediator.Send(request, canelation);
             return View(response);
         }
         [HttpPost]
-        
-            public IActionResult SaveRecord(SaveOrdersRequest request)
+
+        public IActionResult SaveRecord(SaveOrdersRequest request)
         {
-            var cancellationToken =new CancellationToken();
+            var cancellationToken = new CancellationToken();
 
             var response = _mediator.Send(request, cancellationToken);
-            return Json ("OK");
+            return Json("OK");
         }
 
-        public async Task <IActionResult> ProductByCategory(string Catid)
-        {
-            int id = Convert.ToInt32(Catid);
+        //public async Task<IActionResult> ProductByCategory(string Catid)
+        //{
+        //    int id = Convert.ToInt32(Catid);
 
-            try
-            {
-                var i = (ClaimsIdentity)User.Identity;
-                var uid = i.FindFirst(ClaimTypes.NameIdentifier);
-                string userid = uid.Value;
+        //    try
+        //    {
+        //        var i = (ClaimsIdentity)User.Identity;
+        //        var uid = i.FindFirst(ClaimTypes.NameIdentifier);
+        //        string userid = uid.Value;
 
 
 
-                var categoryrecords = await _productsRepository.ShowByCatID(id, userid);
-                return Json(categoryrecords);
+        //        var categoryrecords = await _productsRepository.ShowByCatID(id, userid);
+        //        return Json(categoryrecords);
 
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Internal server error");
-            }
-            return Json("");
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, "Internal server error");
+        //    }
+        //    return Json("");
+        //}
         //done
         public async Task<IActionResult> BarGraphResult(GraphChartRequest request, CancellationToken cancellationToken)
         {

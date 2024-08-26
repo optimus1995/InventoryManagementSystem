@@ -17,10 +17,22 @@ namespace ApplicationCore.UseCases.Orders.GetBarChart
 
         public async Task<BarChartResponse> Handle(BarChartRequest request, CancellationToken cancellationToken)
         {
-            var records = await _ordersRepository.BarChartOrderDetail();
+            var record = await _ordersRepository.BarChartOrderDetail();
+
+            var barChartOrders = record.Select(record => new BarChartOrder
+            {
+                // Map properties from BarChartResponse to BarChartOrder
+                Amount = record.Amount,
+                Year = record.Year,
+                Month = record.Month
+                // Add other mappings as needed
+            }).ToList();
+
             return new BarChartResponse
             {
+                barChartOrders = barChartOrders
             };
+
         }
     }
 

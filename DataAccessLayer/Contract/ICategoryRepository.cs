@@ -1,5 +1,5 @@
 ﻿using ApplicationCore.DapperEntity;
-using ApplicationCore.UseCases.Category.Update;
+using ApplicationCore.UseCases.Category.FetchCategory;
 
 namespace ApplicationCore.Contract
 {

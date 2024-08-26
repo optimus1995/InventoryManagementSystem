@@ -167,104 +167,6 @@ namespace Infrastructure.Repository
                 return products.ToList();
             }
         }
-
-
-        //public async Task<IEnumerable<Products>> GetAll()
-        //{
-        //    var query = @"
-        //SELECT 
-        //    p.Id, 
-        //    p.Name, 
-        //    p.Price, 
-        //    p.Quantity, 
-        //    p.SKU, 
-        //    p.Description, 
-        //    p.CreatedAt, 
-        //    p.CategoryID,
-        //    s.Id AS CategoryId, 
-        //    s.Name AS CategoryName,
-        //    s.IsActive AS CategoryIsActive
-        //FROM Products p  
-        //JOIN Category s ON s.Id = p.CategoryID";
-
-        //    using (var connection = _Context.CreateConnection())
-        //    {
-        //        var products = await connection.QueryAsync<Products, Category, Products>(
-        //            query,
-        //            (product, category) =>
-        //            {
-        //                product.Category = category;
-        //                return product;
-        //            },
-        //            splitOn: "CategoryId"
-        //        );
-
-        //        return products.ToList();
-        //    }
-        //}
-
-
-
-
-
-        //public async Task <Products> GetrecordforUpdate(int id)
-        //{
-        //    var q = "SELECT * FROM Products WHERE Id = @Id";
-        //    using (var connection = _Context.CreateConnection())
-        //    {
-        //        Products data =  connection.QuerySingleOrDefault(q,id);
-
-        //        return data;
-        //    }
-
-        //}
-
-
-        //public async Task<Products> GetrecordforUpdate(int id)
-        //{
-        //    var query = "SELECT * FROM Products WHERE Id = @Id";
-
-        //    using (var connection = _Context.CreateConnection())
-        //    {
-        //        var product = await connection.QuerySingleOrDefaultAsync<Products>(query, new { Id = id });
-        //        return product;
-        //    }
-        //}
-        //public async Task <Products> GetrecordforUpdate(int id)
-        //{
-        //    var productid = id;
-        //    var q = @"SELECT 
-        //          p.Id,
-        //          p.Name,
-        //          p.Price,
-        //          p.Quantity,
-        //          p.SKU,
-        //          p.Description,
-        //          p.CreatedAt,
-        //          p.CategoryID,
-        //          s.Id AS CategoryId,
-        //          s.Name AS CategoryName
-        //      FROM Products p
-        //      JOIN Category s ON s.Id = p.CategoryID
-        //      WHERE p.Id = @ProductId";
-
-        //    using (var connection = _Context.CreateConnection())
-        //    {
-        //        var products = await connection.QueryAsync<Products, Category, Products>(
-        //            q,
-        //            (product, category) =>
-        //            {
-        //                product.Category = category;
-        //                return product;
-        //            },
-        //            new { ProductId = productid }, // Dynamic parameter object
-        //            splitOn: "CategoryId" // Split on the CategoryId column
-        //        );
-
-        //        return products;
-        //    }
-        //}  
-
         public async Task<Products> GetrecordforUpdate(int id)
         {
             var productid = id;
@@ -303,8 +205,6 @@ namespace Infrastructure.Repository
         public async Task<Products> UpdateProducts(Products product)
         {
             int id = product.Id;
-            //var query = "Update  Products (Name, Description, SKU, Price, Quantity ,CreatedAt,IsActive) " +
-            //             "VALUES (@Name, @Description, @SKU, @Price, @Quantity,@CreatedAt, @IsActive) where Id='@Id; ";
             var query = "Update  Products  set Name=@Name, Description=@Description, SKU = @SKu, Price=@Price, quantity=@Quantity , LastUpdatedAt=@LastUpdate, CategoryID=@CategoryID where Id=@Id";
             var parameters = new DynamicParameters();
             parameters.Add("@Id", product.Id, DbType.Int32);
@@ -376,7 +276,6 @@ namespace Infrastructure.Repository
 
         public async Task<(int ProductCount, int CategoryCount)> GetCount()
         {
-            // Correct SQL query to get counts
             var query = @"
         SELECT 
             (SELECT COUNT(*) FROM Products) AS ProductCount, 

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using ApplicationCore.DapperEntity;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
-using ApplicationCore.UseCases.Category.Read;
+using ApplicationCore.UseCases.Category.ReadCategory;
 
 namespace ApplicationCore.UseCases.Customers.Read
 {

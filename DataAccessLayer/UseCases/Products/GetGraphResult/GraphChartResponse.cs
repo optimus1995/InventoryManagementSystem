@@ -10,10 +10,9 @@ namespace ApplicationCore.DapperEntity
     public class GraphChartResponse
     {
 
-        public int Amount { get; set; }
+        public IEnumerable<ApplicationCore.DapperEntity.ProductCategoryGraph> productCategoryGraphs { get; set; }
+        public string CategoryName { get; set; }
+        public int ProductCount { get; set; }
 
-        public int Year { get; set; }
-
-        public int Month { get; set; }
     }
 }

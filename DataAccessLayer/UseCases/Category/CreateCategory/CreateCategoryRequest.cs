@@ -5,12 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using MediatR;
 
-namespace ApplicationCore.UseCases.Category.Update
+namespace ApplicationCore.UseCases.Category.CreateCategory
 {
-    public class UpdateCategoryRequest : IRequest<UpdateCategoryResponse>
+    public class CreateCategoryRequest : IRequest<CreateCategoryResponse>
     {
-        public int Id { get; set; }
         public string Name { get; set; }
-      
+        public int IsActive { get; set; }
     }
 }

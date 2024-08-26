@@ -6,17 +6,14 @@ using System.Threading.Tasks;
 using ApplicationCore.DapperEntity;
 using MediatR;
 
-namespace ApplicationCore.UseCases.Orders.GetGraphChart
+namespace ApplicationCore.UseCases.Products.GetGraphChart
 
 {
     public class GraphChartRequest : IRequest<GraphChartResponse>
     {
 
+        public string CategoryName { get; set; }
+        public int ProductCount { get; set; }
 
-        public int Amount { get; set; }
-
-        public int Year { get; set; }
-
-        public int Month { get; set; }
     }
 }

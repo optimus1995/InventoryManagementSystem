@@ -215,7 +215,7 @@ using System.Reflection;
 using InventoryManagementSystem.Controllers;
 using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.Extensions.DependencyInjection;
-using ApplicationCore.UseCases.Category.Create;
+using ApplicationCore.UseCases.Category.CreateCategory;
 using MediatR;
 
 internal class Program

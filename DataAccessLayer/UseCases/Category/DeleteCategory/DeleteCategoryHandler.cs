@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using ApplicationCore.DapperEntity;
 
-namespace ApplicationCore.UseCases.Category.Delete
+namespace ApplicationCore.UseCases.Category.DeleteCategory
 {
     public class DeleteCategoryHandler: IRequestHandler<DeleteCategoryRequest,  DeleteCategoryResponse>
     //    {

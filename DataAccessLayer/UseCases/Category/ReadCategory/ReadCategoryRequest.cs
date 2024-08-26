@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using ApplicationCore.DapperEntity;
 using MediatR;
 
-namespace ApplicationCore.UseCases.Category.Read
+namespace ApplicationCore.UseCases.Category.ReadCategory
 {
     public class ReadCategoryRequest : IRequest<ReadCategoryResponse>
     {

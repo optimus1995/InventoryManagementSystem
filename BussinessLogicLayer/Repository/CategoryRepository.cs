@@ -11,10 +11,11 @@ using Microsoft.AspNetCore.Identity.Data;
 using ApplicationCore.DapperEntity;
 using ApplicationCore.Contract;
 using ApplicationCore.Context;
-using ApplicationCore.UseCases.Category.Update;
+using ApplicationCore.UseCases.Category.UpdateCategory;
+using ApplicationCore.UseCases.Category.FetchCategory;
 
 namespace Infrastructure.Repository
-{ 
+{
 
     public class CategoryRepository : ICategoryRepository
     {

@@ -1,4 +1,4 @@
-﻿ @using ApplicationCore.DapperEntity
+﻿ @using ApplicationCore.UseCases.Products.Read
  @inject Infrastructure.Services.LanguageServices LanguageServices
 @{
     var selectedCategoryId = ViewBag.SelectedCategoryId as int?;
@@ -10,7 +10,7 @@
         background-color: yellow;
         color: red    }
 </style>
-@model ProductViewModel
+@model ReadProductsResponse
 @using  Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
 @await Component.InvokeAsync("Inventory")

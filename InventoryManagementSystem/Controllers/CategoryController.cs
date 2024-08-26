@@ -1,27 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Serilog;
-using ApplicationCore.DapperEntity;
-using ApplicationCore.Contract;
-using ApplicationCore.UseCases.Category.Create;
+using ApplicationCore.UseCases.Category.CreateCategory;
 using MediatR;
-using ApplicationCore.UseCases.Category.Delete;
-using ApplicationCore.UseCases.Category.Update;
-using System.Threading;
-using ApplicationCore.UseCases.Category.Read;
-
+using ApplicationCore.UseCases.Category.UpdateCategory;
+using ApplicationCore.UseCases.Category.ReadCategory;
+using ApplicationCore.UseCases.Category.DeleteCategory;
+using ApplicationCore.UseCases.Category.FetchCategory;
 namespace InventoryManagementSystem.Controllers
 {
     [Authorize(Roles = "ADMIN,Admin,  SUPERADMIN, SuperAdmin")]
 
     public class CategoryController : Controller
-    {  private readonly ICategoryRepository _categoryRepository;
+    {
         public readonly ILogger<CategoryController> logger;
         private readonly IMediator _mediator;
 
-        public CategoryController(ICategoryRepository categoryRepository, ILogger<CategoryController> _log,IMediator mediator )
+        public CategoryController(ILogger<CategoryController> _log, IMediator mediator)
         {
-            _categoryRepository = categoryRepository;
             logger = _log;
             _mediator = mediator;
         }
@@ -40,11 +36,11 @@ namespace InventoryManagementSystem.Controllers
 
                 // Pass the list of records to the view
                 return View(records);
-                Log.Information("Result", records);
 
             }
             catch (Exception ex)
             {
+                Log.Error(ex, "Error occured");
                 return StatusCode(500, "Internal server error");
             }
         }
@@ -56,18 +52,15 @@ namespace InventoryManagementSystem.Controllers
         }
 
         [HttpPost]
-       
-
-        [HttpPost]
         //done
-        public async Task<IActionResult> Save(CreateCategoryRequest command,CancellationToken cancellation)
+        public async Task<IActionResult> Save(CreateCategoryRequest command, CancellationToken cancellation)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     command.IsActive = 1;
-                    var response = await _mediator.Send(command,cancellation);
+                    var response = await _mediator.Send(command, cancellation);
                     return RedirectToAction("Result");
                 }
                 else
@@ -82,12 +75,12 @@ namespace InventoryManagementSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Edit(FetchCategoryRequest request, CancellationToken cancellationToken)
         {
-            var request= new FetchCategoryRequest();
-            request.Id= id;
-           var response =  _mediator.Send(request, cancellationToken);
-       //     var category = await _categoryRepository.GetrecordforUpdate(id);
+            //var request = new FetchCategoryRequest();
+            //request.Id = id;
+            var response = await _mediator.Send(request, cancellationToken);
+            //     var category = await _categoryRepository.GetrecordforUpdate(id);
             if (response == null)
             {
                 return NotFound();
@@ -103,9 +96,9 @@ namespace InventoryManagementSystem.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                   
-                  //  _categoryRepository.Update(Category);
-                    _mediator.Send(request,cancellationToken);
+
+                    //  _categoryRepository.Update(Category);
+                    _mediator.Send(request, cancellationToken);
                     return RedirectToAction("Result");
                 }
                 else
@@ -120,13 +113,15 @@ namespace InventoryManagementSystem.Controllers
 
         }
         //done
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
-    //        var request = new DeleteCategoryRequest { Id = id };
-            await _mediator.Send(id);
+            var request = new DeleteCategoryRequest();
+            request.Id = id;
+            //        var request = new DeleteCategoryRequest { Id = id };
+            await _mediator.Send(request, cancellationToken);
 
             return RedirectToAction("Result");
-            }
+        }
 
     }
 }

@@ -11,11 +11,11 @@ namespace InventoryManagementSystem.Controllers
             return View();
         }
 
-       // [Route("Category/Result")]
+        // [Route("Category/Result")]
         public IActionResult NotFoundError()
         {
-           // var exceptionHandlerPathFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-              
+            // var exceptionHandlerPathFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+
             return View();
         }
     }

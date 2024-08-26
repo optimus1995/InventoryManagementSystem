@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MediatR;
 
-namespace ApplicationCore.UseCases.Category.Update
+namespace ApplicationCore.UseCases.Category.FetchCategory
 {
     public class FetchCategoryRequest : IRequest<FetchCategoryResponse>
     {

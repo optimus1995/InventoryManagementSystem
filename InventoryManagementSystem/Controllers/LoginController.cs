@@ -19,7 +19,7 @@ namespace InventoryManagementSystem.Controllers
 
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public LoginController(RoleManager<IdentityRole> roleManager,UserManager<IdentityUser> _userManager, SignInManager<IdentityUser> _signInManager)
+        public LoginController(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> _userManager, SignInManager<IdentityUser> _signInManager)
         {
             _roleManager = roleManager;
             userManager = _userManager;
@@ -161,12 +161,12 @@ namespace InventoryManagementSystem.Controllers
 
                     if (user == null)
                     {
-                     user = new IdentityUser
+                        user = new IdentityUser
                         {
                             UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
                             Email = info.Principal.FindFirstValue(ClaimTypes.Email),
-                            
-                     };
+
+                        };
 
                         await userManager.CreateAsync(user);
                     }

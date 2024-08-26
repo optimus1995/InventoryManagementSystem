@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using ApplicationCore.DapperEntity;
 
-namespace ApplicationCore.UseCases.Category.Create
+namespace ApplicationCore.UseCases.Category.CreateCategory
 {
     public class CreateCategoryHandler: IRequestHandler<CreateCategoryRequest,  CreateCategoryResponse>
     //    {

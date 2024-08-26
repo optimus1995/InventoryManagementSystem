@@ -1,6 +1,6 @@
-﻿@using ApplicationCore.DapperEntity
+﻿@using ApplicationCore.UseCases.Category.ReadCategory
 
-@model IEnumerable<Category>
+@model ReadCategoryResponse
 
 
 <div class="card mt-4 ">
@@ -44,7 +44,7 @@
 
        <label for="Category" class="form-label">Category</label>
            <select name="CategoryID" class="form-control" >
-               @foreach(var category in Model){
+               @foreach(var category in Model.Categories){
                            <option value="@category.Id">@category.Name</option>
                }
 

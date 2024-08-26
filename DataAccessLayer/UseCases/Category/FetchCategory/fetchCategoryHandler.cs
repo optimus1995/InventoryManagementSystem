@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using ApplicationCore.DapperEntity;
 
-namespace ApplicationCore.UseCases.Category.Update
+namespace ApplicationCore.UseCases.Category.FetchCategory
 {
     public class FetchCategoryHandler: IRequestHandler<FetchCategoryRequest,  FetchCategoryResponse>
     //    {

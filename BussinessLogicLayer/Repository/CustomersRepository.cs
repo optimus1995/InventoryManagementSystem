@@ -74,8 +74,8 @@ namespace Infrastructure.Repository
                 }
             }
         }
-    
-       
+
+
         public async Task<IEnumerable<Customers>> GetAll(string userid)
         {
             //var i = 7;
@@ -97,9 +97,9 @@ namespace Infrastructure.Repository
             using (var connection = _Context.CreateConnection())
             {
                 var query = q;
-                var customers = await connection.QueryAsync<Customers,  AspNetUsers, Customers>(
+                var customers = await connection.QueryAsync<Customers, AspNetUsers, Customers>(
                     q,
-                    (customers,  aspnetusers) =>
+                    (customers, aspnetusers) =>
                     {
                         customers.AspNetUsers = aspnetusers;
 

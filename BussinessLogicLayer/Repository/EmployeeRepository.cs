@@ -19,7 +19,7 @@ using ApplicationCore.UseCases.Employee.UpdateRole;
 namespace Infrastructure.Repository
 {
 
-    public class EmployeeRepository: IEmployeesRepository
+    public class EmployeeRepository : IEmployeesRepository
     {
 
         private DapperContext _Context;
@@ -27,7 +27,7 @@ namespace Infrastructure.Repository
         public EmployeeRepository(DapperContext dapperContext)
         {
             _Context = dapperContext;
-          
+
         }
         public async Task<IEnumerable<AspNetUsers>> GetAll()
         {
@@ -63,9 +63,9 @@ namespace Infrastructure.Repository
         }
 
 
-        
 
-       public async Task<IEnumerable<AspNetRoles>> GetAllRoles()
+
+        public async Task<IEnumerable<AspNetRoles>> GetAllRoles()
         {
             try
             {

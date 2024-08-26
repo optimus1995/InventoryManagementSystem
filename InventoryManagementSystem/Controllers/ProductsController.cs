@@ -15,6 +15,11 @@ using Microsoft.Extensions.Localization;
 using MediatR;
 using ApplicationCore.UseCases.Products.Create;
 using ApplicationCore.UseCases.Products.Update;
+using ApplicationCore.UseCases.Products.Read;
+using DocumentFormat.OpenXml.Spreadsheet;
+using ApplicationCore.UseCases.Category.ReadCategory;
+using System.Threading;
+using ApplicationCore.UseCases.Products.GetGraphChart;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -23,48 +28,35 @@ namespace InventoryManagementSystem.Controllers
     {
 
         private IStringLocalizer<ProductsController> _stringLocalizer;
-        private readonly IProductsRepository _productsRepository;
-        private readonly ICategoryRepository _categoryRepository;
+
         private readonly IMediator _mediator;
 
-        public ProductsController( IMediator mediator ,IProductsRepository productsRepository, ICategoryRepository categoryRepository, IStringLocalizer<ProductsController>  stringLocalizer)
+        public ProductsController(IMediator mediator, IStringLocalizer<ProductsController> stringLocalizer)
         {
             _stringLocalizer = stringLocalizer;
-            _productsRepository = productsRepository;
-            _categoryRepository = categoryRepository;
+
             _mediator = mediator;
         }
 
-
+        //done
         [Route("Products/Result")]
         [HttpGet]
-        public async Task <IActionResult> Result(int catid)
+        public async Task<IActionResult> Result(int catid, CancellationToken cancellationToken)
         {
             try
             {
-
-
-                var i = (ClaimsIdentity)User.Identity;
-                var id = i.FindFirst(ClaimTypes.NameIdentifier);
-                string userid = id.Value;
-
-                var categories = await _categoryRepository.GetAll();
-                List<Products> records;
-                if (catid == null|| catid==0)
-                {
-
-                     records = (List<Products>)await _productsRepository.GetAll(userid);
-                }
-                else {
-                     records = (List<Products>)await _productsRepository.ShowByCatID(catid, userid);
-                }
-                var viewModel = new ProductViewModel
-                {
-                    Products = records,
-                    Categories = (List<Category>)categories
-                };
+                var request = new ReadProductsRequest();
+                request.catid = catid;
+                var s = await _mediator.Send(request, cancellationToken);
                 ViewBag.SelectedCategoryId = catid;
-                return View(viewModel);
+
+                return View(s);
+
+
+                //return View(viewModel);
+
+
+
 
             }
             catch (Exception ex)
@@ -72,94 +64,26 @@ namespace InventoryManagementSystem.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
-        
-        [Route("Products/ShowProducts")]
+
+        [Route("Products/SaveProduct")]
         [HttpGet]
-        public async Task<IActionResult> ShowProducts(int id) 
-        {
-            try
-            {
-                var i = (ClaimsIdentity)User.Identity;
-                var uid = i.FindFirst(ClaimTypes.NameIdentifier);
-                string userid = uid.Value;
-
-
-                ViewBag.SelectedCategoryId = id;
-                var records = await _productsRepository.ShowByCatID(id, userid);
-                return View(records);
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Internal server error");
-            }
-        }
-          [Route("Products/SaveProduct")]
-        [HttpGet]
+        //done
         public async Task<IActionResult> SaveProduct()
         {
-            //  List<Category> categories = new List<Category>();
-           
-            var categories = await _categoryRepository.GetAllCategories ();
-            
-            Console.WriteLine(categories);
+            var request = new ReadCategoryRequest();
+            var cancellationToken = new CancellationToken();
+
+            var records = await _mediator.Send(request, cancellationToken);
+            var categories = records;
 
             return View(categories);
         }
-
-
-        //public async Task<IActionResult> SaveProduct(Products productData, CancellationToken cancellation)
-        //{
-        //    try
-        //    {
-
-        //        var categories = await _categoryRepository.GetAll();
-        //        var category = categories.Where(x => x.Id == productData.CategoryID);
-
-        //        var i = (ClaimsIdentity)User.Identity;
-        //        var id = i.FindFirst(ClaimTypes.NameIdentifier);
-        //        var userid = id.Value;
-        //        productData.UserId = userid;
-        //        if (ModelState.IsValid)
-        //        {
-
-        //            var response = await _mediator.Send(productData, cancellation);
-        //            return RedirectToAction("Result");
-        //        }
-        //        else
-        //        {
-        //            return BadRequest(ModelState);
-        //        }
-        //    }
-
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Internal server error: {ex.Message}");
-        //    }
-        //}
         [HttpPost]
-        //dones
+        //done
         public async Task<IActionResult> SaveProduct(CreateProductsRequest productData, CancellationToken cancellation)
         {
             try
             {
-                //var categories = await _categoryRepository.GetAll();
-                //var category = categories.FirstOrDefault(x => x.Id == productData.CategoryID);
-                //if (category == null)
-                //{
-                //    ModelState.AddModelError(nameof(productData.CategoryID), "Invalid Category ID");
-                //    return BadRequest(ModelState);
-                //}
-
-                var identity = (ClaimsIdentity)User.Identity;
-                var idClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
-                if (idClaim == null)
-                {
-                    return StatusCode(500, "User ID not found");
-                }
-
-                productData.UserId = idClaim.Value;
-
                 if (ModelState.IsValid)
                 {
                     var response = await _mediator.Send(productData, cancellation);
@@ -178,20 +102,23 @@ namespace InventoryManagementSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int id, CancellationToken cancellationToken)
         {
-            ViewBag.Category = await _categoryRepository.GetAll();
-
-            var product = await _productsRepository.GetrecordforUpdate(id);
+            var catrequest = new ReadCategoryRequest();
+            ViewBag.Category = await _mediator.Send(catrequest, cancellationToken);
+            var productrequest = new GetProductsRequest();
+            productrequest.Id = id;
+            var product = await _mediator.Send(productrequest, cancellationToken);
             if (product == null)
             {
                 return NotFound();
             }
-            return View(product);
+
+            return View(product.products);
         }
 
-
-        public async Task<IActionResult> EditAsync(UpdateProductsRequest productData,CancellationToken cancellationToken)
+        //done
+        public async Task<IActionResult> EditAsync(UpdateProductsRequest productData, CancellationToken cancellationToken)
         {
 
             try
@@ -201,9 +128,9 @@ namespace InventoryManagementSystem.Controllers
                     var response = await _mediator.Send(productData, cancellationToken);
                     return RedirectToAction("Result");
                 }
-                   
-                   
-                
+
+
+
                 else
                 {
                     return BadRequest(ModelState);
@@ -214,97 +141,95 @@ namespace InventoryManagementSystem.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
 
-          }
-
-        public IActionResult Delete(int id)
-        {
-            _productsRepository.DeleteRecord(id);
-            return RedirectToAction("Result"); 
-        
         }
-        //public IActionResult ExportRecord() {
-        //    DataTable dt = new DataTable();
-        //    dt.Columns.Add("DataSet", typeof(string));
-        //    dt.Rows.Add("ID");
-        //    dt.Rows.Add("Name");
-        //    dt.Rows.Add("Description");
-        //    dt.Rows.Add("SKU");
-        //    dt.Rows.Add("Price");
-        //    dt.Rows.Add("Quantity");
-        //    dt.Rows.Add("Created Date");
 
-        //   WorkBook  wb = WorkBook.Create(ExcelFileFormat.XLS);
-        //    WorkSheet ws = wb.DefaultWorkSheet;
-        //    int rowCount = 1;
-        //    foreach (DataRow row in dt.Rows)
-        //    {
-        //        ws["A" + (rowCount)].Value = row[0].ToString();
-        //        rowCount++;
-        //    }
-        //    wb.SaveAs("datatable.xlsx");
+        //public IActionResult Delete(int id)
+        //{
+        //    _productsRepository.DeleteRecord(id);
         //    return RedirectToAction("Result");
-        //}   
 
-    
-public async Task<IActionResult> ExportRecord()
-    {
-        try
+        //}
+        //done
+        public async Task<IActionResult> ExportRecord(ReadProductsRequest readProductsRequest, CancellationToken cancellation)
         {
-            var identity = (ClaimsIdentity)User.Identity;
-            var id = identity.FindFirst(ClaimTypes.NameIdentifier);
-            string userId = id.Value;
+            try
+            {
+                var identity = (ClaimsIdentity)User.Identity;
+                var id = identity.FindFirst(ClaimTypes.NameIdentifier);
+                string userId = id.Value;
 
-            var records = await _productsRepository.GetAll(userId);
-                var recordsList = records?.ToList() ?? new List<Products>();
+                var records = await _mediator.Send(readProductsRequest, cancellation);
+                var recordsList = records;
 
                 using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.Worksheets.Add("Records");
+                {
+                    var worksheet = workbook.Worksheets.Add("Records");
 
-               // These are headers for the excel files //
+                    // These are headers for the excel files //
                     worksheet.Cell(1, 1).Value = "ID";
-                worksheet.Cell(1, 2).Value = "Name";
-                worksheet.Cell(1, 3).Value = "Description";
-                worksheet.Cell(1, 4).Value = "SKU";
-                worksheet.Cell(1, 5).Value = "Price";
-                worksheet.Cell(1, 6).Value = "Quantity";
-                worksheet.Cell(1, 7).Value = "Created Date";
+                    worksheet.Cell(1, 2).Value = "Name";
+                    worksheet.Cell(1, 3).Value = "Description";
+                    worksheet.Cell(1, 4).Value = "SKU";
+                    worksheet.Cell(1, 5).Value = "Price";
+                    worksheet.Cell(1, 6).Value = "Quantity";
+                    worksheet.Cell(1, 7).Value = "Created Date";
                     // after header we use loops to store all data in file 
                     //first rows is header and i=0 so add 1 for header and 1 for next line
-                for (int i = 0; i < recordsList.Count; i++)
-                {
-                    var record = recordsList[i];
-                    worksheet.Cell(i + 2, 1).Value = record.Id;
-                    worksheet.Cell(i + 2, 2).Value = record.Name;
-                    worksheet.Cell(i + 2, 3).Value = record.Description;
-                    worksheet.Cell(i + 2, 4).Value = record.SKU;
-                    worksheet.Cell(i + 2, 5).Value = record.Price;
-                    worksheet.Cell(i + 2, 6).Value = record.quantity;
-                    worksheet.Cell(i + 2, 7).Value = record.CreatedAt .ToString(format: "dddd, dd MMMM yyyy  hh:mm tt ");
-                        
-                }
+                    for (int i = 0; i < recordsList.Products.Count; i++)
+                    {
+                        var record = recordsList.Products[i];
+                        worksheet.Cell(i + 2, 1).Value = record.Id;
+                        worksheet.Cell(i + 2, 2).Value = record.Name;
+                        worksheet.Cell(i + 2, 3).Value = record.Description;
+                        worksheet.Cell(i + 2, 4).Value = record.SKU;
+                        worksheet.Cell(i + 2, 5).Value = record.Price;
+                        worksheet.Cell(i + 2, 6).Value = record.quantity;
+                        worksheet.Cell(i + 2, 7).Value = record.CreatedAt.ToString(format: "dddd, dd MMMM yyyy  hh:mm tt ");
 
-                using (var stream = new MemoryStream())
-                {
-                    workbook.SaveAs(stream);
- 
-                    return File(
-                        stream.ToArray(),
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        "ProductsRecord.xlsx");
+                    }
+
+                    using (var stream = new MemoryStream())
+                    {
+                        workbook.SaveAs(stream);
+
+                        return File(
+                            stream.ToArray(),
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                            "ProductsRecord.xlsx");
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
         }
-        catch (Exception ex)
-        {
-            return StatusCode(500, "Internal server error: " + ex.Message);
-        }
-    }
 
 
+        //[Route("Products/ShowProducts")]
+        //[HttpGet]
+        //public async Task<IActionResult> ShowProducts(int id)
+        //{
+        //    try
+        //    {
+        //        var i = (ClaimsIdentity)User.Identity;
+        //        var uid = i.FindFirst(ClaimTypes.NameIdentifier);
+        //        string userid = uid.Value;
 
+
+        //        ViewBag.SelectedCategoryId = id;
+        //        var records = await _productsRepository.ShowByCatID(id, userid);
+        //        return View(records);
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, "Internal server error");
+        //    }
+        //}
 
         [HttpGet]
+        //done
         public async Task<IActionResult> ResultName()
         {
             var article = _stringLocalizer["Article"];
@@ -312,20 +237,20 @@ public async Task<IActionResult> ExportRecord()
             return Ok(article.Value);
 
         }
-        public async Task<IActionResult> GraphResult()
+        public async Task<IActionResult> GraphResult(GraphChartRequest request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var record = await _productsRepository.GetCountforChart();
-
-                return Json(record);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            var response = await _mediator.Send(request, cancellationToken);
+            // var result = response.barChartOrders;
+            var result = response.productCategoryGraphs;
+            return Json(result);
         }
+        public async Task<IActionResult> Delete(int id)
+        {
+            //        var request = new DeleteCategoryRequest { Id = id };
+            await _mediator.Send(id);
 
+            return RedirectToAction("Result");
+        }
     }
 
 
