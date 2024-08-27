@@ -216,6 +216,7 @@ using InventoryManagementSystem.Controllers;
 using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using ApplicationCore.UseCases.Category.CreateCategory;
+using ApplicationCore.Mapping;
 using MediatR;
 
 internal class Program
@@ -278,7 +279,8 @@ internal class Program
         // //   Assembly.Load("Infrastructure")   // Additional assemblies if needed
         //));
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
-        
+        builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+        builder.Services.AddAutoMapper(typeof(MappingProfile));
         builder.Services.AddControllersWithViews()
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddDataAnnotationsLocalization();

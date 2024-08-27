@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace ApplicationCore.UseCases.Products.Read
+namespace ApplicationCore.UseCases.Products.ReadProducts
 {
     public class ReadProductsResponse
     {

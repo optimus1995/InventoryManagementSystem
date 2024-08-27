@@ -1,8 +1,9 @@
 ﻿using ApplicationCore.Contract;
 using ApplicationCore.DapperEntity;
 using ApplicationCore.Enum;
-using ApplicationCore.UseCases.Employee.Read;
-using ApplicationCore.UseCases.Employee.UpdateRole;
+using ApplicationCore.UseCases.Employee.GetRoles;
+using ApplicationCore.UseCases.Employee.ReadEmployee;
+using ApplicationCore.UseCases.Employee.UpdateRoleEmployee;
 using Infrastructure.Repository;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -31,7 +32,9 @@ namespace InventoryManagementSystem.Controllers
         [Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> RoleUpdate(string UserId, CancellationToken cancellationToken)
         {
-            // ViewBag.Roles = await _EmployeesRepository.GetAllRoles();
+            var rolerequest = new GetRolesRequest();
+            var s = await _mediator.Send(rolerequest, cancellationToken);
+            ViewBag.Roles =s.AspNetRoles;
 
             var getrolerequest = new GetRoleRequest();
             getrolerequest.Id = UserId;

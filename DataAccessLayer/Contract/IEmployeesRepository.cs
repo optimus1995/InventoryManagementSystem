@@ -1,5 +1,5 @@
 ﻿using ApplicationCore.DapperEntity;
-using ApplicationCore.UseCases.Employee.UpdateRole;
+using ApplicationCore.UseCases.Employee.UpdateRoleEmployee;
 using System;
 using System.Collections.Generic;
 using System.Linq;

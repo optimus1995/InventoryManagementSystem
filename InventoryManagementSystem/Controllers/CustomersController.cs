@@ -8,10 +8,10 @@ using Microsoft.AspNetCore.Authorization;
 using Infrastructure.Repository;
 using DocumentFormat.OpenXml.Spreadsheet;
 using MediatR;
-using ApplicationCore.UseCases.Customers.Create;
-using ApplicationCore.UseCases.Customers.Update;
-using ApplicationCore.UseCases.Customers.Read;
-using ApplicationCore.UseCases.Customers.Delete;
+using ApplicationCore.UseCases.Customers.CreateCustomers;
+using ApplicationCore.UseCases.Customers.UpdateCustomers;
+using ApplicationCore.UseCases.Customers.ReadCustomers;
+using ApplicationCore.UseCases.Customers.DeleteCustomers;
 namespace InventoryManagementSystem.Controllers
 {
     [Authorize]
@@ -38,7 +38,7 @@ namespace InventoryManagementSystem.Controllers
         public IActionResult SaveProduct(SaveCustomersRequest customerData, CancellationToken cancellationToken)
         {
             var s = _mediator.Send(customerData, cancellationToken);
-            return RedirectToAction("SaveRecord");
+            return RedirectToAction("Result");
         }
 
         [HttpGet]

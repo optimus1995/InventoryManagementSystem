@@ -10,7 +10,7 @@ using ApplicationCore.Context;
 using Dapper;
 using System.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
-using ApplicationCore.UseCases.Orders.Create;
+using ApplicationCore.UseCases.Orders.CreateOrders;
 using ApplicationCore.UseCases.Orders.GetBarChart;
 namespace Infrastructure.Repository
 {

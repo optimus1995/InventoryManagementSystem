@@ -6,21 +6,29 @@ using ApplicationCore.DapperEntity;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using ApplicationCore.UseCases.Category.ReadCategory;
+using AutoMapper;
 
-namespace ApplicationCore.UseCases.Products.Read
+namespace ApplicationCore.UseCases.Products.ReadProducts
 {
     public class ReadProductsHandler : IRequestHandler<ReadProductsRequest, ReadProductsResponse>
     {
         private readonly IProductsRepository _ProductsRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IMapper _mapper;
 
-        public ReadProductsHandler(IProductsRepository ProductsRepository, IHttpContextAccessor httpContextAccessor, ICategoryRepository categoryRepository)
+        public ReadProductsHandler(IProductsRepository ProductsRepository,
+            IHttpContextAccessor httpContextAccessor, 
+            ICategoryRepository categoryRepository,
+            IMapper mapper
+            )
+
         {
 
             _ProductsRepository = ProductsRepository;
             _httpContextAccessor = httpContextAccessor;
             _categoryRepository = categoryRepository;
+            _mapper = mapper;
 
         }
 
@@ -48,7 +56,6 @@ namespace ApplicationCore.UseCases.Products.Read
             {
                 records = (List<ApplicationCore.DapperEntity.Products>)await _ProductsRepository.ShowByCatID(catid, userid);
             }
-
             return new ReadProductsResponse
             {
                 Products = records,

@@ -13,7 +13,7 @@ using System.Data;
 using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Data.SqlTypes;
-using ApplicationCore.UseCases.Employee.UpdateRole;
+using ApplicationCore.UseCases.Employee.UpdateRoleEmployee;
 
 
 namespace Infrastructure.Repository

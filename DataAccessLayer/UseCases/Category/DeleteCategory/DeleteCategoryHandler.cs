@@ -24,10 +24,8 @@ namespace ApplicationCore.UseCases.Category.DeleteCategory
         {
             await _categoryRepository.DeleteRecord(request.Id);
 
-            return new DeleteCategoryResponse
-            {
-                Id = request.Id
-            };
+            return new DeleteCategoryResponse();
+            
         }
     }
 }

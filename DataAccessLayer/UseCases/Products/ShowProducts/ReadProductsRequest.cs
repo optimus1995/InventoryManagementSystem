@@ -8,7 +8,7 @@ using ApplicationCore.DapperEntity;
 using MediatR;
 
 
-namespace ApplicationCore.UseCases.Products.Read
+namespace ApplicationCore.UseCases.Products.ReadProducts
 {
     public class ReadProductsRequest : IRequest<ReadProductsResponse>
     {
