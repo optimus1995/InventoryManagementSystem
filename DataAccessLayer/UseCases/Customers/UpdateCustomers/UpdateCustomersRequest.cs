@@ -5,6 +5,9 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using ApplicationCore.DapperEntity;
+using ApplicationCore.UseCases.Customers.CreateCustomers;
+using ApplicationCore.UseCases.Customers.UpdateCustomers;
+using FluentValidation;
 using MediatR;
 
 
@@ -24,4 +27,16 @@ namespace ApplicationCore.UseCases.Customers.UpdateCustomers
 
         public AspNetUsers? AspNetUsers { get; set; }
     }
+}
+public class UpdateCustomerValidator : AbstractValidator<UpdateCustomersRequest>
+{
+    public UpdateCustomerValidator()
+    {
+        RuleFor(rule => rule.Name).NotNull().MaximumLength(50);
+        RuleFor(rule => rule.Email).NotNull().EmailAddress();
+        RuleFor(rule => rule.BillingAddress).NotNull();
+        RuleFor(rule => rule.ShippingAddress).NotNull();
+
+    }
+
 }

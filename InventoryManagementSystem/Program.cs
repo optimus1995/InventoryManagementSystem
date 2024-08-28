@@ -218,6 +218,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ApplicationCore.UseCases.Category.CreateCategory;
 using ApplicationCore.Mapping;
 using MediatR;
+using FluentValidation.AspNetCore;
 
 internal class Program
 {
@@ -279,6 +280,12 @@ internal class Program
         // //   Assembly.Load("Infrastructure")   // Additional assemblies if needed
         //));
         builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
+        //builder.Services.AddFluentValidation(cfg => cfg.(AppDomain.CurrentDomain.GetAssemblies()));
+        builder.Services.AddFluentValidation(config =>
+        {
+            config.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+        });
+
         builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
         builder.Services.AddAutoMapper(typeof(MappingProfile));
         builder.Services.AddControllersWithViews()

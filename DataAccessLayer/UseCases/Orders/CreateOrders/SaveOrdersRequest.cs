@@ -5,7 +5,10 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using ApplicationCore.DapperEntity;
+using ApplicationCore.UseCases.Orders.CreateOrders;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
+using FluentValidation;
 
 
 namespace ApplicationCore.UseCases.Orders.CreateOrders
@@ -28,4 +31,20 @@ namespace ApplicationCore.UseCases.Orders.CreateOrders
 
         public string? isActive { get; set; }
     }
+}
+
+
+public class SaveOrderRequestValidator : AbstractValidator<SaveOrdersRequest>
+{
+    public SaveOrderRequestValidator()
+    {
+        RuleFor(rule => rule.Discount).NotNull();
+        RuleFor(rule => rule.CustomerId).NotNull();
+        RuleFor(rule => rule.TotalAmount).NotNull();
+        RuleFor(rule => rule.ListDetails)
+            .Must(list => list != null && list.Count >= 1)
+            .WithMessage("ListDetails must contain at least 1 item.");
+        RuleFor(rule => rule.Discount).NotNull().GreaterThan(0).LessThanOrEqualTo(100);
+    }
+
 }

@@ -214,10 +214,12 @@
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
                     console.log(response);
+                    var product = response.products;
+                    console.log(product);
                     var productDropdown = document.getElementById("productDropdown");
                     productDropdown.innerHTML = '<option value="" disabled selected>Select Product</option>';
 
-                    response.forEach(function (product) {
+                    product.forEach (function (product) {
                         var option = document.createElement("option");
                         option.value = product.id;
                         option.text = product.name;

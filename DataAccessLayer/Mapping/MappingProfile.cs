@@ -7,6 +7,9 @@ using ApplicationCore.UseCases.Customers.UpdateCustomers;
 using ApplicationCore.UseCases.Employee.GetRoles;
 using ApplicationCore.UseCases.Employee.ReadEmployee;
 using ApplicationCore.UseCases.Employee.UpdateRoleEmployee;
+using ApplicationCore.UseCases.Orders.CreateOrders;
+using ApplicationCore.UseCases.Products.CreateProducts;
+using ApplicationCore.UseCases.Products.UpdateProducts;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -37,7 +40,7 @@ namespace ApplicationCore.Mapping
 
             //          -         -----------       Employees Use Cases Mapping \
             CreateMap<List<AspNetUsers>, ReadEmployeesResponse>()
-       .ForMember(destionation => destionation.AspNetUsers, opt => opt.MapFrom(src => src));
+       .ForMember(destination => destination.AspNetUsers, opt => opt.MapFrom(src => src));
 
             CreateMap<List< AspNetRoles>, GetRolesResponse>()
                  .ForMember(dest => dest.AspNetRoles, opt => opt.MapFrom(src => src)); ;
@@ -46,7 +49,15 @@ namespace ApplicationCore.Mapping
                     .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.AspNetUserRoles.RoleId))  
                        .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.Id))
                     .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.AspNetRoles.NormalizedName));
- 
+            //      ------------------   Orders Use Cases Mapping         -         -------------- 
+            CreateMap<CustomerProductView, CreateOrdersResponse>()
+    .ForMember(destination => destination.Products, opt => opt.MapFrom(src => src.Products))
+    .ForMember(destination => destination.Customers, opt => opt.MapFrom(src => src.Customers))
+    .ForMember(destination => destination.Categories, opt => opt.MapFrom(src => src.Categories));
+
+            CreateMap<CreateProductsRequest, Products>();
+
+            CreateMap<UpdateProductsRequest, Products>();
         }
     }
 }

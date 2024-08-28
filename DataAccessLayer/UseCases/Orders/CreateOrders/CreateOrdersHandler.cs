@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ApplicationCore.DapperEntity;
 using Microsoft.AspNetCore.Http;
+using AutoMapper;
 
 
 namespace ApplicationCore.UseCases.Orders.CreateOrders
@@ -17,18 +18,21 @@ namespace ApplicationCore.UseCases.Orders.CreateOrders
         private readonly ICategoryRepository _categoryRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IOrdersRepository _ordersRepository;
+        private readonly IMapper _mapper ;
 
         public CreateOrdersHandler(IOrdersRepository ordersRepository,
             ICustomersRepository customersRepository,
             IProductsRepository productsRepository,
             ICategoryRepository categoryRepository,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IMapper mapper)
         {
             _ordersRepository = ordersRepository;
             _customersRepository = customersRepository;
             _productsRepository = productsRepository;
             _categoryRepository = categoryRepository;
             _httpContextAccessor = httpContextAccessor;
+            _mapper = mapper;
         }
 
         public async Task<CreateOrdersResponse> Handle(CreateOrdersRequest request, CancellationToken cancellationToken)
@@ -42,14 +46,12 @@ namespace ApplicationCore.UseCases.Orders.CreateOrders
 
             var response = new CreateOrdersResponse
             {
-                //CustomerId = customer.Id,
-                //CustomerName = customer.Name,
-                //CustomerBillingAddress = customer.BillingAddress,
-                //CustomerShippingAddress = customer.ShippingAddress,
+
                 Products = products,
                 Customers = customers,
                 Categories = categories
             };
+            //    var response = _mapper.Map<CreateOrdersResponse>((products,customers,categories,));
 
             return response;
         }

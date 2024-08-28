@@ -7,6 +7,7 @@ using System.Text;
 using ApplicationCore.DapperEntity;
 using System.Security.Claims;
 using Microsoft.Identity.Client;
+using AutoMapper;
 namespace ApplicationCore.UseCases.Products.UpdateProducts
 {
     public class UpdateProductsHandler : IRequestHandler<UpdateProductsRequest, UpdateProductsResponse>
@@ -17,12 +18,16 @@ namespace ApplicationCore.UseCases.Products.UpdateProducts
         private readonly IProductsRepository _productsRepository;
 
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IMapper _mapper;
 
-        public UpdateProductsHandler(IProductsRepository ProductsRepository, ICategoryRepository categoryRepository)
+        public UpdateProductsHandler(IProductsRepository ProductsRepository, 
+            ICategoryRepository categoryRepository,
+            IMapper mapper )
         {
 
             _productsRepository = ProductsRepository;
             _categoryRepository = categoryRepository;
+            _mapper = mapper;
 
         }
 
@@ -33,20 +38,10 @@ namespace ApplicationCore.UseCases.Products.UpdateProducts
 
            
 
-            var Products = new ApplicationCore.DapperEntity.Products
-            {
-                Name = productData.Name,
-                Description = productData.Description,
-                SKU = productData.SKU,
-                Price = productData.Price,
-                quantity = productData.quantity,
-                CategoryID = productData.CategoryID,
-                UserId= productData.UserId,
-                Id = productData.Id
-                
+           
+            var Products = _mapper.Map<DapperEntity.Products>(productData);
 
-                };
-           var productUpdated= _productsRepository.UpdateProducts(Products);
+            var productUpdated = _productsRepository.UpdateProducts(Products);
 
             return new UpdateProductsResponse
             {

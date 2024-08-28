@@ -19,6 +19,10 @@ using ApplicationCore.UseCases.Orders.GetBarChart;
 using ApplicationCore.UseCases.Products.GetGraphChart;
 using Microsoft.AspNetCore.Http.HttpResults;
 using ApplicationCore.UseCases.Orders.SpecificOrder;
+using ApplicationCore.UseCases.Products.ReadProducts;
+using Microsoft.AspNetCore.Mvc.DataAnnotations;
+using FluentValidation;
+using DocumentFormat.OpenXml.Presentation;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -26,10 +30,14 @@ namespace InventoryManagementSystem.Controllers
     {
         private LanguageServices _languageServices;
         private readonly IMediator _mediator;
-        public OrdersController(LanguageServices languageServices, IMediator mediator)
+        private readonly IValidator<SaveOrdersRequest> _validator;
+        public OrdersController(LanguageServices languageServices, IMediator mediator,
+            IValidator <SaveOrdersRequest> validator)
         {
 
             _mediator = mediator;
+            _languageServices = languageServices;
+            _validator = validator;
         }
 
 
@@ -80,53 +88,58 @@ namespace InventoryManagementSystem.Controllers
             return Json(result);
 
         }
-
-
-
-
-
         [HttpGet]
         //done
         public async Task<IActionResult> SaveOrder()
         {
             var request = new CreateOrdersRequest();
-
             var canelation = new CancellationToken();
             var response = await _mediator.Send(request, canelation);
             return View(response);
         }
         [HttpPost]
 
-        public IActionResult SaveRecord(SaveOrdersRequest request)
+        public async Task< IActionResult> SaveRecord(SaveOrdersRequest request)
         {
+            var result = await _validator.ValidateAsync(request);
+            var createrequest = new CreateOrdersRequest();
+            // If validation fails, add the errors to ModelState
+            if (result.Errors.Any())
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+             
+
+            // Return the view with the command object to display errors
+        }
             var cancellationToken = new CancellationToken();
 
-            var response = _mediator.Send(request, cancellationToken);
+            var response =await _mediator.Send(request, cancellationToken);
             return Json("OK");
         }
 
-        //public async Task<IActionResult> ProductByCategory(string Catid)
-        //{
-        //    int id = Convert.ToInt32(Catid);
+        public async Task<IActionResult> ProductByCategory(ReadProductsRequest request,CancellationToken cancellationToken )
+        {
+    //        int id = Convert.ToInt32(Catid);
 
-        //    try
-        //    {
-        //        var i = (ClaimsIdentity)User.Identity;
-        //        var uid = i.FindFirst(ClaimTypes.NameIdentifier);
-        //        string userid = uid.Value;
+            try
+            {
+             
 
 
 
-        //        var categoryrecords = await _productsRepository.ShowByCatID(id, userid);
-        //        return Json(categoryrecords);
+                var categoryrecords = await  _mediator.Send(request,cancellationToken);
+                return Json(categoryrecords);
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, "Internal server error");
-        //    }
-        //    return Json("");
-        //}
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
+            return Json("");
+        }
         //done
         public async Task<IActionResult> BarGraphResult(GraphChartRequest request, CancellationToken cancellationToken)
         {

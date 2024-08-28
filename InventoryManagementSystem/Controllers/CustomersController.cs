@@ -12,15 +12,23 @@ using ApplicationCore.UseCases.Customers.CreateCustomers;
 using ApplicationCore.UseCases.Customers.UpdateCustomers;
 using ApplicationCore.UseCases.Customers.ReadCustomers;
 using ApplicationCore.UseCases.Customers.DeleteCustomers;
+using Cqrs.Events;
+using FluentValidation;
 namespace InventoryManagementSystem.Controllers
 {
     [Authorize]
     public class CustomersController : Controller
     {
         private readonly IMediator _mediator;
-        public CustomersController(IMediator mediator)
+        private readonly IValidator<SaveCustomersRequest> _createvalidator;
+        private readonly IValidator<UpdateCustomersRequest> _updatevalidator;
+
+        public CustomersController(IMediator mediator, IValidator<SaveCustomersRequest> createvalidator, IValidator<UpdateCustomersRequest> updatevalidator)
         {
             _mediator = mediator;
+            _createvalidator = createvalidator;
+            _updatevalidator = updatevalidator;
+
         }
         public async Task<IActionResult> Result(ReadCustomersRequest request, CancellationToken cancellation)
         {
@@ -35,8 +43,20 @@ namespace InventoryManagementSystem.Controllers
 
         [HttpPost]
         [Route("Customers/SaveRecord")]
-        public IActionResult SaveProduct(SaveCustomersRequest customerData, CancellationToken cancellationToken)
+        public async Task<IActionResult> SaveProduct(SaveCustomersRequest customerData, CancellationToken cancellationToken)
         {
+            var result = await _createvalidator.ValidateAsync(customerData);
+
+            // If validation fails, add the errors to ModelState
+            if (result.Errors.Any())
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+                return View(customerData); // Return the view with the command object to display errors
+            }
+
             var s = _mediator.Send(customerData, cancellationToken);
             return RedirectToAction("Result");
         }
@@ -54,10 +74,21 @@ namespace InventoryManagementSystem.Controllers
         }
         [HttpPost]
 
-        public IActionResult Edit(UpdateCustomersRequest customerData, CancellationToken cancellationToken)
+        public async Task<IActionResult> Edit(UpdateCustomersRequest customerData, CancellationToken cancellationToken)
         {
+            var result = await _updatevalidator.ValidateAsync(customerData);
 
-            var result = _mediator.Send(customerData, cancellationToken);
+            // If validation fails, add the errors to ModelState
+            if (result.Errors.Any())
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+                return View(customerData); // Return the view with the command object to display errors
+            }
+
+            var res = _mediator.Send(customerData, cancellationToken);
             return RedirectToAction("Result");
 
         }

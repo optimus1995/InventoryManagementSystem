@@ -5,6 +5,8 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using ApplicationCore.DapperEntity;
+using ApplicationCore.UseCases.Orders.CreateOrders;
+using FluentValidation;
 using MediatR;
 
 
@@ -22,3 +24,4 @@ namespace ApplicationCore.UseCases.Orders.CreateOrders
         public List<ApplicationCore.DapperEntity.Category> Categories { get; set; }
     }
 }
+
