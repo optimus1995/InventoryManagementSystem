@@ -58,6 +58,8 @@ namespace ApplicationCore.Mapping
             CreateMap<CreateProductsRequest, Products>();
 
             CreateMap<UpdateProductsRequest, Products>();
+
+            CreateMap<Products, UpdateProductsRequest>();
         }
     }
 }

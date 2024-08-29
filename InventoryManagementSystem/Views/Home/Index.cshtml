@@ -73,6 +73,8 @@
         // ShowProductsRecordGraph();
         updateChart();
            updateChart1();
+
+
     })
         function ShowProductsRecordGraph() {debugger
 
@@ -311,20 +313,22 @@
 
         var barChart;
 
-        function updateChart1() {
-            $.ajax({
-                type: "GET",
-                url: "/Orders/GetBarChartResult",
-                dataType: "json",
-                success: function (response) {debugger
-                    console.log(response);
+    function updateChart1() {
+        debugger;
+        $.ajax({
+            type: "GET",
+            url: "/Orders/GetBarChartResult",
+            dataType: "json",
+            success: function (response) {
+                debugger
+                console.log(response);
 
-                    var labels = [];
-                    var data = [];
+                var labels = [];
+                var data = [];
 
-                    response.forEach(function (item) {
-                        console.log(item);
-                        labels.push(item.year + '-' + item.month); // e.g., "2024-08"
+                response.forEach(function (item) {
+                    console.log(item);
+                    labels.push(item.year + '-' + item.month + '-' + item.day); // e.g., "2024-08"
                         data.push(item.amount);
                     });
 

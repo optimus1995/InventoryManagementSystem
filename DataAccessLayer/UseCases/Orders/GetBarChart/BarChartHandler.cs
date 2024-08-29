@@ -24,7 +24,8 @@ namespace ApplicationCore.UseCases.Orders.GetBarChart
                 // Map properties from BarChartResponse to BarChartOrder
                 Amount = record.Amount,
                 Year = record.Year,
-                Month = record.Month
+                Month = record.Month,
+                Day = record.Day,
                 // Add other mappings as needed
             }).ToList();
 

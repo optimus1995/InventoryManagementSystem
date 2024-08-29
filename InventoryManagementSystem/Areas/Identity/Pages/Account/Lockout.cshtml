@@ -1,10 +1,137 @@
 ﻿@page
-@model LockoutModel
+@model LoginModel
+
 @{
-    ViewData["Title"] = "Locked out";
+    Layout = null;
+    ViewData["Title"] = "Locked Out";
 }
 
-<header>
-    <h1 class="text-danger">@ViewData["Title"]</h1>
-    <p class="text-danger">This account has been locked out, please try again later.</p>
-</header>
+
+
+
+
+
+
+
+
+
+
+
+<link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+      rel="stylesheet">
+
+<!-- Custom styles for this template-->
+<link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+
+
+<body class="bg-gradient-primary">
+
+    <div class="container">
+
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
+
+            <div class="col-xl-10 col-lg-12 col-md-9">
+
+
+                <div class="card o-hidden border-0 shadow-lg my-5  ">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-md-6">
+                             </div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1  class="h4 text-danger mb-4"> This account has been locked out. Please try again later.</h1>
+                                    </div>
+
+                                    <section>
+                                        <form id="account" method="post" class="user">
+                                            <div class="form-group">
+                                                <input asp-for="Input.Email" class="form-control form-control-user " autocomplete="off" aria-required="true" placeholder="Email" />
+                                                <span asp-validation-for="Input.Email" class="text-danger"></span>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <input asp-for="Input.Password" class="form-control form-control-user" autocomplete="current-password" aria-required="true" placeholder="Password" />
+                                                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="custom-control custom-checkbox small">
+
+                                                    <label asp-for="Input.RememberMe" class="form-label">
+                                                        <input class="form-check-input" asp-for="Input.RememberMe" />
+                                                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                                    </label>
+
+                                                </div>
+                                            </div>
+                                            <button id="login-submit" type="submit" class="btn btn-primary btn-user btn-block">Log in</button>
+                                            <hr />
+                                            <a class="btn btn-danger btn-user btn-block" asp-page="./ForgotPassword">
+                                                <i class="fab fa-user fa-fw"></i> Forgot your password.
+                                            </a>
+
+                                                @*
+                                            <a class="btn btn-danger btn-user btn-block" asp-controller="Login" asp-action="Login">
+                                            <i class="fab fa-google fa-fw"></i> Login Using Google.
+                                            </a>
+                                            *@
+                                        </form>
+                                    </section>
+                                    <hr>
+
+                                    <form method="post" class="user" asp-controller="Login" asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
+                                        <div>
+                                                @foreach (var provider in Model.ExternalLogins)
+                                                {
+                                                <button type="submit" class="btn btn-danger btn-user btn-block"
+                                                        name="provider" value="@provider.Name"
+                                                        title="Log in using your @provider.DisplayName account">
+
+                                                    <i class="fab fa-google fa-fw"></i> Login Using Google.
+                                                </button>
+                                                }
+                                        </div>
+                                    </form>
+
+
+
+
+
+                                    <div class="text-center">
+                                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+
+                                    </div>
+                                    <div class="text-center">
+                                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    @section scripts {
+        <!-- Bootstrap core JavaScript-->
+        <script src="/vendor/jquery/jquery.min.js"></script>
+        <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Core plugin JavaScript-->
+        <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+        <!-- Custom scripts for all pages-->
+        <script src="/js/sb-admin-2.min.js"></script>
+        <partial name="_ValidationScriptsPartial" />
+
+    }
+
+</body>

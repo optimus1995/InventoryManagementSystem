@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ApplicationCore.DapperEntity;
+using ApplicationCore.UseCases.Products.CreateProducts;
+using ApplicationCore.UseCases.Products.UpdateProducts;
+using FluentValidation;
 using MediatR;
 
 namespace ApplicationCore.UseCases.Products.UpdateProducts
@@ -25,5 +28,19 @@ namespace ApplicationCore.UseCases.Products.UpdateProducts
         public string? UserId { get; set; }
         public ApplicationCore.DapperEntity.Category? Category { get; set; }
         public ApplicationCore.DapperEntity.AspNetUsers? AspNetUsers { get; set; }
+    }
+}
+
+public class UpdateProductsRequestValidator : AbstractValidator<UpdateProductsRequest>
+{
+    public UpdateProductsRequestValidator()
+    {
+        RuleFor(x => x.Name).NotNull().MaximumLength(50);
+        RuleFor(x => x.Description).NotNull().MaximumLength(50);
+        RuleFor(x => x.Price).NotNull().GreaterThan(0);
+        RuleFor(x => x.CategoryID).NotNull();
+        RuleFor(x => x.SKU).NotNull().GreaterThan(0);
+        RuleFor(x => x.quantity).NotNull().GreaterThan(0);
+
     }
 }

@@ -20,6 +20,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using ApplicationCore.UseCases.Category.ReadCategory;
 using System.Threading;
 using ApplicationCore.UseCases.Products.GetGraphChart;
+using FluentValidation;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -30,12 +31,19 @@ namespace InventoryManagementSystem.Controllers
         private IStringLocalizer<ProductsController> _stringLocalizer;
 
         private readonly IMediator _mediator;
+        private readonly IValidator <CreateProductsRequest>  _validator;
+        private readonly IValidator<UpdateProductsRequest> _updatevalidator;
+       
 
-        public ProductsController(IMediator mediator, IStringLocalizer<ProductsController> stringLocalizer)
+
+        public ProductsController(IMediator mediator, IStringLocalizer<ProductsController> stringLocalizer,
+            IValidator <CreateProductsRequest> validator, IValidator<UpdateProductsRequest> updatevalidator)
         {
             _stringLocalizer = stringLocalizer;
 
             _mediator = mediator;
+            _validator = validator;
+            _updatevalidator = updatevalidator;
         }
 
         //done
@@ -75,15 +83,26 @@ namespace InventoryManagementSystem.Controllers
 
             var records = await _mediator.Send(request, cancellationToken);
             var categories = records;
+            ViewBag.Categories = categories.Categories;
 
-            return View(categories);
+            return View();
         }
         [HttpPost]
         //done
         public async Task<IActionResult> SaveProduct(CreateProductsRequest productData, CancellationToken cancellation)
         {
-            try
+            var result = await _validator.ValidateAsync(productData);
+
+            if (!result.IsValid)
             {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+                return View(productData); // Return the view with the validation errors
+            }
+            try
+                {
                 if (ModelState.IsValid)
                 {
                     var response = await _mediator.Send(productData, cancellation);
@@ -113,13 +132,24 @@ namespace InventoryManagementSystem.Controllers
             {
                 return NotFound();
             }
+        //    var updateProductRequest = _mapper.Map<UpdateProductsRequest>(product);
 
-            return View(product.products);
+            return View();
         }
 
         //done
         public async Task<IActionResult> EditAsync(UpdateProductsRequest productData, CancellationToken cancellationToken)
         {
+            var result = await _updatevalidator.ValidateAsync(productData);
+
+            if (!result.IsValid)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+                return View(productData); // Return the view with the validation errors
+            }
 
             try
             {

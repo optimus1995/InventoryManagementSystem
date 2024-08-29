@@ -6,9 +6,11 @@ using System.Diagnostics;
 using Infrastructure.Repository;
 using ApplicationCore.Contract;
 using ApplicationCore.DapperEntity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InventoryManagementSystem.Controllers
 {
+    
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -20,7 +22,7 @@ namespace InventoryManagementSystem.Controllers
             _logger = logger;
             _stringLocalizer = stringLocalizer;
         }
-
+        [Authorize]
         public IActionResult Index()
         {
 

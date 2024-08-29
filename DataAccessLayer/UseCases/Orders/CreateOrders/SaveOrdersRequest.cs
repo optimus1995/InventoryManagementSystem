@@ -43,7 +43,7 @@ public class SaveOrderRequestValidator : AbstractValidator<SaveOrdersRequest>
         RuleFor(rule => rule.TotalAmount).NotNull();
         RuleFor(rule => rule.ListDetails)
             .Must(list => list != null && list.Count >= 1)
-            .WithMessage("ListDetails must contain at least 1 item.");
+            .WithMessage("Product Table must contain at least 1 item.");
         RuleFor(rule => rule.Discount).NotNull().GreaterThan(0).LessThanOrEqualTo(100);
     }
 

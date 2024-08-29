@@ -23,6 +23,7 @@ using ApplicationCore.UseCases.Products.ReadProducts;
 using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using FluentValidation;
 using DocumentFormat.OpenXml.Presentation;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -81,8 +82,9 @@ namespace InventoryManagementSystem.Controllers
         //}
 
         //done
-        public async Task<IActionResult> GetBarChartResult(BarChartRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetBarChartResult( CancellationToken cancellationToken)
         {
+            var request = new BarChartRequest();
             var response = await _mediator.Send(request, cancellationToken);
             var result = response.barChartOrders;
             return Json(result);
@@ -99,26 +101,27 @@ namespace InventoryManagementSystem.Controllers
         }
         [HttpPost]
 
-        public async Task< IActionResult> SaveRecord(SaveOrdersRequest request)
+        public async Task<IActionResult> SaveRecord(SaveOrdersRequest request)
         {
             var result = await _validator.ValidateAsync(request);
-            var createrequest = new CreateOrdersRequest();
-            // If validation fails, add the errors to ModelState
+
             if (result.Errors.Any())
             {
-                foreach (var error in result.Errors)
+                var errorList = result.Errors.Select(error => new
                 {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                }
-             
+                    field = error.PropertyName,
+                    message = error.ErrorMessage
+                }).ToList();
 
-            // Return the view with the command object to display errors
-        }
+                return Json(new { success = false, errors = errorList });
+            }
+
             var cancellationToken = new CancellationToken();
+            var response = await _mediator.Send(request, cancellationToken);
 
-            var response =await _mediator.Send(request, cancellationToken);
-            return Json("OK");
+            return Json(new { success = true, message = "Order saved successfully", data = response });
         }
+
 
         public async Task<IActionResult> ProductByCategory(ReadProductsRequest request,CancellationToken cancellationToken )
         {

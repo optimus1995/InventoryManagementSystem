@@ -63,23 +63,20 @@ namespace InventoryManagementSystem.Controllers
         //done
         public async Task<IActionResult> Save(CreateCategoryRequest command, CancellationToken cancellation)
 {
-    // Validate the command using FluentValidation
     var result = await _validator.ValidateAsync(command);
 
-            // If validation fails, add the errors to ModelState
             if (result.Errors.Any())
             {
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
                 }
-                return View(command); // Return the view with the command object to display errors
+                return View(command); 
             }
 
 
     try
     {
-        // Proceed with the command if the model state is valid
         if (ModelState.IsValid)
         {
             command.IsActive = 1;

@@ -13,10 +13,11 @@ namespace ApplicationCore.UseCases.Orders.GetBarChart
     {
 
 
-        public int Amount { get; set; }
+        public long Amount { get; set; }
 
         public int Year { get; set; }
 
         public int Month { get; set; }
+        public int Day { get; set; }
     }
 }

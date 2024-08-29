@@ -1,7 +1,9 @@
-﻿@using ApplicationCore.UseCases.Category.ReadCategory
+﻿@using ApplicationCore.UseCases.Products.CreateProducts
 
-@model ReadCategoryResponse
-
+@model CreateProductsRequest
+@{
+    var categories = ViewBag.Categories as List<ApplicationCore.DapperEntity.Category>;
+}
 
 <div class="card mt-4 ">
     <div class="card-header">
@@ -14,42 +16,49 @@
     <div class="row">
     <div class="col-md-6 mb-3">
         <label for="productName" class="form-label">Name</label>
-        <input type="text" name="Name" class="form-control" placeholder="Enter product name" required />
+        <input type="text" name="Name" class="form-control" placeholder="Enter product name"  />
+        <span asp-validation-for="Name" class="text-danger " ></span>
     </div>
 
                 <div class="col-md-6 mb-3">
                     <label for="productDescription" class="form-label">Description</label>
-        <input type="text" name="Description" class="form-control" placeholder="Enter product description" required />
-    </div>
+        <input type="text" name="Description" class="form-control" placeholder="Enter product description"  />
+                    <span asp-validation-for="Description" class="text-danger "></span>
+                </div>
     </div>
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="productSKU" class="form-label">SKU</label>
-        <input type="text" name="SKU" class="form-control" placeholder="Enter product SKU" required />
-    </div>
+        <input type="text" name="SKU" class="form-control" placeholder="Enter product SKU" />
+                    <span asp-validation-for="SKU" class="text-danger "></span>
+                </div>
 
                 <div class="col-md-6 mb-3">
         <label for="productPrice" class="form-label">Price</label>
         <input type="number" name="Price" class="form-control" placeholder="Enter product price" required step=".0001" />
+                    <span asp-validation-for="Price" class="text-danger "></span>
     </div>
     </div>
             <div class="row">
                 <div class="col-md-6 mb-3">
         <label for="productQuantity" class="form-label">Quantity</label>
         <input type="number" name="quantity" class="form-control" placeholder="Enter product quantity" required min="1" />
+                    <span asp-validation-for="quantity" class="text-danger "></span>
     </div>
 
 
                 <div class="col-md-6 mb-3">
-
-       <label for="Category" class="form-label">Category</label>
-           <select name="CategoryID" class="form-control" >
-               @foreach(var category in Model.Categories){
-                           <option value="@category.Id">@category.Name</option>
-               }
-
-           </select>
-      
+                    <label for="Category" class="form-label">Category</label>
+                    <select name="CategoryID" class="form-control">
+                        @if (categories != null && categories.Any())
+                        {
+                            foreach (var category in categories)
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        }
+                       
+                    </select>
     </div>
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
