@@ -16,5 +16,6 @@
         public string? UserId { get; set; }
         public Category? Category { get; set; }
         public AspNetUsers? AspNetUsers { get; set; }
+        public ProductImages? ProductImages{ get; set; }
     }
 }

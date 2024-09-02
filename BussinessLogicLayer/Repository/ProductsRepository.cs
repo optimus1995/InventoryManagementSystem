@@ -316,6 +316,176 @@ namespace Infrastructure.Repository
                 return result;
             }
         }
+        public async Task<ProductImages> SaveImages(ProductImages productimages)
+        {
+            var query = "INSERT INTO ProductImages (ImagesPath, ProductId) " +
+                        "VALUES (@ImagesPath, @ProductId);";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("@ImagesPath", productimages.ImagesPath, DbType.String);
+            parameters.Add("@ProductId", productimages.ProductId, DbType.String);
+
+            using (var connection = _Context.CreateConnection())
+            {
+                try
+                {
+                    if (connection.State != ConnectionState.Open)
+                    {
+                        connection.Open();
+                    }
+                    await connection.ExecuteAsync(query, parameters);
+
+                    var created = new ProductImages
+                    {
+                        ProductId = productimages.ProductId,
+                        ImagesPath = productimages.ImagesPath // Include this for clarity
+                    };
+
+                    return created;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    throw;
+                }
+            }
+        }
+
+        //public async Task<ProductImages> SaveImages(ProductImages productimages)
+        //{
+        //    var query = "INSERT INTO ProductImages ( ImagesPath, ProductId) " +
+        //                "VALUES ( @ImagePath, @ProductId);";
+
+
+        //    var parameters = new DynamicParameters();
+        //    //       parameters.Add("@Id", product.Id, DbType.Int32);
+        //    parameters.Add("@ImagePath", productimages.ImagePath, DbType.String);
+        //    parameters.Add("@ProductId", productimages.ProductId, DbType.String);
+
+        //    using (var connection = _Context.CreateConnection())
+        //    {
+        //        try
+        //        {
+        //            if (connection.State != ConnectionState.Open)
+        //            {
+        //                connection.Open();
+        //            }
+        //            await connection.ExecuteAsync(query, parameters);
+
+        //            var created = new ProductImages
+        //            {
+        //                ProductId = productimages.ProductId
+
+        //            };
+
+        //            return created;
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Handle the exception as necessary
+        //            Console.WriteLine($"An error occurred: {ex.Message}");
+        //            throw;
+        //        }
+        //    }
+        //}   
+
+
+        //public async Task<IEnumerable<ProductImages>> DisplayImages(int productId)
+        //{
+        //    var q = @"Select 
+        //            p.Id ,
+        //            p.Name ,
+        //            from Products p
+        //            join ProductImages prodimgs on prodimgs.ProductId=p.Id
+
+        //    where p.Id =@productId";
+        //    //where p.UserId=  '6370e636-8165-4711-b391-da621035d6a4'     ";
+        //    using (var connection = _Context.CreateConnection())
+        //    {
+        //        var query = q;
+        //        var products = await connection.QueryAsync<Products,  ProductImages, Products>(
+        //            q,
+        //            (product,productimages ) =>
+        //            {
+        //                product.ProductImages = productimages;
+
+        //                return product;
+        //            },
+        //              new { productId }
+
+        //        );
+        //        var products = new Prodcut
+        //        return products.ToList();
+        //    }
+        //}
+        public async Task<IEnumerable<ProductImages>> DisplayImages(int productId)
+        {
+            var query = @"
+        SELECT 
+           
+            p.Name as ProductName,
+            prodimgs.Id,
+            prodimgs.ImagesPath,
+            prodimgs.ProductId
+        FROM ProductImages prodimgs
+        join Products p on p.Id=prodimgs.productId
+
+        WHERE prodimgs.ProductId = @productId";
+
+            using (var connection = _Context.CreateConnection())
+            {
+                var images = await connection.QueryAsync<ProductImages>(query, new { productId });
+                return images;
+            }
+        }
+
+
+     //   public async Task<IEnumerable<ProductImages>> DisplayImages(int productId)
+     //   {
+     //       var q = @"
+     //SELECT 
+     //       p.Id,
+     //       p.Name,
+     //       prodimgs.ImagesPath
+     //   FROM Products p
+     //   JOIN ProductImages prodimgs ON prodimgs.ProductId = p.Id
+     //   WHERE p.Id = @productId";
+     //       using (var connection = _Context.CreateConnection())
+     //       {
+     //           var query = q;
+     //           var products = await connection.QueryAsync<Products, ProductImages, Products>(
+     //               q,
+     //               (product, images) =>
+     //               {
+     //                   product.ProductImages = images;
+
+
+     //                   return product;
+     //               },
+     //                 new { productId }
+
+     //           );
+     //           return products;
+     //       }
+     //   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 }

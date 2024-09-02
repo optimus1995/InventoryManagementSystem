@@ -121,21 +121,13 @@ namespace InventoryManagementSystem.Controllers
 
             return Json(new { success = true, message = "Order saved successfully", data = response });
         }
-
-
         public async Task<IActionResult> ProductByCategory(ReadProductsRequest request,CancellationToken cancellationToken )
         {
     //        int id = Convert.ToInt32(Catid);
-
             try
             {
-             
-
-
-
                 var categoryrecords = await  _mediator.Send(request,cancellationToken);
                 return Json(categoryrecords);
-
             }
             catch (Exception ex)
             {

@@ -75,7 +75,9 @@
                                         <th hidden> CategoryId </th>
                                 <th> @LanguageServices.GetKey("Category").Value</th>
                                 <th> @LanguageServices.GetKey("User").Value</th>
+                                <th> Images </th>
                                 <th> @LanguageServices.GetKey("Actions").Value</th>
+                           
                                     </tr>
 
                                 </thead>
@@ -94,11 +96,20 @@
                                             <td hidden> @records.CategoryID </td>
                                             <td> @records.Category.Name  </td>
                                             <td> @records.AspNetUsers.UserName</td>
+                                    <td>
+                                        <a class="btn btn-primary" asp-action="ShowImages" asp-controller="Products" asp-route-id="@records.Id">
+                                            <i class="fas fa-regular fa-images"></i>
+                                        </a>
+                                        </td>
 
                                             <td>
+                                        <a class="btn btn-primary" asp-action="AddorEditImages" asp-controller="Products" asp-route-id="@records.Id">
+                                            <i class="fas fa-solid fa-image"></i>
+                                        </a>
                                                 <a class="btn btn-primary" asp-action="Edit" asp-controller="Products" asp-route-id="@records.Id">
                                                     <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                                                 </a>
+
                                                 <a class="btn btn-danger" asp-action="Delete" asp-controller="Products" asp-route-id="@records.Id">
                                                     <i class="fas fa-trash" aria-hidden="true"></i>
                                                 </a>

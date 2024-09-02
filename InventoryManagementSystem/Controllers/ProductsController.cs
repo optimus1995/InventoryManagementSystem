@@ -21,6 +21,10 @@ using ApplicationCore.UseCases.Category.ReadCategory;
 using System.Threading;
 using ApplicationCore.UseCases.Products.GetGraphChart;
 using FluentValidation;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using NUglify.Helpers;
+using ApplicationCore.UseCases.Products.SaveImages;
+using ApplicationCore.UseCases.Products.DisplayImages;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -33,17 +37,20 @@ namespace InventoryManagementSystem.Controllers
         private readonly IMediator _mediator;
         private readonly IValidator <CreateProductsRequest>  _validator;
         private readonly IValidator<UpdateProductsRequest> _updatevalidator;
-       
+        private readonly IWebHostEnvironment _hostingEnvironment;
+
 
 
         public ProductsController(IMediator mediator, IStringLocalizer<ProductsController> stringLocalizer,
-            IValidator <CreateProductsRequest> validator, IValidator<UpdateProductsRequest> updatevalidator)
+            IValidator <CreateProductsRequest> validator, IValidator<UpdateProductsRequest> updatevalidator,
+            IWebHostEnvironment hostingEnvironment)
         {
             _stringLocalizer = stringLocalizer;
 
             _mediator = mediator;
             _validator = validator;
             _updatevalidator = updatevalidator;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         //done
@@ -234,7 +241,69 @@ namespace InventoryManagementSystem.Controllers
                 return StatusCode(500, "Internal server error: " + ex.Message);
             }
         }
+        // [Route("Products/{id}/AddImages")]
+        [HttpGet]
+    //    [Route("Products/AddorEditImages/{id}")]
+        public async Task< IActionResult> AddorEditImages(int id , CancellationToken cancellationToken)
+        {
+            var productrequest = new GetProductsRequest();
+            productrequest.Id = id;
+            var product = await _mediator.Send(productrequest, cancellationToken);
+            ViewBag.Product = product.products;
+            if (product == null)
+            {
+              
+            }
+            //    var updateProductRequest = _mapper.Map<UpdateProductsRequest>(product);
 
+
+            return View();
+        }
+
+
+        [HttpPost]
+        //        public async Task<IActionResult> AddorEditImages(int productId, List <IFormFile> ImagePath, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddorEditImages(SaveImagesProductRequest request , CancellationToken cancellationToken)
+
+        {
+            var result = await _mediator.Send(request, cancellationToken);
+
+            //if (ImagePath != null)
+            //{
+            //    var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "Uploads");
+            //    if (!Directory.Exists(uploadsFolder))
+            //    {
+            //        Directory.CreateDirectory(uploadsFolder);
+            //    }
+
+            //    foreach (var file in ImagePath)
+            //    {
+            //            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            //            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            //            using (var stream = new FileStream(filePath, FileMode.Create))
+            //            {
+            //                await file.CopyToAsync(stream);
+            //            }
+
+            //        var productimage = new productimage
+            //        {
+            //            productid = productid,
+            //            imagename = filename,
+            //            imagepath = filepath
+            //        };
+
+            //        Save to database(use your repository or DbContext here)
+            //        _context.ProductImages.Add(productImage);
+            //        await _context.SaveChangesAsync();
+            //    }
+
+
+            //    return RedirectToAction("ProductDetails", new { id = productId });
+            //}
+
+            return RedirectToAction("Result");
+        }
 
         //[Route("Products/ShowProducts")]
         //[HttpGet]
@@ -280,6 +349,15 @@ namespace InventoryManagementSystem.Controllers
             await _mediator.Send(id);
 
             return RedirectToAction("Result");
+        } 
+
+        public async Task<IActionResult> ShowImages(DisplayImagesRequest request , CancellationToken cancellationToken)
+        {
+            var response = await _mediator.Send(request, cancellationToken);
+
+            return View (response);
+
+
         }
     }
 

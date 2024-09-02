@@ -1,0 +1,83 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model ApplicationCore.DapperEntity.ProductImages
+
+
+
+
+<div class="card">
+    <div class="card-header" id="productimagesid">
+      <h1>  Add Images</h1>
+    </div>
+
+    <div class="card-body">
+
+        <form method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="text" asp-for="ProductId" value="@ViewBag.Product.Id" hidden />
+                    <input type="text" class="form-control" value="@ViewBag.Product.Name" disabled />
+                </div>
+                <div class="col-md-6">
+                    <input type="file"  asp-for="ImagesPath" class="form-control" multiple accept="image/*">
+                </div>
+
+            </div>
+           <div class="row">
+               <div class="col-md-3 float-end">
+                    <button class="btn btn-primary" type="submit">Save Images</button>
+
+               </div>
+           </div>
+        </form>
+
+    </div>
+</div>
+
+
+<script>
+
+    // function AddImages() {
+    //     try {
+
+    //         let quantity = parseInt($("#Quantity").val(), 10);
+    //         let totalPriceInput = $("#TotalPrice");
+
+    //         let dropdown = document.getElementById("productDropdown");
+    //         let selectedOption = dropdown.options[dropdown.selectedIndex];
+
+    //         let productName = selectedOption.text;
+
+    //         let productID = selectedOption.value;
+
+    //         let productPrice = parseFloat(selectedOption.getAttribute("data-price"));
+
+    //         let total = quantity * productPrice;
+    //         totalPriceInput.val(total);
+    //         let table = $('#orderstable').DataTable();
+    //         let newRow = "<tr>" +
+    //             "<td >" + productID + "</td>" +
+    //             "<td>" + productName + "</td>" +
+    //             "<td>" + productPrice + "</td>" +
+    //             "<td>" + quantity + "</td>" +
+    //             "<td>" + total + "</td>" +
+    //             "<td>" +
+    //             "<a class='btn btn-danger' onclick='deleterow(this)'>" +
+    //             "<i class='fas fa-trash' aria-hidden='true'></i></a>" +
+    //             "</td>" +
+
+    //             "</tr>";
+    //         totalamount += total;
+    //         table.row.add($(newRow)).draw(false);
+    //         console.log("Total Amount: " + totalamount);
+    //     } catch (ex) {
+    //         // Handle any errors
+    //         console.log("Error: " + ex.message);
+    //     }
+    // }
+
+
+</script>

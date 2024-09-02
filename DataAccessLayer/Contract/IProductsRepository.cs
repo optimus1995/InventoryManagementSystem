@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.DapperEntity;
+using ApplicationCore.UseCases.Products.SaveImages;
 using System.Linq;
 
 namespace ApplicationCore.Contract
@@ -14,5 +15,10 @@ namespace ApplicationCore.Contract
         public Task DeleteRecord(int id);
         public Task<(int ProductCount, int CategoryCount)> GetCount();
         public Task<IEnumerable<ProductCategoryGraph>> GetCountforChart();
+
+        public Task<ProductImages> SaveImages(ProductImages productImages);
+
+        public Task<IEnumerable<ProductImages>> DisplayImages(int productId);
+
     }
 }
