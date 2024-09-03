@@ -14,7 +14,15 @@ namespace ApplicationCore.UseCases.Products.SaveImages
 
         public string ImageName { get; set; }
 
-        public string ImagePath { get; set; }
+        public string ImagesPath { get; set; }
+
+        public string? ProductName { get; set; }
+
+        public int ImageSize { get; set; }
+
+        public string ImageType { get; set; }
+
+
 
 
     }

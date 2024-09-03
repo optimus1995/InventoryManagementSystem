@@ -16,7 +16,25 @@ namespace ApplicationCore.UseCases.Products.SaveImages
       
         public string ProductId { get; set; }
 
-        public List<IFormFile> ImagePath { get; set; }
+        public List<IFormFile> ImagesPath { get; set; }
+
+        public string ImageName { get; set; }
+        public string? ProductName { get; set; }
+
+        public int ImageSize { get; set; }
+
+        public string ImageType { get; set; }
+
+
+
+
+
+
+
+
+
+
+
     }
 }
 //public class CreateProductsRequestValidator: AbstractValidator<CreateProductsRequest>

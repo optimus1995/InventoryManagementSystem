@@ -354,7 +354,7 @@ namespace InventoryManagementSystem.Controllers
         public async Task<IActionResult> ShowImages(DisplayImagesRequest request , CancellationToken cancellationToken)
         {
             var response = await _mediator.Send(request, cancellationToken);
-
+            ViewBag.productname = response.productsImage;
             return View (response);
 
 

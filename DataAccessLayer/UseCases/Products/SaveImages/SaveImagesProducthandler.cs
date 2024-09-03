@@ -109,7 +109,7 @@ namespace ApplicationCore.UseCases.Products.SaveImages
 
         public async Task<SaveImagesProductResponse> Handle(SaveImagesProductRequest productData, CancellationToken cancellationToken)
         {
-            var imagePath = productData.ImagePath;
+            var imagePath = productData.ImagesPath;
             if (imagePath != null)
             {
                  var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "Uploads");
@@ -131,17 +131,24 @@ namespace ApplicationCore.UseCases.Products.SaveImages
                     }
 
                     var relativePath = Path.Combine("Uploads", fileName);
+                    var  contenttype = file.ContentType;
+                    var filesize = file.Length;
+                    var originalFileName = Path.GetFileNameWithoutExtension(file.FileName);
+                    var extension = Path.GetExtension(file.FileName).TrimStart('.').ToLower();
 
                     var productImage = new ProductImages
                     {
                         ProductId = productData.ProductId,
-                        ImagesPath = relativePath // Store the relative path
+                        ImagesPath = relativePath ,
+                        ImageSize= (int)filesize,
+                        ImageType = extension,
+                        ImageName = originalFileName,
+
                     };
 
-                    // Await the SaveImages call
+
                     var result = await _productsRepository.SaveImages(productImage);
 
-                    // Handle the result if needed
                 }
 
                 var saveImageProductResponse = new SaveImagesProductResponse

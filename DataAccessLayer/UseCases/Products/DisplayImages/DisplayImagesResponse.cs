@@ -10,6 +10,7 @@ namespace ApplicationCore.UseCases.Products.DisplayImages
 {
     public class DisplayImagesResponse
     {
+        public string ProductName { get; set; } 
 
        public  ApplicationCore.DapperEntity.Products products { get; set; }
 

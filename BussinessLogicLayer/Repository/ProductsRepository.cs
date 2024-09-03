@@ -318,12 +318,15 @@ namespace Infrastructure.Repository
         }
         public async Task<ProductImages> SaveImages(ProductImages productimages)
         {
-            var query = "INSERT INTO ProductImages (ImagesPath, ProductId) " +
-                        "VALUES (@ImagesPath, @ProductId);";
+            var query = "INSERT INTO ProductImages (ImagesPath, ProductId,ImageType,ImageName,ImageSize) " +
+                        "VALUES (@ImagesPath, @ProductId,@ImageType,@ImageName,@ImageSize);";
 
             var parameters = new DynamicParameters();
             parameters.Add("@ImagesPath", productimages.ImagesPath, DbType.String);
             parameters.Add("@ProductId", productimages.ProductId, DbType.String);
+            parameters.Add("@ImageName", productimages.ImageName, DbType.String);
+            parameters.Add("@ImageType",productimages.ImageType, DbType.String);
+            parameters.Add("@ImageSize",productimages.ImageSize, DbType.Int32);
 
             using (var connection = _Context.CreateConnection())
             {
@@ -426,6 +429,9 @@ namespace Infrastructure.Repository
             p.Name as ProductName,
             prodimgs.Id,
             prodimgs.ImagesPath,
+            prodimgs.ImageName,
+            prodimgs.ImageSize,
+            prodimgs.ImageType,
             prodimgs.ProductId
         FROM ProductImages prodimgs
         join Products p on p.Id=prodimgs.productId

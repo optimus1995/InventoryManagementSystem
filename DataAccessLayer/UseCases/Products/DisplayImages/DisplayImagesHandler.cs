@@ -35,12 +35,15 @@ namespace ApplicationCore.UseCases.Products.DisplayImages
 
 
             var imagesList = result.ToList();
+            var productName = imagesList.FirstOrDefault()?.ProductName;
 
             // Return the response
             return new DisplayImagesResponse
             {
                 
-                productsImage = imagesList
+                productsImage = imagesList,
+                ProductName=productName
+          
             };
 
         }
