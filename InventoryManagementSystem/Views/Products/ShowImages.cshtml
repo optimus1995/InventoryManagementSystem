@@ -1,5 +1,4 @@
-﻿
-@using ApplicationCore.UseCases.Products.DisplayImages;
+﻿@using ApplicationCore.UseCases.Products.DisplayImages;
 @model DisplayImagesResponse
 @inject Infrastructure.Services.LanguageServices LanguageServices
 <!-- Custom fonts for this template -->
@@ -24,35 +23,42 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h6 class="m-0 font-weight-bold text-primary">Product Images</h6>
-                        <i class="fas fa-pencil-alt" aria-hidden="true"></i>
-                    </a>
+                    <h6 class="m-0 font-weight-bold text-primary">Product Images   [  @Model.ProductName  ]</h6>
+
+                    
                 </div>
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-primary" asp-action="DownloadAllImages" asp-controller="Products" asp-route-Id="@Model.ProductId"> Download All </a>
             </div>
-          
+
             <div class="card-body">
-                <div class="col-md-6 align-content-center">
-                  @*   <h2>@Model.productsImage. </h2>
- *@                </div>
                 <div class="row">
                     @foreach (var records in Model.productsImage)
                     {
-                        <div class="col-md-3 ">
-                            <div class="card">
-                                <img src="@Url.Content("~/" + records.ImagesPath.Replace("\\", "/"))" class="card-img-top" alt="Product Image" />
+                        var size = records.ImageSize / 1024;
 
+                        <div class="col-md-3 ">
+                            <div class="card container-fluid">
+                                <img src="@Url.Content("~/" + records.ImagesPath.Replace("\\", "/"))" style="height:200px;" alt="Product Image" />
+
+
+                                <div class="card w-100">
+
+                                    <p>  @records.ImageName.@records.ImageType  </p>
+                                    <h5> Image Size : @size kb </h5>
+
+                                    <!-- Download Button -->
+                                    <a href="@Url.Content("~/" + records.ImagesPath.Replace("\\", "/"))" download="@records.ImageName.@records.ImageType" class="btn btn-primary">
+                                        Download Image
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     }
                 </div>
             </div>
-
-
         </div>
-
-
     </div>
-
 </div>
 @section scripts {
     <script src="/vendor/jquery/jquery.min.js"></script>

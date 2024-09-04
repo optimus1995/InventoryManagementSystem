@@ -25,6 +25,10 @@ using DocumentFormat.OpenXml.Office2010.Excel;
 using NUglify.Helpers;
 using ApplicationCore.UseCases.Products.SaveImages;
 using ApplicationCore.UseCases.Products.DisplayImages;
+using System.IO.Compression;
+using NuGet.Protocol.Plugins;
+using System.IO;
+using NUglify.JavaScript.Syntax;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -35,14 +39,14 @@ namespace InventoryManagementSystem.Controllers
         private IStringLocalizer<ProductsController> _stringLocalizer;
 
         private readonly IMediator _mediator;
-        private readonly IValidator <CreateProductsRequest>  _validator;
+        private readonly IValidator<CreateProductsRequest> _validator;
         private readonly IValidator<UpdateProductsRequest> _updatevalidator;
         private readonly IWebHostEnvironment _hostingEnvironment;
 
 
 
         public ProductsController(IMediator mediator, IStringLocalizer<ProductsController> stringLocalizer,
-            IValidator <CreateProductsRequest> validator, IValidator<UpdateProductsRequest> updatevalidator,
+            IValidator<CreateProductsRequest> validator, IValidator<UpdateProductsRequest> updatevalidator,
             IWebHostEnvironment hostingEnvironment)
         {
             _stringLocalizer = stringLocalizer;
@@ -109,7 +113,7 @@ namespace InventoryManagementSystem.Controllers
                 return View(productData); // Return the view with the validation errors
             }
             try
-                {
+            {
                 if (ModelState.IsValid)
                 {
                     var response = await _mediator.Send(productData, cancellation);
@@ -139,7 +143,7 @@ namespace InventoryManagementSystem.Controllers
             {
                 return NotFound();
             }
-        //    var updateProductRequest = _mapper.Map<UpdateProductsRequest>(product);
+            //    var updateProductRequest = _mapper.Map<UpdateProductsRequest>(product);
 
             return View();
         }
@@ -243,8 +247,8 @@ namespace InventoryManagementSystem.Controllers
         }
         // [Route("Products/{id}/AddImages")]
         [HttpGet]
-    //    [Route("Products/AddorEditImages/{id}")]
-        public async Task< IActionResult> AddorEditImages(int id , CancellationToken cancellationToken)
+        //    [Route("Products/AddorEditImages/{id}")]
+        public async Task<IActionResult> AddorEditImages(int id, CancellationToken cancellationToken)
         {
             var productrequest = new GetProductsRequest();
             productrequest.Id = id;
@@ -252,7 +256,7 @@ namespace InventoryManagementSystem.Controllers
             ViewBag.Product = product.products;
             if (product == null)
             {
-              
+
             }
             //    var updateProductRequest = _mapper.Map<UpdateProductsRequest>(product);
 
@@ -263,7 +267,7 @@ namespace InventoryManagementSystem.Controllers
 
         [HttpPost]
         //        public async Task<IActionResult> AddorEditImages(int productId, List <IFormFile> ImagePath, CancellationToken cancellationToken)
-        public async Task<IActionResult> AddorEditImages(SaveImagesProductRequest request , CancellationToken cancellationToken)
+        public async Task<IActionResult> AddorEditImages(SaveImagesProductRequest request, CancellationToken cancellationToken)
 
         {
             var result = await _mediator.Send(request, cancellationToken);
@@ -305,27 +309,6 @@ namespace InventoryManagementSystem.Controllers
             return RedirectToAction("Result");
         }
 
-        //[Route("Products/ShowProducts")]
-        //[HttpGet]
-        //public async Task<IActionResult> ShowProducts(int id)
-        //{
-        //    try
-        //    {
-        //        var i = (ClaimsIdentity)User.Identity;
-        //        var uid = i.FindFirst(ClaimTypes.NameIdentifier);
-        //        string userid = uid.Value;
-
-
-        //        ViewBag.SelectedCategoryId = id;
-        //        var records = await _productsRepository.ShowByCatID(id, userid);
-        //        return View(records);
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, "Internal server error");
-        //    }
-        //}
 
         [HttpGet]
         //done
@@ -349,16 +332,98 @@ namespace InventoryManagementSystem.Controllers
             await _mediator.Send(id);
 
             return RedirectToAction("Result");
-        } 
+        }
 
-        public async Task<IActionResult> ShowImages(DisplayImagesRequest request , CancellationToken cancellationToken)
+        public async Task<IActionResult> ShowImages(DisplayImagesRequest request, CancellationToken cancellationToken)
         {
             var response = await _mediator.Send(request, cancellationToken);
             ViewBag.productname = response.productsImage;
-            return View (response);
-
-
+            ViewBag.ProductId=response.ProductId;
+            return View(response);
         }
+
+        //public async Task<IActionResult> DownloadAllImages(DisplayImagesRequest request, CancellationToken cancellationToken)
+        //{
+        //    var response = await _mediator.Send(request, cancellationToken);
+        //    var productImages = response.productsImage;
+
+        //    var zipName = $"{productImages.FirstOrDefault()?.ProductName}_{DateTime.Now:yyyyMMddHHmmss}.zip";
+
+        //    using (MemoryStream ms = new MemoryStream())
+        //    {
+        //        using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
+        //        {
+        //            foreach (var item in productImages)
+        //            {
+        //                var fullImagePath = Path.Combine(Directory.GetCurrentDirectory(), item.ImagesPath);
+
+        //                if (!string.IsNullOrEmpty(fullImagePath) && System.IO.File.Exists(fullImagePath))
+        //                {
+        //                    var entry = zip.CreateEntry(item.ImageName);
+
+        //                    using (var fileStream = new FileStream(fullImagePath, FileMode.Open, FileAccess.Read))
+        //                    using (var entryStream = entry.Open())
+        //                    {
+        //                        await fileStream.CopyToAsync(entryStream);
+        //                    }
+        //                }
+        //            }
+        //        }
+
+        //        return File(ms.ToArray(), "application/zip", zipName);
+        //    }
+        //}
+
+        public async Task<IActionResult> DownloadAllImages(DisplayImagesRequest request, CancellationToken cancellationToken)
+        {
+            var response = await _mediator.Send(request, cancellationToken);
+            var productImages = response.productsImage;
+            
+
+            var zipName = $"{productImages.FirstOrDefault()?.ProductName}_{DateTime.Now:yyyyMMddHHmmss}.zip";
+
+            try
+            {
+                using (var ms = new MemoryStream())
+                {
+                    using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
+                    {
+                        foreach (var item in productImages)
+                        {
+                            // Use _hostingEnvironment.WebRootPath to access the wwwroot folder
+                            var fullImagePath = Path.Combine(_hostingEnvironment.WebRootPath, item.ImagesPath.Replace("/", "\\"));
+
+                            if (System.IO.File.Exists(fullImagePath))
+                            {
+                                var entry = zip.CreateEntry(item.ImageName + Path.GetExtension(item.ImagesPath));
+
+
+                                using (var fileStream = new FileStream(fullImagePath, FileMode.Open, FileAccess.Read))
+                                using (var entryStream = entry.Open())
+                                {
+                                    await fileStream.CopyToAsync(entryStream);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine($"File not found: {fullImagePath}");
+                            }
+                        }
+                    }
+
+                    // Reset the MemoryStream position to the beginning before returning the file.
+                    ms.Seek(0, SeekOrigin.Begin);
+                    return File(ms.ToArray(), "application/zip", zipName);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return View();        }
+
+
     }
 
 

@@ -32,17 +32,20 @@ namespace ApplicationCore.UseCases.Products.DisplayImages
         {
             
             var result = await _ProductsRepository.DisplayImages(request.Id);
-
+            
 
             var imagesList = result.ToList();
-            var productName = imagesList.FirstOrDefault()?.ProductName;
 
+            var productName = imagesList.FirstOrDefault()?.ProductName;
+            int pid= request.Id;
             // Return the response
             return new DisplayImagesResponse
             {
                 
                 productsImage = imagesList,
-                ProductName=productName
+                ProductName=productName,
+                ProductId=pid
+
           
             };
 

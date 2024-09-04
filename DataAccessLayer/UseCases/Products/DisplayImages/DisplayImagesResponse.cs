@@ -12,6 +12,7 @@ namespace ApplicationCore.UseCases.Products.DisplayImages
     {
         public string ProductName { get; set; } 
 
+        public int ProductId { get; set; }
        public  ApplicationCore.DapperEntity.Products products { get; set; }
 
         public  List<ApplicationCore.DapperEntity.ProductImages > productsImage { get; set; }

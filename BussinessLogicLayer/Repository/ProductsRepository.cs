@@ -318,7 +318,7 @@ namespace Infrastructure.Repository
         }
         public async Task<ProductImages> SaveImages(ProductImages productimages)
         {
-            var query = "INSERT INTO ProductImages (ImagesPath, ProductId,ImageType,ImageName,ImageSize) " +
+             var query = "INSERT INTO ProductImages (ImagesPath, ProductId,ImageType,ImageName,ImageSize) " +
                         "VALUES (@ImagesPath, @ProductId,@ImageType,@ImageName,@ImageSize);";
 
             var parameters = new DynamicParameters();
@@ -427,12 +427,14 @@ namespace Infrastructure.Repository
         SELECT 
            
             p.Name as ProductName,
+            
             prodimgs.Id,
             prodimgs.ImagesPath,
             prodimgs.ImageName,
             prodimgs.ImageSize,
             prodimgs.ImageType,
             prodimgs.ProductId
+            
         FROM ProductImages prodimgs
         join Products p on p.Id=prodimgs.productId
 
