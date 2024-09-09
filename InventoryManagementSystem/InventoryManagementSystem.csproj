@@ -4,8 +4,16 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+    <AspNetCoreModuleName>AspNetCoreModule</AspNetCoreModuleName>
     <UserSecretsId>aspnet-InventoryManagementSystem-1f8b372d-4e7f-489a-be99-6cfdc0475bd9</UserSecretsId>
   </PropertyGroup>
+
+  
+  
+  
+  
+  
 
   <ItemGroup>
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
@@ -19,6 +27,7 @@
     <PackageReference Include="MailKit" Version="4.7.0" />
     <PackageReference Include="MediatR" Version="12.4.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6" />
