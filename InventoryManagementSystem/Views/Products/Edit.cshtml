@@ -49,7 +49,7 @@
     <div class="row col-md-6">
       
         <label asp-for="CategoryID" class="form-label">Category</label>
-        <select class="form-control" asp-for="CategoryID" asp-items="@(new SelectList(@ViewBag.Category,"Id","Name"))"></select>
+        <select class="form-control" asp-for="CategoryID" asp-items="@(new SelectList(@ViewBag.Category.Categories,"Id","Name"))"></select>
           
             </div>
             <br />
