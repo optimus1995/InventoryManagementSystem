@@ -20,7 +20,7 @@ namespace ApplicationCore.UseCases.Orders.ReadOrders
             var records = await _ordersRepository.Result();
             return new ReadOrdersResponse
             {
-                Orders = records
+                Orders = (IEnumerable<OrderItems>)records
             };
         }
     }

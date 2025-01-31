@@ -14,7 +14,9 @@ namespace ApplicationCore.DapperEntity
         public int Quantity { get; set; }
         public int Price { get; set; }
         public int TotalPrice { get; set; }
-        
+        public int Discount { get; set; }
+        public string OrderStatus { get; set; }
+
         public Orders? Orders { get; set; }
         public Products? Products { get; set; }
         public Customers? Customers { get; set; }

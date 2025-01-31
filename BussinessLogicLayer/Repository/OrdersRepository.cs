@@ -150,44 +150,35 @@ namespace Infrastructure.Repository
         public async Task<IEnumerable<OrderItems>> Result()
         {
             var query = @"
-SELECT  distinct
-    orditem.ProductId,
-    orditem.OrderId,
-    orditem.Quantity,
-    ord.Id as OrderId,
-    ord.TotalPrice,
-    ord.Discount,
-    ord.TotalAmount,
-    ord.CreatedBy,
-    ord.OrderStatus,
-    ord.CustomerId,
-    prod.Id as ProductId,
-    prod.Name ,
-    cus.Id as CustomerId,
-    cus.Name,
-    cus.ShippingAddress,
-    cus.BillingAddress
-FROM OrderItems orditem
-JOIN Orders ord ON orditem.OrderId = ord.Id 
-JOIN Products prod ON orditem.ProductId = prod.Id 
-JOIN Customers cus ON ord.CustomerId = cus.Id
-where ord.IsActive =1";
+    select ord.Id as OrderId,  -- Alias for OrderId
+           ord.TotalAmount as TotalPrice,
+           ord.Discount as Discount,
+           ord.OrderStatus as OrderStatus,
+           ord.TotalPrice as Price,
+           ord.CustomerID as CustomerId,  -- CustomerId from Orders table
+           cust.Id as CustomerId,         -- CustomerId from Customers table
+           cust.Name ,
+           cust.Email ,
+           cust.ShippingAddress as ShippingAddress, 
+           cust.BillingAddress as BillingAddress
+    from Orders ord
+    join Customers cust on cust.Id = ord.CustomerId
+    where ord.isactive = 1";
 
             using (var connection = _Context.CreateConnection())
             {
-                var ordersRecord = await connection.QueryAsync<OrderItems, Orders, Products, Customers, OrderItems>(
+                var ordersRecord = await connection.QueryAsync<OrderItems, Orders, Customers, OrderItems>(
                     query,
-                    (orderItems, orders, products, customers) =>
+                    (orderItem, order, customer) =>
                     {
-                        orderItems.Orders = orders;
-                        orderItems.Products = products;
-                        orderItems.Customers = customers;
-                        return orderItems;
+                        orderItem.Orders = order;
+                        orderItem.Customers = customer;
+                        return orderItem;
                     },
-                    splitOn: "OrderId,ProductId,CustomerId"
+                    splitOn: "CustomerId"  // Split on the correct columns
                 );
 
-                return ordersRecord.ToList();
+                return ordersRecord;
             }
         }
         public async Task<SaveOrdersResponse> CreateOrders(SaveOrdersRequest orders)

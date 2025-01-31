@@ -53,15 +53,15 @@
                                         <tr>
                                             <td> @records.OrderId</td>
                                             <td>@records.Customers.Name</td>
-                                            <td>@records.Orders.TotalPrice </td>
-                                            <td>@records.Orders.Discount  % </td>
-                                            <td>@records.Orders.TotalAmount </td>
+                                            <td>@records.Price </td>
+                                            <td>@records.Discount  % </td>
+                                            <td>@records.TotalPrice </td>
                                            <td>
                                                 @*     <a class='btn btn-danger' onclick='ShowOrderDetails(@records.OrderId)'><i class="fas fa-receipt fa-solid"></i></a></td> *@
                                             <a class="btn btn-primary" asp-action="Details" asp-controller="Orders" asp-route-Orderid="@records.OrderId">
                                                 <i class="fas fa-receipt fa-solid" aria-hidden="true"></i>
                                             </a>
-                                            <td>@records.Orders.OrderStatus</td>
+                                            <td>@records.OrderStatus</td>
                                             
 
 

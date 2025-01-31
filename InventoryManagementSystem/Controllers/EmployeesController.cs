@@ -29,7 +29,7 @@ namespace InventoryManagementSystem.Controllers
             return View(s);
         }
         //done
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "SuperAdmin, SUPERADMIN")]
         public async Task<IActionResult> RoleUpdate(string UserId, CancellationToken cancellationToken)
         {
             var rolerequest = new GetRolesRequest();
