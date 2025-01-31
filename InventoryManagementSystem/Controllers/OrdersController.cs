@@ -27,6 +27,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace InventoryManagementSystem.Controllers
 {
+    [Authorize]
     public class OrdersController : Controller
     {
         private LanguageServices _languageServices;
