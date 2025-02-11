@@ -41,6 +41,7 @@ namespace InventoryManagementSystem.Controllers
                 var cancellationToken = new CancellationToken();
 
                 var records = await _mediator.Send(request, cancellationToken);
+                logger.LogInformation("Fetched categories with product counts: {@query}", records);
 
                 // Pass the list of records to the view
                 return View(records);
